@@ -18,21 +18,22 @@ namespace HW
         [SerializeField]
         float deceleration;
 
+        [SerializeField]
+        float angularSpeed;
+        float angularSpeedInRadians;
+
         // The max speed the player can reach depending on whether is running or not
         float maxSpeed;
-        float sqrMaxSpeed;
-
-        // The actual velocity the player is moving as vector
-        Vector2 currentVelocity = Vector2.zero;
-
+       
+        // The target velocity
+        Vector3 targetVelocity;
 
         bool running = false; // Is player running ?
-        bool aiming = false; // Is player aiming ?
         bool disabled = false; // Is this controller disabled ?
+        bool aiming = false;
 
         Rigidbody rb;
-        float radius;
-
+        
         string horizontalAxis = "Horizontal";
         string verticalAxis = "Vertical";
         string sprintAxis = "Run";
@@ -40,7 +41,7 @@ namespace HW
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            radius = GetComponent<CapsuleCollider>().radius;
+            angularSpeedInRadians = angularSpeed * Mathf.Deg2Rad;
         }
 
         // Start is called before the first frame update
@@ -52,123 +53,75 @@ namespace HW
         // Update is called once per frame
         void Update()
         {
-            // Get the current rigidbody velocity
-            //currentVelocity = new Vector2(rb.velocity.x, rb.velocity.z);
+            // You can't move
+            if (disabled)
+                return;
 
-            // Init the target velocity
-            Vector2 targetVelocity = Vector2.zero;
+            //
+            // Check movement
+            //
 
-            // Check running input axis
+            // Check if player is running
             CheckIsRunning();
 
-            // If is not aiming player can move
-            if (!aiming)
-            {
-                // Get input and target velocity
-                targetVelocity = ComputeTargetVelocity(GetMovementInput());
-            }
-            else
-            {
-                // Stop moving on aiming
-                targetVelocity = ComputeTargetVelocity(Vector2.zero);
-
-                // Adjust rotation with aiming
-                
-            }
-
-            // Check collision with wall
-            currentVelocity = targetVelocity;
-
+            // Get player movement input 
+            Vector2 input = new Vector2(GetAxisRaw(horizontalAxis), GetAxisRaw(verticalAxis)).normalized; 
             
+            // Set the velocity we want or need to reach
+            targetVelocity = new Vector3(input.x, 0, input.y) * maxSpeed;
 
+            // 
+            // Adjust look at
+            //
+
+            // Get the target direction the player must look at
+            Vector3 targetFwd = targetVelocity.normalized;
+
+            // Get the current direction player is looking at
+            Vector3 currentFwd = transform.forward;
+            if (targetVelocity == Vector3.zero)
+                targetFwd = currentFwd;
+           
+            // Lerp rotation
+            transform.forward = Vector3.RotateTowards(currentFwd, targetFwd, angularSpeedInRadians * Time.deltaTime, 0);
         }
 
         private void FixedUpdate()
         {
-            CheckCollisions();
 
-            // Adjust position
-            rb.velocity = new Vector3(currentVelocity.x, 0, currentVelocity.y);
-            
-            //// Get the current rigidbody velocity
-            //currentVelocity = new Vector2(rb.velocity.x, rb.velocity.z);
+            // Get starting and target speeds
+            float currentSpeed = rb.velocity.magnitude;
+            float targetSpeed = targetVelocity.magnitude;
+
+            // Compute acceleration/deceleration
+            float speedChange = ((currentSpeed < targetSpeed) ? acceleration : deceleration) * Time.fixedDeltaTime;
+
+            // Interpolate speed
+            float speed = Mathf.MoveTowards(currentSpeed, targetSpeed, speedChange);
+
+            // If the target velocity is zero we must keep the old direction to avoid the player to stop instantly
+            Vector3 direction = targetVelocity.normalized;
+            if (targetSpeed == 0)
+                direction = rb.velocity.normalized;
+
+            // Update rigidbody velocity
+            rb.velocity = direction * speed;
         }
 
-
-        // Computes target velocity depending on the input
-        Vector2 ComputeTargetVelocity(Vector2 input)
+        public void SetDisabled(bool value)
         {
-            // The velocity we need or want to reach
-            Vector2 targetVelocity = Vector2.zero;
+            disabled = value;
 
-            if (input != Vector2.zero)
-            {
-                // Normalize input ( this only works for raw axis, 0 or 1 input value ), otherwise we need to clamp
-                input.Normalize();
-
-                // We stopped running some frames ago
-                if (!running && currentVelocity.sqrMagnitude > sqrMaxSpeed)
-                {
-
-                    // Get the current speed
-                    float speed = currentVelocity.magnitude;
-
-                    // Decelerate 
-                    speed -= deceleration * Time.deltaTime;
-
-                    // Too much???
-                    if (speed < maxSpeed)
-                        speed = maxSpeed;
-
-                    // Set new target velocity 
-                    targetVelocity = input * speed;
-                }
-                else
-                {
-                    // Get current speed
-                    float speed = currentVelocity.magnitude;
-
-                    // Accelerate
-                    speed += input.magnitude * acceleration * Time.deltaTime;
-
-                    // Set new target velocity
-                    targetVelocity = input * speed;
-
-                    // Clamp velocity depending on the max speed
-                    if (targetVelocity.sqrMagnitude > sqrMaxSpeed)
-                    {
-                        targetVelocity = targetVelocity.normalized * maxSpeed;
-                    }
-                }
-            }
-            else // No input at all, decelerate
-            {
-                float speed = currentVelocity.magnitude - deceleration * Time.deltaTime;
-                if (speed < 0)
-                    speed = 0;
-
-                targetVelocity = currentVelocity.normalized * speed;
-            }
-
-            return targetVelocity;
+            if(value)
+                Reset();
         }
-
         
-        void CheckCollisions()
-        {
-            RaycastHit info;
-            if (Physics.Raycast(rb.position, currentVelocity.x > 0 ? Vector3.right : Vector3.left, out info, currentVelocity.x * Time.fixedDeltaTime + radius))
-                currentVelocity.x = 0;
-
-            if (Physics.Raycast(rb.position, currentVelocity.y > 0? Vector3.forward : Vector3.back, out info, currentVelocity.y * Time.fixedDeltaTime + radius))
-                currentVelocity.y = 0;
-        }
 
         // Check running input
         void CheckIsRunning()
         {
             // Get input
-            bool axis = GetAxisRaw(sprintAxis);
+            bool axis = GetAxisRaw(sprintAxis) > 0 ? true : false;
 
             // Run
             if(axis)
@@ -193,34 +146,10 @@ namespace HW
         void ResetMaxSpeed()
         {
             maxSpeed = running ? maxRunningSpeed : maxWalkingSpeed;
-            sqrMaxSpeed = maxSpeed * maxSpeed;
-        }
-
-        // Gets horizontal and vertical input axis as 2d vector
-        Vector2 GetMovementInput()
-        {
-            // You can't move
-            if (disabled)
-                return Vector2.zero;
-
-            // No suffix for mouse and keyboard
-            string suffix = "";
-
-            // Are we using the gamepad ?
-            if (JoystickManager.Instance.Connected)
-            {
-                // If so which type ?
-                suffix = JoystickManager.Instance.Suffix;
-            }
-
-            
-
-            // Get input
-            return new Vector2(Input.GetAxisRaw(horizontalAxis + suffix), Input.GetAxisRaw(verticalAxis + suffix));
         }
 
         // Returns true if axis raw is higher than 0, otherwise false
-        bool GetAxisRaw(string axis)
+        float GetAxisRaw(string axis)
         {
             // No suffix for mouse and keyboard
             string suffix = "";
@@ -232,15 +161,15 @@ namespace HW
                 suffix = JoystickManager.Instance.Suffix;
             }
 
-            return Input.GetAxisRaw(axis + suffix) == 1 ? true : false;
+            return Input.GetAxisRaw(axis + suffix);
         }
 
         private void Reset()
         {
             running = false;
             aiming = false;
-            currentVelocity = Vector2.zero;
-          
+            targetVelocity = Vector2.zero;
+           
             ResetMaxSpeed();
         }
     }
