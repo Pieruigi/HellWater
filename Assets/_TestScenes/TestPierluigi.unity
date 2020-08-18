@@ -121,11 +121,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &55616552 stripped
+--- !u!4 &55616549 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7762933675538711261, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
     type: 3}
-  m_PrefabInstance: {fileID: 7762933675552384760}
+  m_PrefabInstance: {fileID: 5468824119535138586}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &65216867
 GameObject:
@@ -1748,18 +1748,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1585807444 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
-    type: 3}
-  m_PrefabInstance: {fileID: 7762933675552384760}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02deadb4a41b486439968aee73a0770f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1639759655
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1895,7 +1883,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sources.Array.data[0].sourceTransform
       value: 
-      objectReference: {fileID: 55616552}
+      objectReference: {fileID: 55616549}
     - target: {fileID: 7342672233657326309, guid: 3d7cef4e2f9cc7f44ab6c8573592b262,
         type: 3}
       propertyPath: m_Name
@@ -2445,17 +2433,13 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: b370e78c13dce354a9ca9d58b9f0518e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a00c454bdeaa47f41a32c19be39f57a1, type: 3}
---- !u!1001 &7762933675552384760
+--- !u!1001 &5468824119535138586
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
-      propertyPath: range
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 7762933675538711259, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
         type: 3}
       propertyPath: m_Name
@@ -2516,11 +2500,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7762933675538711262, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
-        type: 3}
-      propertyPath: fireWeapon
-      value: 
-      objectReference: {fileID: 1585807444}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
 --- !u!1001 &8198422405170258835
