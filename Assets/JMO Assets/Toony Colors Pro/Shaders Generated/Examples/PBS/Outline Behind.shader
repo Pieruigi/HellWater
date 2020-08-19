@@ -1,5 +1,5 @@
 ﻿// Toony Colors Pro+Mobile 2
-// (c) 2014-2019 Jean Moreno
+// (c) 2014-2020 Jean Moreno
 
 
 Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
@@ -31,20 +31,7 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 		_SColor("Shadow Color", Color) = (0.195,0.195,0.195,1.0)
 
 	[Header(Ramp Shading)]
-		_RampThreshold("Threshold", Range(0,1)) = 0.5
-		_RampSmooth("Main Light Smoothing", Range(0,1)) = 0.2
-		_RampSmoothAdd("Other Lights Smoothing", Range(0,1)) = 0.75
-
-	[Header(Stylized Specular)]
-		_SpecSmooth("Specular Smoothing", Range(0,1)) = 1.0
-		_SpecBlend("Specular Blend", Range(0,1)) = 1.0
-
-
-	[Header(Stylized Fresnel)]
-		[PowerSlider(3)] _RimStrength("Strength", Range(0, 2)) = 0.5
-		_RimMin("Min", Range(0, 1)) = 0.6
-		_RimMax("Max", Range(0, 1)) = 0.85
-
+		[NoScaleOffset] [TCP2Gradient] _Ramp ("Ramp Texture", 2D) = "gray" {}
 
 	[Header(Outline)]
 		//OUTLINE
@@ -67,7 +54,6 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 
 		//This property will be ignored and will draw the custom normals GUI instead
 		[TCP2OutlineNormalsGUI] __outline_gui_dummy__ ("_unused_", Float) = 0
-			_StencilRef ("Stencil Outline Group", Range(0,255)) = 1
 
 		//Avoid compile error if the properties are ending with a drawer
 		[HideInInspector] __dummy__ ("__unused__", Float) = 0
@@ -124,7 +110,7 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 		float _TexLod;
 	#endif
 
-		#define OUTLINE_WIDTH _Outline
+		#define OUTLINE_WIDTH 0.0
 
 		v2f TCP2_Outline_Vert(a2v v)
 		{
@@ -135,6 +121,15 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 			UNITY_SETUP_INSTANCE_ID(v);
 	#endif
 
+
+			float3 objSpaceLight = mul(unity_WorldToObject, _WorldSpaceLightPos0).xyz;
+	#ifdef TCP2_OUTLINE_CONST_SIZE
+			//Camera-independent outline size
+			float dist = distance(_WorldSpaceCameraPos, mul(unity_ObjectToWorld, v.vertex));
+			v.vertex.xyz += objSpaceLight.xyz * 0.01 * _Outline * dist;
+	#else
+			v.vertex.xyz += objSpaceLight.xyz * 0.01 * _Outline;
+	#endif
 
 	#if TCP2_ZSMOOTH_ON
 			float4 pos = float4(UnityObjectToViewPos(v.vertex), 1.0);
@@ -168,13 +163,7 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 			normal.z = -_ZSmooth;
 	#endif
 
-	#ifdef TCP2_OUTLINE_CONST_SIZE
-			//Camera-independent outline size
-			float dist = distance(mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 0)).xyz, v.vertex.xyz);
-			#define SIZE	dist
-	#else
-			#define SIZE	1.0
-	#endif
+			#define SIZE	0.0
 
 	#if TCP2_ZSMOOTH_ON
 			o.pos = mul(UNITY_MATRIX_P, pos + float4(normalize(normal),0) * OUTLINE_WIDTH * 0.01 * SIZE);
@@ -206,12 +195,31 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 		// OUTLINE INCLUDE END
 		//================================================================
 
-
-		Stencil
+		//Outline
+		Pass
 		{
-			Ref [_StencilRef]
-			Comp Always
-			Pass Replace
+			Cull Off
+			ZWrite Off
+			Offset [_Offset1],[_Offset2]
+
+			Tags { "LightMode"="ForwardBase" "Queue"="Transparent" "IgnoreProjectors"="True" }
+
+			CGPROGRAM
+
+			#pragma vertex TCP2_Outline_Vert
+			#pragma fragment TCP2_Outline_Frag
+
+			#pragma multi_compile TCP2_NONE TCP2_ZSMOOTH_ON
+			#pragma multi_compile TCP2_NONE TCP2_OUTLINE_CONST_SIZE
+			#pragma multi_compile TCP2_NONE TCP2_COLORS_AS_NORMALS TCP2_TANGENT_AS_NORMALS TCP2_UV2_AS_NORMALS
+			#pragma multi_compile TCP2_NONE TCP2_OUTLINE_TEXTURED
+			#pragma multi_compile_instancing
+
+			#pragma multi_compile EXCLUDE_TCP2_MAIN_PASS
+
+			#pragma target 3.0
+
+			ENDCG
 		}
 		Tags { "RenderType"="Opaque" "PerformanceChecks"="False" }
 
@@ -297,39 +305,6 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 		}
 		ENDCG
 
-
-		//Outline
-		Pass
-		{
-			Cull Front
-			Offset [_Offset1],[_Offset2]
-
-			Tags { "LightMode"="ForwardBase" "IgnoreProjectors"="True" }
-
-			Stencil
-			{
-				Ref [_StencilRef]
-				Comp NotEqual
-				Pass Keep
-			}
-
-			CGPROGRAM
-
-			#pragma vertex TCP2_Outline_Vert
-			#pragma fragment TCP2_Outline_Frag
-
-			#pragma multi_compile TCP2_NONE TCP2_ZSMOOTH_ON
-			#pragma multi_compile TCP2_NONE TCP2_OUTLINE_CONST_SIZE
-			#pragma multi_compile TCP2_NONE TCP2_COLORS_AS_NORMALS TCP2_TANGENT_AS_NORMALS TCP2_UV2_AS_NORMALS
-			#pragma multi_compile TCP2_NONE TCP2_OUTLINE_TEXTURED			
-			#pragma multi_compile_instancing
-
-			#pragma multi_compile EXCLUDE_TCP2_MAIN_PASS
-
-			#pragma target 3.0
-
-			ENDCG
-		}
 	}
 
 	CGINCLUDE
@@ -376,11 +351,6 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 		fixed _RampThreshold;
 		fixed _RampSmooth;
 		fixed _RampSmoothAdd;
-		fixed _SpecSmooth;
-		fixed _SpecBlend;
-		fixed _RimStrength;
-		fixed _RimMin;
-		fixed _RimMax;
 
 		//================================================================================================================================
 		// LIGHTING / BRDF
@@ -391,20 +361,8 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 		inline half WrapRampNL(half nl, fixed threshold, fixed smoothness)
 		{
 			nl = saturate(nl);
-			nl = smoothstep(threshold - smoothness*0.5, threshold + smoothness*0.5, nl);
+			nl = tex2D(_Ramp, nl.xx).r;
 			return nl;
-		}
-
-		inline half StylizedSpecular(half specularTerm, fixed specSmoothness)
-		{
-			return smoothstep(specSmoothness*0.5, 0.5 + specSmoothness*0.5, specularTerm);
-		}
-
-		inline half3 StylizedFresnel(half nv, half roughness, UnityLight light, half3 normal, fixed rimMin, fixed rimMax, fixed rimStrength)
-		{
-			half rim = 1-nv;
-			rim = smoothstep(rimMin, rimMax, rim) * rimStrength * saturate(1.33-roughness);
-			return rim * saturate(dot(normal, light.dir)) * light.color;
 		}
 
 		//-------------------------------------------------------------------------------------
@@ -415,7 +373,7 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 		{
 			half2 mg;
 			mg.r = _Metallic;
-			mg.g = _Glossiness;
+			mg.g = mainTexAlpha * _Glossiness;
 			return mg;
 		}
 
@@ -497,10 +455,6 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 			half D = NDFBlinnPhongNormalizedTerm (nh, PerceptualRoughnessToSpecPower(perceptualRoughness));
 	#endif
 			half specularTerm = V*D * UNITY_PI; // Torrance-Sparrow model, Fresnel is applied later
-	//TCP2 Stylized Specular
-			half r = sqrt(roughness)*0.85;
-			r += 1e-4h;
-			specularTerm = lerp(specularTerm, StylizedSpecular(specularTerm, _SpecSmooth) * (1/r), _SpecBlend);
 	#ifdef UNITY_COLORSPACE_GAMMA
 			specularTerm = sqrt(max(1e-4h, specularTerm));
 	#endif
@@ -542,8 +496,6 @@ Shader "Toony Colors Pro 2/Examples/PBS/Outline Behind"
 							+ surfaceReduction * gi.specular
 							* FresnelLerp (specColor, grazingTerm, nv);
 
-			//TCP2 Enhanced Rim/Fresnel
-			color += StylizedFresnel(nv, roughness, light, normal, _RimMin, _RimMax, _RimStrength);
 			return half4(color, 1);
 		}
 
