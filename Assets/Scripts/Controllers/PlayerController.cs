@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HW.Interfaces;
+using UnityEngine.Events;
 
 namespace HW
 {
     public class PlayerController : MonoBehaviour
     {
+        public UnityAction OnShoot;
+        public UnityAction OnChargeAttack;
+        public UnityAction OnAttack;
+        public UnityAction OnIsOutOfAmmo;
+        public UnityAction OnReload;
+
         [SerializeField]
         float maxWalkingSpeed;
 
@@ -36,9 +43,17 @@ namespace HW
 
         #region FIGHTING
         bool aiming = false;
+        bool reloading = false;
+        bool shooting = false;
+        bool chargingAttack = false; // Charging melee attack
+        bool attacking = false; // Performing attack with melee weapon
+        bool attackCharged = false;
 
         [SerializeField]
         FireWeapon fireWeapon;
+
+        [SerializeField]
+        MeleeWeapon meleeWeapon;
 
         //Transform desiredTarget;
         Transform currentTarget;
@@ -49,11 +64,14 @@ namespace HW
         string verticalAxis = "Vertical";
         string sprintAxis = "Run";
         string aimAxis = "Aim";
+        string reloadAxis = "Reload";
+        string shootAxis = "Shoot";
         #endregion
 
         Rigidbody rb;
         bool disabled = false; // Is this controller disabled ?
         float sphereCastRadius = 0.5f;
+        bool qteAction = false;
 
         #region NATIVE
         private void Awake()
@@ -71,90 +89,14 @@ namespace HW
         // Update is called once per frame
         void Update()
         {
-            // You can't move
-            if (disabled)
+            // You can't do anything else while you are doing one of these actions
+            if (disabled || reloading || shooting || attacking)
                 return;
 
-            // Check if player is aiming
-            CheckIsAiming();
-
-            if (!aiming)
-            {
-                //
-                // Check movement
-                //
-
-                // Check if player is running
-                CheckIsRunning();
-
-                // Get player movement input 
-                Vector2 input = new Vector2(GetAxisRaw(horizontalAxis), GetAxisRaw(verticalAxis)).normalized;
-
-                // Set the velocity we want or need to reach
-                desiredVelocity = new Vector3(input.x, 0, input.y) * maxSpeed;
-
-                // 
-                // Adjust look at
-                //
-
-                // Get the target direction the player must look at
-                Vector3 desiredFwd = desiredVelocity.normalized;
-
-                // Get the current direction player is looking at
-                Vector3 currentFwd = transform.forward;
-                if (desiredVelocity == Vector3.zero)
-                    desiredFwd = currentFwd;
-
-                // Lerp rotation
-                transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
-            }
-            else // Is aiming
-            {
-                // Get targets inside the weapon range which are not hidden by any obstacle
-                List<Transform> targets = GetAvailableTargets(fireWeapon.Range);
-
-                // Clear current target if not longer available
-                if (currentTarget && !targets.Contains(currentTarget))
-                    currentTarget = null;
-
-
-                // If there no target yet then set the closest one if available
-                if (!currentTarget)
-                {
-                    currentTarget = GetClosestTarget(targets);
-                }
-                else
-                {
-                    // Get the aiming direction
-                    Vector3 direction = new Vector3(GetAxisRaw(horizontalAxis), 0, GetAxisRaw(verticalAxis)).normalized;
-
-                    // Get the target the player is aiming or null
-                    Transform newTarget = GetNewTarget(targets, direction, fireWeapon.Range);
-                    if (newTarget && newTarget != currentTarget)
-                        currentTarget = newTarget;
-                }
-                    
-
-                // If target exists 
-                if (currentTarget)
-                {
-                    // Get the target direction the player must look at
-                    Vector3 desiredFwd = (currentTarget.position - transform.position).normalized;
-
-                    // Get the current direction player is looking at
-                    Vector3 currentFwd = transform.forward;
-                    
-                    // Lerp rotation
-                    transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
-                }
-                
-
-                // Just debug
-                DebugTargets(targets);
-
-                Debug.Log("CurrentTarget:" + currentTarget);
-            }
-
+            if (qteAction)
+                QteAction();
+            else
+                RealtimeAction();
            
         }
 
@@ -198,16 +140,79 @@ namespace HW
                 running = false;
                 desiredVelocity = Vector3.zero;
                 ResetMaxSpeed();
+
+                // Show fire weapon
+                ShowFireWeapon();
             }
             else
             {
                 currentTarget = null;
+
+                // Hide weapon
+                HideWeapon();
             }
         }
+
+        // Equips ands set visible fire or melee weapon
+        public void EquipWeapon(Weapon weapon)
+        {
+            // Is it a fire weapon ?
+            if (weapon.GetType() == typeof(FireWeapon))
+            {
+                // Switching
+                if (fireWeapon && fireWeapon != weapon)
+                    fireWeapon.SetVisible(false);
+
+                // No weapon equipped
+                if (!fireWeapon)
+                    fireWeapon = weapon as FireWeapon;
+
+                // Ok let's see this weapon
+                ShowFireWeapon();
+            }
+            else // Is melee ( we only have bat )
+            {
+                // Not equipped yet
+                if (!meleeWeapon)
+                    meleeWeapon = weapon as MeleeWeapon;
+
+                // Show melee
+                ShowMeleeWeapon();
+            }
+        }
+
 
         #endregion
 
         #region PRIVATE
+        // Show current equipped fire weapon
+        void ShowFireWeapon()
+        {
+            HideWeapon();
+            
+            if(fireWeapon)
+                fireWeapon.SetVisible(true);
+        }
+
+        // Show melee weapon
+        void ShowMeleeWeapon()
+        {
+            HideWeapon();
+
+            if (meleeWeapon)
+                meleeWeapon.SetVisible(true);
+        }
+
+        // Hide any weapon the player is holding 
+        void HideWeapon()
+        {
+            if (fireWeapon && fireWeapon.IsVisible())
+                fireWeapon.SetVisible(false);
+
+            if (meleeWeapon && meleeWeapon.IsVisible())
+                meleeWeapon.SetVisible(false);
+        }
+
         // Check running input
         void CheckIsRunning()
         {
@@ -235,15 +240,115 @@ namespace HW
 
         void CheckIsAiming()
         {
+            // Aiming only works with fire weapons
+            if (!fireWeapon)
+            {
+                SetAiming(false);
+                return;
+            }
+                
+            // Check input
             SetAiming(GetAxisRaw(aimAxis) > 0 ? true : false);
         }
 
-       
+       void CheckIsReloading()
+        {
+            // Reloading only works on fire weapons
+            if (!fireWeapon)
+                return;
+
+            if (fireWeapon.IsFull())
+                return;
+
+            // Check button
+            if (GetAxisRaw(reloadAxis) > 0)
+            {
+                TryReload();
+            }
+                
+        }
 
         // Max speed will change depending on whether the player is running or not
         void ResetMaxSpeed()
         {
             maxSpeed = running ? maxRunningSpeed : maxWalkingSpeed;
+        }
+
+        void TryReload()
+        {
+            if (!fireWeapon)
+                return;
+
+            if(fireWeapon.IsOutOfAmmo())
+            {
+                OnIsOutOfAmmo?.Invoke();
+                return;
+            }
+
+            // If reload is needed then reload your weapon
+            if (fireWeapon.Reload())
+            {
+                // Reset all
+                Reset();
+
+                // Set reloading
+                reloading = true;
+
+                // Event
+                OnReload?.Invoke();
+            }
+           
+        }
+
+        void TryShoot()
+        {
+            if (!fireWeapon)
+                return;
+
+            // Set shooting flag
+            shooting = true;
+
+            // Shoot
+            if (fireWeapon.Shoot())
+                OnShoot?.Invoke();
+        }
+
+        void TryChargeAttack()
+        {
+            if (!meleeWeapon)
+                return;
+
+            // Set flags
+            chargingAttack = true;
+            attackCharged = false;
+
+            // Event
+            OnChargeAttack?.Invoke();
+        }
+
+        void TryAttack()
+        {
+           
+            if (!meleeWeapon)
+                return;
+
+            // Check is attack will succeed
+            if (attackCharged)
+            {
+                Debug.Log("Attack OK");
+            }
+            else
+            {
+                Debug.Log("Attack KO");
+            }
+
+            // Stop charging
+            chargingAttack = false;
+            attackCharged = false;
+
+            // Start attacking ( even if attack fails )
+            attacking = true;
+            
         }
 
         // Returns true if axis raw is higher than 0, otherwise false
@@ -337,13 +442,185 @@ namespace HW
         {
             running = false;
             aiming = false;
+            reloading = false;
+            shooting = false;
+            chargingAttack = false;
+            attacking = false;
+            attackCharged = false;
+
             desiredVelocity = Vector2.zero;
-            
+
             currentTarget = null;
-           
+
             ResetMaxSpeed();
         }
+
+        void RealtimeAction()
+        {
+            // Melee attack ( we must check button release )
+            if (chargingAttack)
+            {
+                if(GetAxisRaw(shootAxis) == 0)
+                {
+                    if (chargingAttack)
+                    {
+                        //chargingAttack = false;
+                        TryAttack();
+                    }
+                }
+            }
+
+            // Switch fire weapon
+            //CheckIsSwitchingWeapon();
+
+            // Check if the equipped fire weapon must be reloaded
+            CheckIsReloading();
+
+            // Check if player is aiming
+            CheckIsAiming();
+
+            if (!aiming)
+            {
+                //
+                // Check movement
+                //
+
+                // Check if player is running
+                CheckIsRunning();
+
+                // Get player movement input 
+                Vector2 input = new Vector2(GetAxisRaw(horizontalAxis), GetAxisRaw(verticalAxis)).normalized;
+
+                // Set the velocity we want or need to reach
+                desiredVelocity = new Vector3(input.x, 0, input.y) * maxSpeed;
+
+                // 
+                // Adjust look at
+                //
+
+                // Get the target direction the player must look at
+                Vector3 desiredFwd = desiredVelocity.normalized;
+
+                // Get the current direction player is looking at
+                Vector3 currentFwd = transform.forward;
+                if (desiredVelocity == Vector3.zero)
+                    desiredFwd = currentFwd;
+
+                // Lerp rotation
+                transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
+
+                // 
+                // Melee attack
+                //
+
+                // If magazine is not empty then shoot
+                if (GetAxisRaw(shootAxis) > 0)
+                {
+                    if (meleeWeapon)
+                        TryChargeAttack();
+                }
+            }
+            else // Is aiming
+            {
+                //
+                // Get target
+                //
+
+                // Get targets inside the weapon range which are not hidden by any obstacle
+                List<Transform> targets = GetAvailableTargets(fireWeapon.Range);
+
+                // Clear current target if not longer available
+                if (currentTarget && !targets.Contains(currentTarget))
+                    currentTarget = null;
+
+
+                // If there no target yet then set the closest one if available
+                if (!currentTarget)
+                {
+                    currentTarget = GetClosestTarget(targets);
+                }
+                else
+                {
+                    // Get the aiming direction
+                    Vector3 direction = new Vector3(GetAxisRaw(horizontalAxis), 0, GetAxisRaw(verticalAxis)).normalized;
+
+                    // Get the target the player is aiming or null
+                    Transform newTarget = GetNewTarget(targets, direction, fireWeapon.Range);
+                    if (newTarget && newTarget != currentTarget)
+                        currentTarget = newTarget;
+                }
+
+
+                // If target exists 
+                if (currentTarget)
+                {
+                    // Get the target direction the player must look at
+                    Vector3 desiredFwd = (currentTarget.position - transform.position).normalized;
+
+                    // Get the current direction player is looking at
+                    Vector3 currentFwd = transform.forward;
+
+                    // Lerp rotation
+                    transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
+                }
+
+                // Just debug
+                DebugTargets(targets);
+
+                Debug.Log("CurrentTarget:" + currentTarget);
+
+                // 
+                // Shoot
+                //
+
+                // If magazine is not empty then shoot
+                if (GetAxisRaw(shootAxis) > 0)
+                {
+                    if (!fireWeapon.IsEmpty())
+                    {
+                        TryShoot();
+                    }
+                    else
+                    {
+                        // Try to reload
+                        TryReload();
+                    }
+                }
+
+            }
+
+        }
+
+        void QteAction()
+        {
+
+        }
+
+
+
         #endregion
+
+        #region ANIMATION EVENTS
+        // Sent by the melee attack animation
+        public void AttackChargingStarted()
+        {
+            attackCharged = true;
+        }
+
+        // Sent by the melee attack animation
+        public void AttackChargingCompleted()
+        {
+            TryAttack();
+        }
+
+        // Sent by the melee attack animation
+        public void AttackCompleted()
+        {
+            attacking = false;
+        }
+        #endregion
+
+
 
         void DebugTargets(List<Transform> targets)
         {

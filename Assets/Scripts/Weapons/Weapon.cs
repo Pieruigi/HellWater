@@ -20,16 +20,29 @@ namespace HW
             get { return range; }
         }
 
+        
+
         // Start is called before the first frame update
         void Start()
         {
-
+            
+            SetVisible(false);
         }
 
         // Update is called once per frame
         void Update()
         {
 
+        }
+
+        public void SetVisible(bool value)
+        {
+            transform.GetChild(0).gameObject.SetActive(value);
+        }
+
+        public bool IsVisible()
+        {
+            return transform.GetChild(0).gameObject.activeSelf;
         }
     }
 

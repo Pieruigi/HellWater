@@ -334,6 +334,7 @@ GameObject:
   m_Component:
   - component: {fileID: 498008317}
   - component: {fileID: 498008316}
+  - component: {fileID: 498008318}
   m_Layer: 0
   m_Name: _TestingModule
   m_TagString: Untagged
@@ -368,6 +369,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &498008318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498008315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5677e4c38d9daa849afbf5ae091ad1af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireWeapon: {fileID: 2131841206}
+  meleeWeapon: {fileID: 0}
 --- !u!1 &533007221
 GameObject:
   m_ObjectHideFlags: 0
@@ -1889,6 +1904,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 7342672233657326311, guid: 3d7cef4e2f9cc7f44ab6c8573592b262,
+        type: 3}
+      propertyPath: orthographic size
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d7cef4e2f9cc7f44ab6c8573592b262, type: 3}
 --- !u!1 &1848830137
@@ -2334,6 +2354,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2131841206 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
+    type: 3}
+  m_PrefabInstance: {fileID: 5468824119535138586}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02deadb4a41b486439968aee73a0770f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2141740725
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2440,6 +2472,28 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1585807442, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
+      propertyPath: maxMagazineAmmo
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
+      propertyPath: leftAmmo
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4090613823765487114, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4090613825347255297, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7762933675538711259, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
         type: 3}
       propertyPath: m_Name
