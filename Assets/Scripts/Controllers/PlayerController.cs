@@ -9,10 +9,15 @@ namespace HW
     public class PlayerController : MonoBehaviour
     {
         public UnityAction OnShoot;
+        public UnityAction OnStartAiming;
+        public UnityAction OnStopAiming;
         public UnityAction OnChargeAttack;
         public UnityAction OnAttack;
         public UnityAction OnIsOutOfAmmo;
         public UnityAction OnReload;
+        public UnityAction<Weapon> OnSetCurrentWeapon;
+        public UnityAction OnResetCurrentWeapon;
+
 
         [SerializeField]
         float maxWalkingSpeed;
@@ -48,13 +53,20 @@ namespace HW
         bool chargingAttack = false; // Charging melee attack
         bool attacking = false; // Performing attack with melee weapon
         bool attackCharged = false;
+        float toTargetSignedAngleRotation = 0;
+        public float ToTargetSignedAngleRotation
+        {
+            get { return toTargetSignedAngleRotation; }
+        }
 
-        [SerializeField]
         FireWeapon fireWeapon;
-
-        [SerializeField]
         MeleeWeapon meleeWeapon;
-
+        Weapon currentWeapon;
+        public Weapon CurrentWeapon
+        {
+            get { return currentWeapon; }
+        }
+       
         //Transform desiredTarget;
         Transform currentTarget;
         #endregion
@@ -72,6 +84,7 @@ namespace HW
         bool disabled = false; // Is this controller disabled ?
         float sphereCastRadius = 0.5f;
         bool qteAction = false;
+        
 
         #region NATIVE
         private void Awake()
@@ -124,6 +137,16 @@ namespace HW
         #endregion
 
         #region PUBLIC
+        public float GetCurrentSpeed()
+        {
+            return rb.velocity.magnitude;
+        }
+
+        public float GetMaximumSpeed()
+        {
+            return maxRunningSpeed;
+        }
+
         public void SetDisabled(bool value)
         {
             disabled = value;
@@ -134,7 +157,7 @@ namespace HW
         public void SetAiming(bool value)
         {
             aiming = value;
-
+            toTargetSignedAngleRotation = 0;
             if (aiming)
             {
                 running = false;
@@ -142,18 +165,25 @@ namespace HW
                 ResetMaxSpeed();
 
                 // Show fire weapon
-                ShowFireWeapon();
+                //ShowFireWeapon();
+                SetCurrentWeapon(fireWeapon);
+
+                OnStartAiming?.Invoke();
             }
             else
             {
                 currentTarget = null;
+               
 
                 // Hide weapon
-                HideWeapon();
+                //HideWeapon();
+                ResetCurrentWeapon();
+
+                OnStopAiming?.Invoke();
             }
         }
 
-        // Equips ands set visible fire or melee weapon
+        // Equips and holds fire or melee weapon
         public void EquipWeapon(Weapon weapon)
         {
             // Is it a fire weapon ?
@@ -168,7 +198,8 @@ namespace HW
                     fireWeapon = weapon as FireWeapon;
 
                 // Ok let's see this weapon
-                ShowFireWeapon();
+                //ShowFireWeapon();
+                SetCurrentWeapon(fireWeapon);
             }
             else // Is melee ( we only have bat )
             {
@@ -177,41 +208,37 @@ namespace HW
                     meleeWeapon = weapon as MeleeWeapon;
 
                 // Show melee
-                ShowMeleeWeapon();
+                //ShowMeleeWeapon();
+                SetCurrentWeapon(meleeWeapon);
             }
         }
-
 
         #endregion
 
         #region PRIVATE
-        // Show current equipped fire weapon
-        void ShowFireWeapon()
+        void SetCurrentWeapon(Weapon weapon)
         {
-            HideWeapon();
-            
-            if(fireWeapon)
-                fireWeapon.SetVisible(true);
+            if (currentWeapon != null)
+                currentWeapon.SetVisible(false);
+
+            currentWeapon = weapon;
+            currentWeapon.SetVisible(true);
+
+            OnSetCurrentWeapon?.Invoke(weapon);
         }
 
-        // Show melee weapon
-        void ShowMeleeWeapon()
+        void ResetCurrentWeapon()
         {
-            HideWeapon();
+            if (!currentWeapon)
+                return;
 
-            if (meleeWeapon)
-                meleeWeapon.SetVisible(true);
+            currentWeapon.SetVisible(false);
+            currentWeapon = null;
+
+            OnResetCurrentWeapon?.Invoke();
         }
 
-        // Hide any weapon the player is holding 
-        void HideWeapon()
-        {
-            if (fireWeapon && fireWeapon.IsVisible())
-                fireWeapon.SetVisible(false);
-
-            if (meleeWeapon && meleeWeapon.IsVisible())
-                meleeWeapon.SetVisible(false);
-        }
+      
 
         // Check running input
         void CheckIsRunning()
@@ -305,12 +332,15 @@ namespace HW
             if (!fireWeapon)
                 return;
 
-            // Set shooting flag
-            shooting = true;
-
             // Shoot
             if (fireWeapon.Shoot())
+            {
+                // Set shooting flag
+                shooting = true;
+
                 OnShoot?.Invoke();
+            }
+                
         }
 
         void TryChargeAttack()
@@ -447,6 +477,7 @@ namespace HW
             chargingAttack = false;
             attacking = false;
             attackCharged = false;
+            toTargetSignedAngleRotation = 0;
 
             desiredVelocity = Vector2.zero;
 
@@ -562,12 +593,18 @@ namespace HW
 
                     // Lerp rotation
                     transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
+
+                    // Get the rotation direction ( 0: no rotation; -1: left; 1: right )
+                    toTargetSignedAngleRotation = Vector3.SignedAngle(currentFwd, desiredFwd, Vector3.up);
+
+                    
+                    //Debug.Log("toTargetSignedAngleRotation:" + toTargetSignedAngleRotation);
                 }
 
                 // Just debug
-                DebugTargets(targets);
+                //DebugTargets(targets);
 
-                Debug.Log("CurrentTarget:" + currentTarget);
+                //Debug.Log("CurrentTarget:" + currentTarget);
 
                 // 
                 // Shoot
@@ -600,6 +637,10 @@ namespace HW
 
         #endregion
 
+        #region ANIMATION CONTROLLER
+
+        #endregion
+
         #region ANIMATION EVENTS
         // Sent by the melee attack animation
         public void AttackChargingStarted()
@@ -617,6 +658,12 @@ namespace HW
         public void AttackCompleted()
         {
             attacking = false;
+        }
+
+        public void ShootCompleted()
+        {
+            shooting = false;
+            Debug.Log("ShootCompleted");
         }
         #endregion
 

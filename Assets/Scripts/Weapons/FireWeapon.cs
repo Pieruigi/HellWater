@@ -6,6 +6,7 @@ namespace HW
 {
     public class FireWeapon : Weapon
     {
+        [Header("Stats")]
         [SerializeField]
         int maxMagazineAmmo;
  
