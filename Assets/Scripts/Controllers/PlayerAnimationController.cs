@@ -15,6 +15,7 @@ namespace HW
         string paramAiming = "Aiming";
         string paramAimingDirection = "AimingDirection";
         string paramShoot = "Shoot";
+        string paramReload = "Reload";
         #endregion
 
         private void Awake()
@@ -28,6 +29,7 @@ namespace HW
             playerController.OnStartAiming += HandleOnStartAiming;
             playerController.OnStopAiming += HandleOnStopAiming;
             playerController.OnShoot += HandleOnShoot;
+            playerController.OnReload += HandleOnReload;
 
             animator = GetComponentInChildren<Animator>();
         }
@@ -83,7 +85,11 @@ namespace HW
         void HandleOnShoot()
         {
             animator.SetTrigger(paramShoot);
-            
+        }
+
+        void HandleOnReload()
+        {
+            animator.SetTrigger(paramReload);
         }
     }
 

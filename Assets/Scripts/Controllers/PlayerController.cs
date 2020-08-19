@@ -309,11 +309,9 @@ namespace HW
             if(fireWeapon.IsOutOfAmmo())
             {
                 OnIsOutOfAmmo?.Invoke();
-                return;
+            
             }
-
-            // If reload is needed then reload your weapon
-            if (fireWeapon.Reload())
+            else
             {
                 // Reset all
                 Reset();
@@ -324,6 +322,7 @@ namespace HW
                 // Event
                 OnReload?.Invoke();
             }
+            
            
         }
 
@@ -664,6 +663,14 @@ namespace HW
         {
             shooting = false;
             Debug.Log("ShootCompleted");
+        }
+
+        public void ReloadCompleted()
+        {
+            Debug.Log("ReloadCompleted");
+            reloading = false;
+
+            fireWeapon.Reload();
         }
         #endregion
 
