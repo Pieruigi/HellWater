@@ -174,43 +174,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &180537296 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7762933675538711259, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
-    type: 3}
-  m_PrefabInstance: {fileID: 5468824119535138586}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &180537301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180537296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8ddacd5b6466ec40aa9e53524116cce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!95 &180537302
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180537296}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3d108426ef0a3f5498c406cf12060ccb, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!4 &239002908 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7948300309774694532, guid: 91accb543933fd04da382883ab555045,
@@ -2397,7 +2360,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5468824119535138586}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5468824119535138587}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02deadb4a41b486439968aee73a0770f, type: 3}
@@ -2509,40 +2472,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1585807442, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
-      propertyPath: maxMagazineAmmo
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
-      propertyPath: leftAmmo
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
-      propertyPath: animationId
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
-      propertyPath: damageAmount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
-      propertyPath: stunnedEffect
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090613823765487114, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090613825347255297, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7762933675538711259, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
         type: 3}
       propertyPath: m_Name
@@ -2603,11 +2532,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3464814060110426152, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
+    - {fileID: 1101272000445104753, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
 --- !u!1 &5468824119535138587 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1585807442, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
+  m_CorrespondingSourceObject: {fileID: 4442371842549765560, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
     type: 3}
   m_PrefabInstance: {fileID: 5468824119535138586}
   m_PrefabAsset: {fileID: 0}
@@ -2620,9 +2551,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5468824119535138587}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05dbfc4cfe3086843ac7872c7be4f55c, type: 3}
+  m_Script: {fileID: 11500000, guid: 033ff626f8080044780d8e6b281a22d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageAmount: 0
+  stunnedEffect: 0
+  hitPhysicalReaction: 0
+  range: 0
+  animationId: 0
 --- !u!1001 &8198422405170258835
 PrefabInstance:
   m_ObjectHideFlags: 0

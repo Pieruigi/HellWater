@@ -8,18 +8,20 @@ namespace HW
 {
     public class PlayerController : MonoBehaviour, IHitable
     {
+        #region ACTIONS
         public UnityAction OnShoot;
         public UnityAction OnStartAiming;
         public UnityAction OnStopAiming;
         public UnityAction OnChargeAttack;
-        public UnityAction OnAttack;
+        public UnityAction<bool> OnAttack;
         public UnityAction OnIsOutOfAmmo;
         public UnityAction OnReload;
         public UnityAction<Weapon> OnSetCurrentWeapon;
         public UnityAction OnResetCurrentWeapon;
         public UnityAction<HitInfo> OnHit;
+        #endregion
 
-
+        #region SERIALIZED FIELDS
         [SerializeField]
         float maxWalkingSpeed;
 
@@ -34,9 +36,9 @@ namespace HW
 
         [SerializeField]
         float angularSpeed;
-        float angularSpeedInRadians;
+        #endregion
 
-        #region LOCOMOTION
+        #region LOCOMOTION FIELDS
         // The max speed the player can reach depending on whether is running or not
         float maxSpeed;
 
@@ -47,14 +49,18 @@ namespace HW
         Vector3 desiredVelocity;
         #endregion
 
-        #region FIGHTING
+        #region FIGHTING FIELDS
         bool aiming = false;
         bool reloading = false;
         bool shooting = false;
         bool chargingAttack = false; // Charging melee attack
         bool attacking = false; // Performing attack with melee weapon
         bool attackCharged = false;
+        bool attackFailed = false;
         bool hit = false;
+
+        // Health 
+        Health health;
 
         float toTargetSignedAngleRotation = 0;
         public float ToTargetSignedAngleRotation
@@ -74,7 +80,7 @@ namespace HW
         Transform currentTarget;
         #endregion
 
-        #region AXIS
+        #region CONTROLLER AXIS 
         string horizontalAxis = "Horizontal";
         string verticalAxis = "Vertical";
         string sprintAxis = "Run";
@@ -83,17 +89,20 @@ namespace HW
         string shootAxis = "Shoot";
         #endregion
 
+        #region MISC FIELDS
         Rigidbody rb;
         bool disabled = false; // Is this controller disabled ?
-        float sphereCastRadius = 0.5f;
+        float sphereCastRadius = 0.5f; // Used to cast targets
         bool qteAction = false;
-        
+        float angularSpeedInRadians;
+        #endregion
 
-        #region NATIVE
+        #region NATIVE METHODS
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
             angularSpeedInRadians = angularSpeed * Mathf.Deg2Rad;
+            health = GetComponent<Health>();
         }
 
         // Start is called before the first frame update
@@ -106,7 +115,7 @@ namespace HW
         void Update()
         {
             // You can't do anything else while you are doing one of these actions
-            if (disabled || reloading || shooting || attacking)
+            if (disabled || reloading || shooting || attacking || hit)
                 return;
 
             if (qteAction)
@@ -146,12 +155,19 @@ namespace HW
                 hit = true;
 
             // Apply damage
+            health.Damage(hitInfo.DamageAmount);
 
+            // Hit event
             OnHit?.Invoke(hitInfo);
         }
         #endregion
 
         #region PUBLIC
+        public bool IsDead()
+        {
+            return health.CurrentHealth == 0;
+        }
+
         public float GetCurrentSpeed()
         {
             return rb.velocity.magnitude;
@@ -380,20 +396,31 @@ namespace HW
             if (attackCharged)
             {
                 Debug.Log("Attack OK");
+                // Start attacking if attack succeeds
+                attacking = true;
+                OnAttack?.Invoke(true);
             }
             else
             {
                 Debug.Log("Attack KO");
+                attacking = false; // Be sure
+                attackFailed = true;
+                StartCoroutine(AttackFailedCooldown());
+                OnAttack?.Invoke(false);
             }
 
             // Stop charging
             chargingAttack = false;
             attackCharged = false;
 
-            // Start attacking ( even if attack fails )
-            attacking = true;
             
         }
+
+        IEnumerator AttackFailedCooldown()
+        {
+            yield return new WaitForSeconds(0.5f);
+            attackFailed = false;
+        } 
 
         // Returns true if axis raw is higher than 0, otherwise false
         float GetAxisRaw(string axis)
@@ -508,12 +535,11 @@ namespace HW
             {
                 if(GetAxisRaw(shootAxis) == 0)
                 {
-                    if (chargingAttack)
-                    {
-                        //chargingAttack = false;
-                        TryAttack();
-                    }
+                    
+                    TryAttack();
                 }
+                // We can't move while charging melee attack
+                return;
             }
 
             // Switch fire weapon
@@ -562,8 +588,12 @@ namespace HW
                 // If magazine is not empty then shoot
                 if (GetAxisRaw(shootAxis) > 0)
                 {
-                    if (meleeWeapon)
+                    if (meleeWeapon && !attackFailed)
+                    {
+                        desiredVelocity = Vector3.zero;
                         TryChargeAttack();
+                    }
+                        
                 }
             }
             else // Is aiming
@@ -658,15 +688,22 @@ namespace HW
 
         #region ANIMATION EVENTS
         // Sent by the melee attack animation
-        public void AttackChargingStarted()
+        public void ChargingAttackStarted()
         {
+            // Charging succeeded
             attackCharged = true;
         }
 
         // Sent by the melee attack animation
-        public void AttackChargingCompleted()
+        public void ChargingAttackCompleted()
         {
-            TryAttack();
+            if (chargingAttack)
+            {
+                // Charging failed
+                attackCharged = false;
+                TryAttack();
+            }
+                
         }
 
         // Sent by the melee attack animation
@@ -694,13 +731,14 @@ namespace HW
             // Some animations could be interrupted by hit, so we need to reset flags to avoid player to be stucked
             reloading = false;
             shooting = false;
+            chargingAttack = false;
+            attackCharged = false;
 
             hit = false;
         }
         #endregion
 
-
-
+        #region DEBUG
         void DebugTargets(List<Transform> targets)
         {
             string s = "";
@@ -711,6 +749,8 @@ namespace HW
             }
             Debug.Log("Targets:" + s);
         }
+
+        #endregion
     }
 }
 

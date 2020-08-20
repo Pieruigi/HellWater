@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HW;
+using HW.Interfaces;
 
 public class _TestFighting : MonoBehaviour
 {
@@ -41,6 +42,11 @@ public class _TestFighting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        // Hit player
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Push, 20, false);
+            playerController.GetComponent<IHitable>().Hit(hitInfo);
+        }
     }
 }

@@ -16,6 +16,11 @@ namespace HW
         string paramAimingDirection = "AimingDirection";
         string paramShoot = "Shoot";
         string paramReload = "Reload";
+        string paramHit = "Hit";
+        string paramDie = "Die";
+        string paramChargeAttack = "ChargeAttack";
+        string paramAttackOK = "AttackOK";
+        string paramAttackKO = "AttackKO";
         #endregion
 
         private void Awake()
@@ -30,6 +35,9 @@ namespace HW
             playerController.OnStopAiming += HandleOnStopAiming;
             playerController.OnShoot += HandleOnShoot;
             playerController.OnReload += HandleOnReload;
+            playerController.OnHit += HandleOnHit;
+            playerController.OnChargeAttack += HandleOnChargeAttack;
+            playerController.OnAttack += HandleOnAttack;
 
             animator = GetComponentInChildren<Animator>();
         }
@@ -90,6 +98,29 @@ namespace HW
         void HandleOnReload()
         {
             animator.SetTrigger(paramReload);
+        }
+
+        void HandleOnHit(HitInfo hitInfo)
+        {
+            
+            if (hitInfo.PhysicalReaction == HitPhysicalReaction.Push)
+                animator.SetTrigger(paramHit);
+
+            if (playerController.IsDead())
+                animator.SetTrigger(paramDie);
+        }
+
+        void HandleOnChargeAttack()
+        {
+            animator.SetTrigger(paramChargeAttack);
+        }
+
+        void HandleOnAttack(bool value)
+        {
+            if(value)
+                animator.SetTrigger(paramAttackOK);
+            else
+                animator.SetTrigger(paramAttackKO);
         }
     }
 

@@ -31,8 +31,16 @@ namespace HW
 
         #region DAMAGE
         float damageAmount;
+        public float DamageAmount
+        {
+            get { return damageAmount; }
+        }
 
         bool stunnedEffect;
+        public bool StunnedEffect
+        {
+            get { return stunnedEffect; }
+        }
         #endregion
 
 
