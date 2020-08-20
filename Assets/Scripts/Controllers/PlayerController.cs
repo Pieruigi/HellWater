@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace HW
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IHitable
     {
         public UnityAction OnShoot;
         public UnityAction OnStartAiming;
@@ -17,6 +17,7 @@ namespace HW
         public UnityAction OnReload;
         public UnityAction<Weapon> OnSetCurrentWeapon;
         public UnityAction OnResetCurrentWeapon;
+        public UnityAction<HitInfo> OnHit;
 
 
         [SerializeField]
@@ -53,6 +54,8 @@ namespace HW
         bool chargingAttack = false; // Charging melee attack
         bool attacking = false; // Performing attack with melee weapon
         bool attackCharged = false;
+        bool hit = false;
+
         float toTargetSignedAngleRotation = 0;
         public float ToTargetSignedAngleRotation
         {
@@ -133,6 +136,18 @@ namespace HW
 
             // Update rigidbody velocity
             rb.velocity = direction * speed;
+        }
+        #endregion
+
+        #region INTERFACES IMPLEMENTATION
+        public void Hit(HitInfo hitInfo)
+        {
+            if(hitInfo.PhysicalReaction != HitPhysicalReaction.None)
+                hit = true;
+
+            // Apply damage
+
+            OnHit?.Invoke(hitInfo);
         }
         #endregion
 
@@ -477,6 +492,7 @@ namespace HW
             attacking = false;
             attackCharged = false;
             toTargetSignedAngleRotation = 0;
+            hit = false;
 
             desiredVelocity = Vector2.zero;
 
@@ -671,6 +687,15 @@ namespace HW
             reloading = false;
 
             fireWeapon.Reload();
+        }
+
+        public void HitCompleted()
+        {
+            // Some animations could be interrupted by hit, so we need to reset flags to avoid player to be stucked
+            reloading = false;
+            shooting = false;
+
+            hit = false;
         }
         #endregion
 

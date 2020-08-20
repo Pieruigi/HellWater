@@ -6,12 +6,26 @@ namespace HW
 {
     public abstract class Weapon : MonoBehaviour
     {
-        [Header("Common Stats")]
+      
         [SerializeField]
-        float damage;
-        public float Damage
+        float damageAmount; // The amount of damage delivered
+        public float DamageAmount
         {
-            get { return damage; }
+            get { return damageAmount; }
+        }
+
+        [SerializeField]
+        bool stunnedEffect; // Does the enemy remain stunned ?
+        public bool StunnedEffect
+        {
+            get { return stunnedEffect; }
+        }
+
+        [SerializeField]
+        HitPhysicalReaction hitPhysicalReaction; // Does the enemy stop moving or get pushed ?
+        public HitPhysicalReaction HitPhysicalReaction
+        {
+            get { return hitPhysicalReaction; }
         }
 
         [SerializeField]
@@ -21,7 +35,7 @@ namespace HW
             get { return range; }
         }
 
-        [Header("Animation")]
+
         [SerializeField]
         int animationId = 0; // 1:bat; 2:gun; 3:shotgun; 4:combat rifle; 5:rifle
         public int AnimationId

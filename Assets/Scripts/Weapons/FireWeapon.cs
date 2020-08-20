@@ -1,19 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HW.Interfaces;
 
 namespace HW
 {
     public class FireWeapon : Weapon
     {
-        [Header("Stats")]
+    
         [SerializeField]
         int maxMagazineAmmo;
  
         int leftAmmo = 0;
 
         int currentMagazineAmmo = 0;
-        
+
+        IShooter shooter;
+
+        private void Awake()
+        {
+            shooter = GetComponent<IShooter>();
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -33,6 +40,8 @@ namespace HW
                 return false;
 
             currentMagazineAmmo--;
+
+            shooter.Shoot(this);
 
             return true;
         }

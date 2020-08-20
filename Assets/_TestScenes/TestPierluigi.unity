@@ -2397,7 +2397,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5468824119535138586}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 5468824119535138587}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02deadb4a41b486439968aee73a0770f, type: 3}
@@ -2525,6 +2525,14 @@ PrefabInstance:
       propertyPath: animationId
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
+      propertyPath: damageAmount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1585807444, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
+      propertyPath: stunnedEffect
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4090613823765487114, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
         type: 3}
       propertyPath: m_IsActive
@@ -2597,6 +2605,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d4659cb52952834e95d3e0f5c57a9ca, type: 3}
+--- !u!1 &5468824119535138587 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1585807442, guid: 3d4659cb52952834e95d3e0f5c57a9ca,
+    type: 3}
+  m_PrefabInstance: {fileID: 5468824119535138586}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5468824119535138588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5468824119535138587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05dbfc4cfe3086843ac7872c7be4f55c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8198422405170258835
 PrefabInstance:
   m_ObjectHideFlags: 0
