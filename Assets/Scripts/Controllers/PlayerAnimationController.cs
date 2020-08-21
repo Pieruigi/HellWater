@@ -9,6 +9,11 @@ namespace HW
         PlayerController playerController;
         Animator animator;
 
+        float chargingSpeed = 1;
+        float chargingSpeedMin = 0.1f;
+        float chargingEvalDir = 0;
+        float chargingEvalSpeed = 10;
+
         #region ANIMATION PARAMS
         string paramWeaponAnimationId = "WeaponAnimationId";
         string paramSpeed = "Speed";
@@ -38,8 +43,11 @@ namespace HW
             playerController.OnHit += HandleOnHit;
             playerController.OnChargeAttack += HandleOnChargeAttack;
             playerController.OnAttack += HandleOnAttack;
+            playerController.OnAttackCharged += HandleOnAttackCharged;
 
             animator = GetComponentInChildren<Animator>();
+
+            
         }
 
         // Start is called before the first frame update
@@ -51,10 +59,12 @@ namespace HW
         // Update is called once per frame
         void LateUpdate()
         {
-            UpdateLocomotion();
+           
+            // Update locomotion
+            animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
 
             // If player is aiming then check rotation
-            if(animator.GetBool(paramAiming))
+            if (animator.GetBool(paramAiming))
             {
                 int dir = 0;
                 if (playerController.ToTargetSignedAngleRotation != 0)
@@ -63,12 +73,27 @@ namespace HW
                 if (animator.GetInteger(paramAimingDirection) != dir)
                     animator.SetInteger(paramAimingDirection, dir);
             }
+
+            //if(chargingEvalDir != 0)
+            //{
+            //    chargingSpeed += chargingEvalDir * chargingEvalSpeed * Time.deltaTime;
+
+            //    animator.speed = Mathf.Clamp(chargingSpeed, chargingSpeedMin, 1);
+            //    //Debug.Log("AnimSpeed:" + animator.speed);
+
+            //    if(chargingEvalDir < 0)
+            //    {
+            //        if (chargingSpeed == chargingSpeedMin)
+            //            chargingEvalDir = 0;
+            //    }
+            //    else
+            //    {
+            //        if (chargingSpeed == 1)
+            //            chargingEvalDir = 0;
+            //    }
+            //}
         }
 
-        void UpdateLocomotion()
-        {
-            animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
-        }
 
         void HandleOnSetCurrentWeapon(Weapon weapon)
         {
@@ -122,6 +147,17 @@ namespace HW
                 animator.SetTrigger(paramAttackOK);
             else
                 animator.SetTrigger(paramAttackKO);
+        }
+
+        void HandleOnAttackCharged(bool value)
+        {
+            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:"+value);
+            //chargingEvalDir = value ? -1 : 1;
+
+            if (value)
+                animator.speed = 0.3f;
+            else
+                animator.speed = 1;
         }
     }
 
