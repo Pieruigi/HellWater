@@ -43,27 +43,28 @@ namespace HW
             get { return animationId; }
         }
 
+        [SerializeField]
+        GameObject weaponObject;
+
         // Start is called before the first frame update
-        void Start()
+        protected virtual void Awake()
         {
             
             SetVisible(false);
         }
 
         // Update is called once per frame
-        void Update()
-        {
-
-        }
+        
 
         public void SetVisible(bool value)
         {
-            transform.GetChild(0).gameObject.SetActive(value);
+            Debug.Log("Visible:" + value);
+            weaponObject.SetActive(value);
         }
 
         public bool IsVisible()
         {
-            return transform.GetChild(0).gameObject.activeSelf;
+            return weaponObject.activeSelf;
         }
     }
 

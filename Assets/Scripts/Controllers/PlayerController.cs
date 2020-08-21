@@ -13,6 +13,7 @@ namespace HW
         public UnityAction OnStartAiming;
         public UnityAction OnStopAiming;
         public UnityAction OnChargeAttack;
+        public UnityAction<bool> OnAttackCharged;
         public UnityAction<bool> OnAttack;
         public UnityAction OnIsOutOfAmmo;
         public UnityAction OnReload;
@@ -75,7 +76,10 @@ namespace HW
         {
             get { return currentWeapon; }
         }
-       
+        float releaseWeaponTimer = 8;
+        float currentReleaseWeaponTimer = 0;
+        
+
         //Transform desiredTarget;
         Transform currentTarget;
         #endregion
@@ -114,9 +118,7 @@ namespace HW
         // Update is called once per frame
         void Update()
         {
-            // You can't do anything else while you are doing one of these actions
-            if (disabled || reloading || shooting || attacking || hit)
-                return;
+            
 
             if (qteAction)
                 QteAction();
@@ -151,8 +153,16 @@ namespace HW
         #region INTERFACES IMPLEMENTATION
         public void Hit(HitInfo hitInfo)
         {
+            // You are already dead
+            if (IsDead())
+                return;
+
             if(hitInfo.PhysicalReaction != HitPhysicalReaction.None)
+            {
                 hit = true;
+                desiredVelocity = Vector3.zero;
+            }
+                
 
             // Apply damage
             health.Damage(hitInfo.DamageAmount);
@@ -208,38 +218,43 @@ namespace HW
 
                 // Hide weapon
                 //HideWeapon();
-                ResetCurrentWeapon();
+                //ResetCurrentWeapon();
 
                 OnStopAiming?.Invoke();
             }
         }
 
+        public void HolsterWeapon()
+        {
+            ResetCurrentWeapon();
+        }
+
+
         // Equips and holds fire or melee weapon
         public void EquipWeapon(Weapon weapon)
         {
+            Debug.Log("Equip weapon:" + weapon);
             // Is it a fire weapon ?
             if (weapon.GetType() == typeof(FireWeapon))
             {
-                // Switching
+                // Switching between fire weapons
                 if (fireWeapon && fireWeapon != weapon)
                     fireWeapon.SetVisible(false);
 
-                // No weapon equipped
+                // No weapon equipped yet
                 if (!fireWeapon)
                     fireWeapon = weapon as FireWeapon;
 
                 // Ok let's see this weapon
-                //ShowFireWeapon();
                 SetCurrentWeapon(fireWeapon);
             }
             else // Is melee ( we only have bat )
             {
-                // Not equipped yet
+                // No weapon equipped yet
                 if (!meleeWeapon)
                     meleeWeapon = weapon as MeleeWeapon;
 
-                // Show melee
-                //ShowMeleeWeapon();
+                // Ok let's see this weapon
                 SetCurrentWeapon(meleeWeapon);
             }
         }
@@ -249,13 +264,24 @@ namespace HW
         #region PRIVATE
         void SetCurrentWeapon(Weapon weapon)
         {
-            if (currentWeapon != null)
+            Debug.Log("Set current weapon:" + weapon);
+
+            currentReleaseWeaponTimer = releaseWeaponTimer;
+
+            if (currentWeapon != null && currentWeapon != weapon)
+            {
                 currentWeapon.SetVisible(false);
+                currentWeapon = null;
+            }
 
-            currentWeapon = weapon;
-            currentWeapon.SetVisible(true);
+            if (!currentWeapon)
+            {
+                currentWeapon = weapon;
+                currentWeapon.SetVisible(true);
 
-            OnSetCurrentWeapon?.Invoke(weapon);
+                OnSetCurrentWeapon?.Invoke(weapon);
+            }
+                
         }
 
         void ResetCurrentWeapon()
@@ -382,6 +408,9 @@ namespace HW
             chargingAttack = true;
             attackCharged = false;
 
+            SetCurrentWeapon(meleeWeapon);
+            //EquipWeapon(meleeWeapon);
+
             // Event
             OnChargeAttack?.Invoke();
         }
@@ -395,6 +424,7 @@ namespace HW
             // Check is attack will succeed
             if (attackCharged)
             {
+                attackCharged = false;
                 Debug.Log("Attack OK");
                 // Start attacking if attack succeeds
                 attacking = true;
@@ -411,9 +441,10 @@ namespace HW
 
             // Stop charging
             chargingAttack = false;
-            attackCharged = false;
 
-            
+
+            OnAttackCharged?.Invoke(false);
+
         }
 
         IEnumerator AttackFailedCooldown()
@@ -530,22 +561,28 @@ namespace HW
 
         void RealtimeAction()
         {
-            // Melee attack ( we must check button release )
+            // You can't do anything else while you are doing one of these actions
+            if (disabled || reloading || shooting || attacking || hit)
+                return;
+
+            // Is charging melee attack
             if (chargingAttack)
             {
-                if(GetAxisRaw(shootAxis) == 0)
+                // Rotate the player towards the choosen target if there is one
+                TryRotateTowardsTarget();
+                
+                if (GetAxisRaw(shootAxis) == 0)
                 {
-                    
                     TryAttack();
                 }
-                // We can't move while charging melee attack
+                // We can't move or do anything else while while we are charging attack
                 return;
             }
-
+            
             // Switch fire weapon
             //CheckIsSwitchingWeapon();
 
-            // Check if the equipped fire weapon must be reloaded
+            // Check if equipped fire weapon must be reloaded
             CheckIsReloading();
 
             // Check if player is aiming
@@ -553,6 +590,11 @@ namespace HW
 
             if (!aiming)
             {
+                // Time to holster weapon?
+                currentReleaseWeaponTimer -= Time.deltaTime;
+                if (currentReleaseWeaponTimer < 0)
+                    ResetCurrentWeapon();
+
                 //
                 // Check movement
                 //
@@ -567,30 +609,38 @@ namespace HW
                 desiredVelocity = new Vector3(input.x, 0, input.y) * maxSpeed;
 
                 // 
-                // Adjust look at
+                // Look the direction you are heading
                 //
 
-                // Get the target direction the player must look at
+                // Get the direction the player is moving towards
                 Vector3 desiredFwd = desiredVelocity.normalized;
 
-                // Get the current direction player is looking at
+                // Get the direction player is looking at
                 Vector3 currentFwd = transform.forward;
                 if (desiredVelocity == Vector3.zero)
                     desiredFwd = currentFwd;
 
-                // Lerp rotation
+                // Lerp 
                 transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
 
                 // 
                 // Melee attack
                 //
 
-                // If magazine is not empty then shoot
+                // Start charging melee attack
                 if (GetAxisRaw(shootAxis) > 0)
                 {
                     if (meleeWeapon && !attackFailed)
                     {
+                        // Stop moving
                         desiredVelocity = Vector3.zero;
+
+                        // Get all the targets inside the weapon range which are not hidden by any obstacle
+                        List<Transform> targets = GetAvailableTargets(fireWeapon.Range);
+
+                        // Set the target or null
+                        currentTarget = GetClosestTarget(targets);
+
                         TryChargeAttack();
                     }
                         
@@ -602,7 +652,7 @@ namespace HW
                 // Get target
                 //
 
-                // Get targets inside the weapon range which are not hidden by any obstacle
+                // Get all the targets inside the weapon range which are not hidden by any obstacle
                 List<Transform> targets = GetAvailableTargets(fireWeapon.Range);
 
                 // Clear current target if not longer available
@@ -626,25 +676,9 @@ namespace HW
                         currentTarget = newTarget;
                 }
 
+                // Rotate the player towards the choosen target if there is one
+                TryRotateTowardsTarget();
 
-                // If target exists 
-                if (currentTarget)
-                {
-                    // Get the target direction the player must look at
-                    Vector3 desiredFwd = (currentTarget.position - transform.position).normalized;
-
-                    // Get the current direction player is looking at
-                    Vector3 currentFwd = transform.forward;
-
-                    // Lerp rotation
-                    transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
-
-                    // Get the rotation direction ( 0: no rotation; -1: left; 1: right )
-                    toTargetSignedAngleRotation = Vector3.SignedAngle(currentFwd, desiredFwd, Vector3.up);
-
-                    
-                    //Debug.Log("toTargetSignedAngleRotation:" + toTargetSignedAngleRotation);
-                }
 
                 // Just debug
                 //DebugTargets(targets);
@@ -678,7 +712,24 @@ namespace HW
 
         }
 
+        void TryRotateTowardsTarget()
+        {
+            if (currentTarget)
+            {
+                // Get the target direction the player must look at
+                Vector3 desiredFwd = (currentTarget.position - transform.position).normalized;
 
+                // Get the current direction player is looking at
+                Vector3 currentFwd = transform.forward;
+
+                // Lerp rotation
+                transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
+
+                // Get the rotation direction ( 0: no rotation; -1: left; 1: right )
+                toTargetSignedAngleRotation = Vector3.SignedAngle(currentFwd, desiredFwd, Vector3.up);
+
+            }
+        }
 
         #endregion
 
@@ -690,8 +741,14 @@ namespace HW
         // Sent by the melee attack animation
         public void ChargingAttackStarted()
         {
-            // Charging succeeded
-            attackCharged = true;
+            if (chargingAttack)
+            {
+                // Charging succeeded
+                attackCharged = true;
+
+                OnAttackCharged?.Invoke(true);
+            }
+            
         }
 
         // Sent by the melee attack animation
@@ -702,6 +759,8 @@ namespace HW
                 // Charging failed
                 attackCharged = false;
                 TryAttack();
+
+                OnAttackCharged?.Invoke(false);
             }
                 
         }

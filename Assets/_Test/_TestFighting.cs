@@ -7,10 +7,10 @@ using HW.Interfaces;
 public class _TestFighting : MonoBehaviour
 {
     [SerializeField]
-    FireWeapon fireWeapon;
+    FireWeapon gun;
 
     [SerializeField]
-    MeleeWeapon meleeWeapon;
+    MeleeWeapon bat;
 
     PlayerController playerController;
 
@@ -18,25 +18,27 @@ public class _TestFighting : MonoBehaviour
     void Start()
     {
         playerController = GameObject.FindObjectOfType<PlayerController>();
-        fireWeapon = playerController.GetComponentInChildren<FireWeapon>();
-        meleeWeapon = playerController.GetComponentInChildren<MeleeWeapon>();
+        gun = playerController.GetComponentInChildren<FireWeapon>();
+        bat = playerController.GetComponentInChildren<MeleeWeapon>();
 
-        if (fireWeapon)
+        if (gun)
         {
-            playerController.EquipWeapon(fireWeapon);
-            fireWeapon.SetVisible(false);
+            playerController.EquipWeapon(gun);
+            gun.AddAmmo(100);
+            gun.Reload();
+            //fireWeapon.SetVisible(false);
         }
             
 
-        if (meleeWeapon)
+        if (bat)
         {
-            playerController.EquipWeapon(meleeWeapon);
-            meleeWeapon.SetVisible(false);
+            playerController.EquipWeapon(bat);
+            //meleeWeapon.SetVisible(false);
         }
-            
 
-        fireWeapon.AddAmmo(100);
-        fireWeapon.Reload();
+        playerController.HolsterWeapon();
+
+        
     }
 
     // Update is called once per frame
@@ -48,5 +50,14 @@ public class _TestFighting : MonoBehaviour
             HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Push, 20, false);
             playerController.GetComponent<IHitable>().Hit(hitInfo);
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            playerController.HolsterWeapon();
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            playerController.EquipWeapon(bat);
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            playerController.EquipWeapon(gun);
     }
 }

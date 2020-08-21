@@ -17,7 +17,7 @@ namespace HW
         string paramShoot = "Shoot";
         string paramReload = "Reload";
         string paramHit = "Hit";
-        string paramDie = "Die";
+        string paramDead = "Dead";
         string paramChargeAttack = "ChargeAttack";
         string paramAttackOK = "AttackOK";
         string paramAttackKO = "AttackKO";
@@ -49,7 +49,7 @@ namespace HW
         }
 
         // Update is called once per frame
-        void Update()
+        void LateUpdate()
         {
             UpdateLocomotion();
 
@@ -102,12 +102,13 @@ namespace HW
 
         void HandleOnHit(HitInfo hitInfo)
         {
-            
+            Debug.Log("OnHit.................");
+
             if (hitInfo.PhysicalReaction == HitPhysicalReaction.Push)
                 animator.SetTrigger(paramHit);
 
             if (playerController.IsDead())
-                animator.SetTrigger(paramDie);
+                animator.SetBool(paramDead, true);
         }
 
         void HandleOnChargeAttack()

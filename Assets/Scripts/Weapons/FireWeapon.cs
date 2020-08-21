@@ -17,23 +17,14 @@ namespace HW
 
         IShooter shooter;
 
-        private void Awake()
+        protected override void Awake()
         {
             shooter = GetComponent<IShooter>();
+            base.Awake();
         }
 
         // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
+        
         public bool Shoot()
         {
             if (IsEmpty())
