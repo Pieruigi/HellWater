@@ -5,8 +5,13 @@ using HW.Interfaces;
 
 namespace HW
 {
-    public class Enemy : MonoBehaviour, ITargetable
+    public class Enemy : MonoBehaviour, ITargetable, IHitable
     {
+        public void Hit(HitInfo hitInfo)
+        {
+            Debug.Log("Receiving HitInfo:" + hitInfo);
+        }
+
         // Start is called before the first frame update
         void Start()
         {

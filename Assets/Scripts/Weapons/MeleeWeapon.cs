@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HW.Interfaces;
+using UnityEngine.Events;
 
 namespace HW
 {
     public class MeleeWeapon : Weapon
     {
+        public UnityAction<bool> OnHit;
+        
 
         IStriker striker;
 

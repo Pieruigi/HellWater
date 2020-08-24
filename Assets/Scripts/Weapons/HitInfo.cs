@@ -52,6 +52,13 @@ namespace HW
             this.damageAmount = damageAmount;
             this.stunnedEffect = stunnedEffect;
         }
+
+
+        public override string ToString()
+        {
+            return string.Format("[HitInfo position:{0}, normal:{1}, physicalReaction:{2}, damageAmount:{3}, stunnedEffect:{4}]",
+                position, normal, physicalReaction, damageAmount, stunnedEffect);
+        }
     }
 
 }

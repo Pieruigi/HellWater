@@ -805,6 +805,10 @@ namespace HW
 
         public void Strike()
         {
+            if (!meleeWeapon || currentWeapon != meleeWeapon)
+                return;
+
+            (currentWeapon as MeleeWeapon).Strike();
 
         }
         #endregion

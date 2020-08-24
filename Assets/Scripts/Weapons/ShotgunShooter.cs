@@ -5,7 +5,7 @@ using HW.Interfaces;
 
 namespace HW
 {
-    public class Striker : MonoBehaviour, IStriker
+    public class ShotgunShooter : MonoBehaviour, IShooter
     {
 
         float maxAngle = 30;
@@ -23,33 +23,30 @@ namespace HW
 
         }
 
-        public void Strike(MeleeWeapon weapon)
+        public void Shoot(FireWeapon weapon)
         {
-            bool hitSomething = false;
-
             // Get the original ray
             Ray ray = new Ray(transform.root.position, transform.root.forward);
 
-            // Raycast
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, weapon.Range))
-            {
-                IHitable hitable = hit.transform.GetComponent<IHitable>();
+            // Get multiple hits
+            List<RaycastHit> hits = RaycastUtility.GetMultipleHits(ray, weapon.Range, raysPerSide, maxAngle);
+            
 
-                Debug.Log("Hitable:" + hitable);
+            foreach(RaycastHit hit in hits)
+            {
+                // Get the hitable object if exists
+                IHitable hitable = hit.transform.GetComponent<IHitable>();
 
                 // If we hit an hitable object we send out hit information
                 if (hitable != null)
                 {
-                    hitSomething = true;
-
                     HitInfo hitInfo = new HitInfo(hit.point, hit.normal, weapon.HitPhysicalReaction, weapon.DamageAmount, weapon.StunnedEffect);
                     hitable.Hit(hitInfo);
                 }
-            }
                 
-            // Hit or miss event
-            weapon.OnHit?.Invoke(hitSomething);
+            }
+
+            
         }
     }
 
