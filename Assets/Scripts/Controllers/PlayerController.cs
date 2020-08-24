@@ -482,6 +482,7 @@ namespace HW
             // Loop through the overlapped colliders
             foreach(Collider collider in colliders)
             {
+                
                 // Get ITargetable interface
                 ITargetable targetable = collider.GetComponent<ITargetable>();
 
@@ -719,18 +720,20 @@ namespace HW
             if (currentTarget)
             {
                 // Get the direction the player must look at
-                Vector3 desiredFwd = (currentTarget.position - transform.position).normalized;
+                Vector3 desiredFwd = currentTarget.position - transform.position;
+                desiredFwd.y = 0;
+                desiredFwd.Normalize();
                 
-                // Get the current direction player is looking at
+                // Get the current direction
                 Vector3 currentFwd = transform.forward;
+                currentFwd.y = 0;
+                currentFwd.Normalize();
                 
                 // Lerp rotation
                 transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
                 
-                currentFwd = transform.forward;
-                
                 // Get the rotation direction ( 0: no rotation; -1: left; 1: right )
-                toTargetSignedAngleRotation = Vector3.SignedAngle(currentFwd, desiredFwd, Vector3.up);
+                toTargetSignedAngleRotation = Vector3.SignedAngle(transform.forward, desiredFwd, Vector3.up);
 
                 // If the angle module is less than 1 degrees then reset
                 if (Mathf.Abs(toTargetSignedAngleRotation) < 1) 
