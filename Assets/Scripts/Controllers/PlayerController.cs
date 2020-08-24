@@ -96,7 +96,7 @@ namespace HW
         #region MISC FIELDS
         Rigidbody rb;
         bool disabled = false; // Is this controller disabled ?
-        float sphereCastRadius = 0.5f; // Used to cast targets
+        float sphereCastRadius = 1.0f; // Used to get targets
         bool qteAction = false;
         float angularSpeedInRadians;
         #endregion
@@ -264,7 +264,7 @@ namespace HW
         #region PRIVATE
         void SetCurrentWeapon(Weapon weapon)
         {
-            Debug.Log("Set current weapon:" + weapon);
+            
 
             currentReleaseWeaponTimer = releaseWeaponTimer;
 
@@ -366,7 +366,6 @@ namespace HW
             if(fireWeapon.IsOutOfAmmo())
             {
                 OnIsOutOfAmmo?.Invoke();
-            
             }
             else
             {
@@ -376,8 +375,11 @@ namespace HW
                 // Set reloading
                 reloading = true;
 
-                // Event
+                // Event on player
                 OnReload?.Invoke();
+
+                // We also invoke event on current weapon
+                fireWeapon.OnReload?.Invoke();
             }
             
            
@@ -716,18 +718,23 @@ namespace HW
         {
             if (currentTarget)
             {
-                // Get the target direction the player must look at
+                // Get the direction the player must look at
                 Vector3 desiredFwd = (currentTarget.position - transform.position).normalized;
-
+                
                 // Get the current direction player is looking at
                 Vector3 currentFwd = transform.forward;
-
+                
                 // Lerp rotation
                 transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
-
+                
+                currentFwd = transform.forward;
+                
                 // Get the rotation direction ( 0: no rotation; -1: left; 1: right )
                 toTargetSignedAngleRotation = Vector3.SignedAngle(currentFwd, desiredFwd, Vector3.up);
 
+                // If the angle module is less than 1 degrees then reset
+                if (Mathf.Abs(toTargetSignedAngleRotation) < 1) 
+                    toTargetSignedAngleRotation = 0;
             }
         }
 
@@ -785,7 +792,7 @@ namespace HW
             fireWeapon.Reload();
         }
 
-        public void HitCompleted()
+        public void ReactionCompleted()
         {
             // Some animations could be interrupted by hit, so we need to reset flags to avoid player to be stucked
             reloading = false;
@@ -794,6 +801,11 @@ namespace HW
             attackCharged = false;
 
             hit = false;
+        }
+
+        public void Strike()
+        {
+
         }
         #endregion
 

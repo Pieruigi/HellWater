@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HW.Interfaces;
+using UnityEngine.Events;
 
 namespace HW
 {
     public class FireWeapon : Weapon
     {
-    
+        public UnityAction OnShoot;
+        public UnityAction OnReload;
+        public UnityAction OnOutOfAmmo;
+
         [SerializeField]
         int maxMagazineAmmo;
  
@@ -27,12 +31,23 @@ namespace HW
         
         public bool Shoot()
         {
+           
+            // You can't shoot without ammo
             if (IsEmpty())
+            {
+                // No more ammo, so we can't reload
+                if (IsOutOfAmmo())
+                    OnOutOfAmmo?.Invoke();
+
                 return false;
+            }
+                
 
             currentMagazineAmmo--;
 
             shooter.Shoot(this);
+
+            OnShoot?.Invoke();
 
             return true;
         }

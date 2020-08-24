@@ -69,7 +69,7 @@ namespace HW
                 int dir = 0;
                 if (playerController.ToTargetSignedAngleRotation != 0)
                     dir = (int)Mathf.Sign(playerController.ToTargetSignedAngleRotation);
-
+                
                 if (animator.GetInteger(paramAimingDirection) != dir)
                     animator.SetInteger(paramAimingDirection, dir);
             }
