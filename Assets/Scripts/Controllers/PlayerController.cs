@@ -82,6 +82,9 @@ namespace HW
 
         //Transform desiredTarget;
         Transform currentTarget;
+
+        System.DateTime lastShoot;
+        float shootTime = 0.35f;
         #endregion
 
         #region CONTROLLER AXIS 
@@ -233,7 +236,7 @@ namespace HW
         // Equips and holds fire or melee weapon
         public void EquipWeapon(Weapon weapon)
         {
-            Debug.Log("Equip weapon:" + weapon);
+
             // Is it a fire weapon ?
             if (weapon.GetType() == typeof(FireWeapon))
             {
@@ -427,14 +430,13 @@ namespace HW
             if (attackCharged)
             {
                 attackCharged = false;
-                Debug.Log("Attack OK");
+
                 // Start attacking if attack succeeds
                 attacking = true;
                 OnAttack?.Invoke(true);
             }
             else
             {
-                Debug.Log("Attack KO");
                 attacking = false; // Be sure
                 attackFailed = true;
                 StartCoroutine(AttackFailedCooldown());
@@ -639,7 +641,7 @@ namespace HW
                         desiredVelocity = Vector3.zero;
 
                         // Get all the targets inside the weapon range which are not hidden by any obstacle
-                        List<Transform> targets = GetAvailableTargets(fireWeapon.Range);
+                        List<Transform> targets = GetAvailableTargets(fireWeapon.Range * 2f);
 
                         // Set the target or null
                         currentTarget = GetClosestTarget(targets);
@@ -693,16 +695,20 @@ namespace HW
                 //
 
                 // If magazine is not empty then shoot
-                if (GetAxisRaw(shootAxis) > 0)
+                if (GetAxisRaw(shootAxis) > 0 && (System.DateTime.UtcNow - lastShoot).TotalSeconds > shootTime)
                 {
+                    lastShoot = System.DateTime.UtcNow;
                     if (!fireWeapon.IsEmpty())
                     {
                         TryShoot();
                     }
                     else
                     {
-                        // Try to reload
-                        TryReload();
+                        Debug.Log("IsOutOfAmmo...");
+                        if (fireWeapon.IsOutOfAmmo())
+                            fireWeapon.OnOutOfAmmo?.Invoke();
+                        else
+                            TryReload();
                     }
                 }
 

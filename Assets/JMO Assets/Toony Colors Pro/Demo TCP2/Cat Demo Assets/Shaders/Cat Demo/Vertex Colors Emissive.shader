@@ -26,6 +26,7 @@ Shader "Toony Colors Pro 2/Examples/Cat Demo/Vertex Colors Emissive"
 	[TCP2Separator]
 
 	[TCP2HeaderHelp(EMISSION, Emission)]
+		[NoScaleOffset] _EmissionMap ("Emission (RGB)", 2D) = "black" {}
 		[HDR] _EmissionColor ("Emission Color", Color) = (1,1,1,1.0)
 	[TCP2Separator]
 
@@ -236,6 +237,7 @@ Shader "Toony Colors Pro 2/Examples/Cat Demo/Vertex Colors Emissive"
 		sampler2D _MainTex;
 		sampler2D _STexture;
 		half4 _EmissionColor;
+		sampler2D _EmissionMap;
 
 		#define UV_MAINTEX uv_MainTex
 
@@ -387,6 +389,7 @@ Shader "Toony Colors Pro 2/Examples/Cat Demo/Vertex Colors Emissive"
 			//Emission
 			half3 emissiveColor = half3(1,1,1);
 			emissiveColor *= mainTex.rgb * vcolors.a;
+			emissiveColor *= tex2D(_EmissionMap, IN.UV_MAINTEX);
 			emissiveColor *= _EmissionColor.rgb * _EmissionColor.a;
 			o.Emission += emissiveColor;
 		}

@@ -19,6 +19,12 @@ namespace HW
         [SerializeField]
         float reloadVolume = 1;
 
+        [SerializeField]
+        AudioClip outOfAmmoClip;
+
+        [SerializeField]
+        float outOfAmmoVolume = 1;
+
         AudioSource audioSource;
         FireWeapon fireWeapon;
 
@@ -55,7 +61,7 @@ namespace HW
 
         void HandleOnOutOfAmmo()
         {
-
+            PlayClip(outOfAmmoClip, outOfAmmoVolume);
         }
 
         void PlayClip(AudioClip clip, float volume)

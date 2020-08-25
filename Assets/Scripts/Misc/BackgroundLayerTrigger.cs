@@ -21,6 +21,7 @@ namespace HW
 
         private void OnTriggerEnter(Collider other)
         {
+
             // Get the ILayerable interface
             ILayerable layerable = other.gameObject.GetComponent<ILayerable>();
             

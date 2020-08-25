@@ -35,9 +35,9 @@ namespace HW
             // You can't shoot without ammo
             if (IsEmpty())
             {
-                // No more ammo, so we can't reload
-                if (IsOutOfAmmo())
-                    OnOutOfAmmo?.Invoke();
+                //// No more ammo, so we can't reload
+                //if (IsOutOfAmmo())
+                //    OnOutOfAmmo?.Invoke();
 
                 return false;
             }

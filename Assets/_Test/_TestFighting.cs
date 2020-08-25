@@ -12,6 +12,9 @@ public class _TestFighting : MonoBehaviour
     [SerializeField]
     MeleeWeapon bat;
 
+    [SerializeField]
+    Enemy enemy;
+
     PlayerController playerController;
 
     // Start is called before the first frame update
@@ -24,16 +27,14 @@ public class _TestFighting : MonoBehaviour
         if (gun)
         {
             playerController.EquipWeapon(gun);
-            gun.AddAmmo(100);
+            gun.AddAmmo(18);
             gun.Reload();
-            //fireWeapon.SetVisible(false);
         }
             
 
         if (bat)
         {
             playerController.EquipWeapon(bat);
-            //meleeWeapon.SetVisible(false);
         }
 
         playerController.HolsterWeapon();
@@ -59,5 +60,11 @@ public class _TestFighting : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
             playerController.EquipWeapon(gun);
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Push, 20, false);
+            enemy.GetComponent<IHitable>().Hit(hitInfo);
+        }
     }
 }

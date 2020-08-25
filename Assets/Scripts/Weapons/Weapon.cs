@@ -58,7 +58,6 @@ namespace HW
 
         public void SetVisible(bool value)
         {
-            Debug.Log("Visible:" + value);
             weaponObject.SetActive(value);
         }
 

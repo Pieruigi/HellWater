@@ -57,8 +57,6 @@ namespace HW
 
         void HandleOnAttackCharged(bool value)
         {
-            Debug.Log("HandleOnAttackCharged:" + value);
-            //dir = value ? 1 : -1;
             foreach (Material material in materials)
                 material.SetColor(emissionColorParam, value ? Color.red : Color.black);
 

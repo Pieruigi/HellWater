@@ -151,9 +151,6 @@ namespace HW
 
         void HandleOnAttackCharged(bool value)
         {
-            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:"+value);
-            //chargingEvalDir = value ? -1 : 1;
-
             if (value)
                 animator.speed = 0.3f;
             else

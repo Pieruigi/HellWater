@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System;
+using HW.Interfaces;
 
 namespace HW
 {
@@ -10,7 +11,7 @@ namespace HW
     public class Patroller : MonoBehaviour, IBehaviour
     {
         [SerializeField]
-        List<Transform> spots;
+        Transform spotGroup;
 
         [SerializeField]
         float stayInSpotMinTime = 5;
@@ -18,18 +19,30 @@ namespace HW
         [SerializeField]
         float stayInSpotMaxTime = 9;
 
-        NavMeshAgent agent;
+        [SerializeField]
+        SpeedClass speedClass = SpeedClass.VerySlow;
+        //float speed = 2;
 
         Transform currentSpot;
 
+        List<Transform> spots;
         DateTime lastSpot;
 
         bool loop = false;
-        
+        DateTime lastSpotTime;
+        float stayTimer = 0;
+
+        IMover mover;
 
         void Awake()
         {
-            agent = GetComponentInParent<NavMeshAgent>();
+            mover = GetComponentInParent<IMover>();
+            mover.OnDestinationReached += HandleOnDestinationReached;
+
+            // Fill the spot list
+            spots = new List<Transform>();
+            for (int i = 0; i < spotGroup.childCount; i++)
+                spots.Add(spotGroup.GetChild(i));
         }
 
         // Start is called before the first frame update
@@ -44,26 +57,46 @@ namespace HW
             if (!loop)
                 return;
 
-            // Destination reached
-            if (agent.remainingDistance == 0)
-                Debug.Log("ASSSSSSSSSSSSSSSSSSSSSSTTTTTTTTTTTTTOOOOOOOOOOPPPPPPPPPPPPP");
+            if (stayTimer > 0)
+            {
+                stayTimer -= Time.deltaTime;
+
+                if (stayTimer <= 0)
+                {
+                    NextDestination();
+                }
+            }
+
+           
         }
 
         public void StartBehaving()
         {
             loop = true;
-            currentSpot = spots[UnityEngine.Random.Range(0, spots.Count)];
-            agent.SetDestination(currentSpot.position);
-            //lastSpot = 
+            stayTimer = 0;
+            mover.SetMaxSpeed(GameplayUtility.GetMovementSpeedValue(speedClass));
+            NextDestination();
+            
         }
 
         public void StopBehaving()
         {
             loop = false;
-            agent.ResetPath();
+            
+            //agent.ResetPath();
         }
 
-      
+        private void NextDestination()
+        {
+            currentSpot = spots[UnityEngine.Random.Range(0, spots.Count)];
+            mover.MoveTo(currentSpot.position);
+        }
+
+        void HandleOnDestinationReached(IMover mover)
+        {
+            Debug.Log("Destination reached");
+            stayTimer = UnityEngine.Random.Range(stayInSpotMinTime, stayInSpotMaxTime);
+        }
     }
 
 }
