@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HW
 {
-    public enum SpeedClass { None, VerySlow, Slow, Average, Fast, VeryFast }
+    public enum SpeedClass { Zero, VerySlow, Slow, Average, Fast, VeryFast }
 
     public class GameplayUtility
     {

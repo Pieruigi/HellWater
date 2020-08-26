@@ -44,12 +44,12 @@ namespace HW
                     hitSomething = true;
 
                     HitInfo hitInfo = new HitInfo(hit.point, hit.normal, weapon.HitPhysicalReaction, weapon.DamageAmount, weapon.StunnedEffect);
-                    hitable.Hit(hitInfo);
+                    hitable.GetHit(hitInfo);
                 }
             }
                 
             // Hit or miss event
-            weapon.OnHit?.Invoke(hitSomething);
+            weapon.OnHit?.Invoke(hitSomething, weapon);
         }
     }
 

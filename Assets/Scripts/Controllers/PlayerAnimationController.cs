@@ -40,7 +40,7 @@ namespace HW
             playerController.OnStopAiming += HandleOnStopAiming;
             playerController.OnShoot += HandleOnShoot;
             playerController.OnReload += HandleOnReload;
-            playerController.OnHit += HandleOnHit;
+            playerController.OnGotHit += HandleOnGotHit;
             playerController.OnChargeAttack += HandleOnChargeAttack;
             playerController.OnAttack += HandleOnAttack;
             playerController.OnAttackCharged += HandleOnAttackCharged;
@@ -125,7 +125,7 @@ namespace HW
             animator.SetTrigger(paramReload);
         }
 
-        void HandleOnHit(HitInfo hitInfo)
+        void HandleOnGotHit(HitInfo hitInfo)
         {
             Debug.Log("OnHit.................");
 

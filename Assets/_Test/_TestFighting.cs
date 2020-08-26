@@ -49,7 +49,7 @@ public class _TestFighting : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.T))
         {
             HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Push, 20, false);
-            playerController.GetComponent<IHitable>().Hit(hitInfo);
+            playerController.GetComponent<IHitable>().GetHit(hitInfo);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -64,7 +64,12 @@ public class _TestFighting : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Y))
         {
             HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Push, 20, false);
-            enemy.GetComponent<IHitable>().Hit(hitInfo);
+            enemy.GetComponent<IHitable>().GetHit(hitInfo);
+        }
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Stop, 20, false);
+            enemy.GetComponent<IHitable>().GetHit(hitInfo);
         }
     }
 }

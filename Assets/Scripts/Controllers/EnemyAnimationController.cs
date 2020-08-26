@@ -6,7 +6,7 @@ namespace HW
 {
     public class EnemyAnimationController : MonoBehaviour
     {
-        
+        // This is the speed that better fit the running animation
         float locomotioMaxSpeed = GameplayUtility.GetMovementSpeedValue(SpeedClass.VeryFast);
 
         Enemy enemy;
@@ -14,8 +14,9 @@ namespace HW
 
         #region ANIMATOR PARAMETERS
         string paramSpeed = "Speed";
-        string paramSoftReact = "SoftReact";
-        string paramHardReact = "HardReact";
+        string paramStopReaction = "StopReaction";
+        string paramPushReaction = "PushReaction";
+        string paramDead = "Dead";
         #endregion
 
         private void Awake()
@@ -23,8 +24,8 @@ namespace HW
             enemy = GetComponent<Enemy>();
             animator = GetComponent<Animator>();
 
-            enemy.OnHardHit += HandleOnHardHit;
-            enemy.OnSoftHit += HandleOnSoftHit;
+            enemy.OnGotHit += HandleOnGotHit;
+            
         }
 
         // Start is called before the first frame update
@@ -44,27 +45,23 @@ namespace HW
             // Update locomotion
             float ratio = enemy.GetSpeed() / locomotioMaxSpeed;
             animator.SetFloat(paramSpeed, ratio);
-
-            // Adjust global speed 
-            //if(enemy.GetCurrentSpeed() > 0)
-            //{
-            //    animator.speed = enemy.GetSpeed() / locomotionBaseSpeed;
-            //}
-            //else
-            //{
-            //    animator.speed = 1;
-            //}
         }
 
-        void HandleOnHardHit()
+        void HandleOnGotHit(HitInfo hitInfo)
         {
-            animator.SetTrigger(paramHardReact);
+            if(hitInfo.PhysicalReaction != HitPhysicalReaction.None)
+            {
+                if(hitInfo.PhysicalReaction == HitPhysicalReaction.Stop || enemy.CanNotBePushed)
+                    animator.SetTrigger(paramStopReaction);
+                else
+                    animator.SetTrigger(paramPushReaction);
+            }
+
+            if (enemy.IsDead())
+                animator.SetBool(paramDead, true);
+
         }
 
-        void HandleOnSoftHit()
-        {
-            animator.SetTrigger(paramSoftReact);
-        }
     }
 
 }

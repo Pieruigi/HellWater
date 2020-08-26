@@ -8,7 +8,7 @@ namespace HW
 {
     public class MeleeWeapon : Weapon
     {
-        public UnityAction<bool> OnHit;
+        public UnityAction<bool, Weapon> OnHit;
         
 
         IStriker striker;

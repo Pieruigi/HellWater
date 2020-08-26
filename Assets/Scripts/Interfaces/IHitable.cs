@@ -6,7 +6,7 @@ namespace HW.Interfaces
 {
     public interface IHitable
     {
-        void Hit(HitInfo hitInfo);
+        void GetHit(HitInfo hitInfo);
 
     }
 

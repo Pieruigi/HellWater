@@ -41,7 +41,7 @@ namespace HW
                 if (hitable != null)
                 {
                     HitInfo hitInfo = new HitInfo(hit.point, hit.normal, weapon.HitPhysicalReaction, weapon.DamageAmount, weapon.StunnedEffect);
-                    hitable.Hit(hitInfo);
+                    hitable.GetHit(hitInfo);
                 }
                 
             }

@@ -19,7 +19,8 @@ namespace HW
         public UnityAction OnReload;
         public UnityAction<Weapon> OnSetCurrentWeapon;
         public UnityAction OnResetCurrentWeapon;
-        public UnityAction<HitInfo> OnHit;
+        public UnityAction<HitInfo> OnGotHit;
+        public UnityAction<Weapon> OnHitSomething;
         #endregion
 
         #region SERIALIZED FIELDS
@@ -45,7 +46,7 @@ namespace HW
 
         // Is player running ?
         bool running = false; 
-
+        
         // The target velocity
         Vector3 desiredVelocity;
         #endregion
@@ -116,6 +117,9 @@ namespace HW
         void Start()
         {
             Reset();
+
+            GetComponentInChildren<MeleeWeapon>().OnHit += HandleOnHitSomething;
+
         }
 
         // Update is called once per frame
@@ -154,7 +158,7 @@ namespace HW
         #endregion
 
         #region INTERFACES IMPLEMENTATION
-        public void Hit(HitInfo hitInfo)
+        public void GetHit(HitInfo hitInfo)
         {
             // You are already dead
             if (IsDead())
@@ -171,11 +175,16 @@ namespace HW
             health.Damage(hitInfo.DamageAmount);
 
             // Hit event
-            OnHit?.Invoke(hitInfo);
+            OnGotHit?.Invoke(hitInfo);
         }
         #endregion
 
         #region PUBLIC
+        public bool IsRunning()
+        {
+            return running;
+        }
+
         public bool IsDead()
         {
             return health.CurrentHealth == 0;
@@ -265,6 +274,7 @@ namespace HW
         #endregion
 
         #region PRIVATE
+
         void SetCurrentWeapon(Weapon weapon)
         {
             
@@ -489,7 +499,7 @@ namespace HW
                 ITargetable targetable = collider.GetComponent<ITargetable>();
 
                 // If not targetable then continue
-                if (targetable == null)
+                if (targetable == null || !targetable.IsTargetable())
                     continue;
 
                 // Get vector heading from player to target
@@ -747,6 +757,12 @@ namespace HW
             }
         }
 
+        void HandleOnHitSomething(bool value, Weapon weapon)
+        {
+            if(value)
+                OnHitSomething(weapon);
+        }
+
         #endregion
 
         #region ANIMATION CONTROLLER
@@ -821,6 +837,7 @@ namespace HW
 
         }
         #endregion
+
 
         #region DEBUG
         void DebugTargets(List<Transform> targets)

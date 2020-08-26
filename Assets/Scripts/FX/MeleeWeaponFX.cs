@@ -42,7 +42,7 @@ namespace HW
 
         }
 
-        void HandleOnHit(bool hitSomething)
+        void HandleOnHit(bool hitSomething, Weapon weapon)
         {
             if(hitSomething)
                 PlayClip(hitClip, hitVolume);

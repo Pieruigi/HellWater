@@ -10,25 +10,27 @@ namespace HW
 {
     public class Enemy : MonoBehaviour, ITargetable, IHitable, IMover, IActivable
     {
+        enum State { Dead, Idle, Alerted, Engaged }
+
         public UnityAction OnAttack;
-        public UnityAction OnSoftHit;
-        public UnityAction OnHardHit;
+        public UnityAction<HitInfo> OnGotHit;
 
         [Header("Engagement ranges")]
         [SerializeField]
-        float awarenessRange = 2f; // You are too close ( zero or negative to disable )
-        float sqrAwarenessRange;
+        float proximityRange = 2f; // You are too close ( zero or negative to disable )
+        float sqrProximityRange;
 
         [SerializeField]
         float hearingRange = 4f; // Valid for running and melee attack when you hit enemes ( zero or negative to disable )
         float sqrHearingRange;
 
         [SerializeField]
-        float sightingRange = 8f; // They can see you ( zero or negative to disable )
-        float sqrSightingRange;
+        float sightRange = 8f; // They can see you ( zero or negative to disable )
+        float sqrSightRange;
 
         [SerializeField]
         float shotHearingRange = 8f; // Enemy can hear you if you shoot within this distance ( zero or negative to disable )
+        float sqrShotHearingRange;
 
         [SerializeField]
         MonoBehaviour idleBehaviour;
@@ -39,14 +41,21 @@ namespace HW
         [SerializeField]
         SpeedClass speedClass = SpeedClass.Average;
 
+        [SerializeField]
+        bool canNotBePushed = false;
+        public bool CanNotBePushed
+        {
+            get { return canNotBePushed; }
+        }
+
         #region FIGHTING
         // The target this enemy is looking for ( can be both the player and any NPC )
         Transform target;
-        bool isDead = false;
         float attackRange = 1.25f;
         bool reacting = false;
         float pushDistance = .75f;
         float pushSpeed = 4;
+        Health health;
         #endregion
 
         #region MOVEMENT
@@ -56,17 +65,26 @@ namespace HW
         float angularSpeedDefault;
         #endregion
 
-        // The maximum speed the ai can even reach
-        
-        
-        bool engaged = false;
+       
+
+        #region ALERT
+        float alertTimer = 8;
+        float waitingTimer = 2f;
+        Vector3 alertPosition;
+        bool movingAlerted = false;
+        #endregion
+
+        State state = State.Idle;
         System.DateTime lastEngagementCheckTime;
-        float EngagementCheckTimer = 0.2f;
-        
-        
+        float engagementCheckTimer = 0.2f;
+        System.DateTime lastPlayerOnSight;
+        float playerLostMaxTime = 5f;
         NavMeshAgent agent;
         GameObject player;
         bool active = false;
+        float sightAngle = 30f;
+        
+
 
         void Awake()
         {
@@ -75,9 +93,12 @@ namespace HW
             ResetSpeed();
 
             // Ranges
-            sqrAwarenessRange = awarenessRange * awarenessRange;
+            sqrProximityRange = proximityRange * proximityRange;
             sqrHearingRange = hearingRange * hearingRange;
-            sqrSightingRange = sightingRange * sightingRange;
+            sqrSightRange = sightRange * sightRange;
+            sqrShotHearingRange = shotHearingRange * shotHearingRange;
+
+            health = GetComponent<Health>();
         }
 
 
@@ -87,13 +108,15 @@ namespace HW
             Activate(true);
 
             player = GameObject.FindGameObjectWithTag(Tags.Player);
+            player.GetComponent<PlayerController>().OnHitSomething += HandlePlayerOnHitSomething;
+            player.GetComponent<PlayerController>().OnShoot += HandlePlayerOnShoot;
             target = player.transform;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (!active || isDead)
+            if (!active)
                 return;
 
             if(reacting)
@@ -101,32 +124,47 @@ namespace HW
                 return;
             }
 
-            if ((System.DateTime.UtcNow - lastEngagementCheckTime).TotalSeconds > EngagementCheckTimer)
+
+            switch (state)
             {
-                lastEngagementCheckTime = System.DateTime.UtcNow;
-                CheckForEngagement();
+                case State.Engaged:
+                    if (CheckForDisengagement())
+                    {
+                        Alert(transform.position);
+                    }
+                    else
+                    {
+                        // Withing the fighting range
+                        if ((transform.position - target.position).magnitude < attackRange)
+                        {
+                            agent.velocity = Vector3.MoveTowards(agent.velocity, Vector3.zero, closeEnoughDeceleration * Time.deltaTime);
+
+                            (fightBehaviour as IFighter)?.Fight();
+                        }
+                        else // Out of the fighting range
+                        {
+                            
+                            // Move to target
+                            if(!IsObstacled(player.transform))
+                                MoveTo(target.position);
+                        }
+                    }
+                    
+                    break;
+
+                case State.Alerted:
+                    //if (CheckForEngagement())
+                    //    Engage();
+                    //break;
+                case State.Idle:
+                    if (CheckForEngagement())
+                        Engage();
+                    break;
+
+                case State.Dead:
+                    break;
             }
 
-            if (engaged)
-            {
-                if ((transform.position - target.position).magnitude < attackRange)
-                {
-                    agent.velocity = Vector3.MoveTowards(agent.velocity, Vector3.zero, closeEnoughDeceleration * Time.deltaTime);
-
-                    (fightBehaviour as IFighter)?.Fight();
-                }
-                else
-                {
-                    // Move to target
-                    MoveTo(target.position);
-                }
-                
-            }
-            else
-            {
-
-            }
-            
             
 
             // Check if destination has been reached
@@ -139,6 +177,11 @@ namespace HW
         }
 
         #region INTERFACES IMPLEMENTATION
+        public bool IsTargetable()
+        {
+            return !IsDead();
+        }
+
         public void Activate(bool value)
         {
             active = value;
@@ -156,13 +199,28 @@ namespace HW
             return active;
         }
 
-        public void Hit(HitInfo hitInfo)
+        public void GetHit(HitInfo hitInfo)
         {
             Debug.Log("Receiving HitInfo:" + hitInfo);
 
-            if (!engaged)
-                Engage();
+            if (state == State.Dead)
+                return;
 
+            if (state != State.Engaged)
+            {
+                if((player.transform.position - transform.position).sqrMagnitude < sqrSightRange)
+                    Engage();
+            }
+                
+
+            // Apply damage
+            health.Damage(hitInfo.DamageAmount);
+
+            if(health.CurrentHealth <= 0)
+                state = State.Dead;
+                
+         
+            // Manage physical reaction
             if(hitInfo.PhysicalReaction != HitPhysicalReaction.None)
             {
                 // Set true in order to avoid get target destination
@@ -171,13 +229,7 @@ namespace HW
                 // Reset
                 agent.ResetPath();
 
-                
-                if (hitInfo.PhysicalReaction == HitPhysicalReaction.Stop)
-                {
-                    
-                    OnSoftHit?.Invoke();
-                }
-                else
+                if (hitInfo.PhysicalReaction == HitPhysicalReaction.Push && !canNotBePushed) // Push back
                 {
                     // Set push speed
                     agent.speed = pushSpeed;
@@ -188,11 +240,13 @@ namespace HW
                     // Avoid enemy to rotate 
                     agent.angularSpeed = 0;
 
-                    OnHardHit?.Invoke();
                 }
                     
             }
-            
+
+            OnGotHit?.Invoke(hitInfo);
+
+
         }
 
         public void MoveTo(Vector3 destination)
@@ -220,11 +274,19 @@ namespace HW
 
         #endregion
 
+        #region PUBLIC
+        public bool IsDead()
+        {
+            return state == State.Dead;
+        }
+        #endregion
+
         #region PRIVATE
         void Reset()
         {
-            engaged = false;
-            (idleBehaviour as IBehaviour).StopBehaving();
+            state = State.Idle;
+            
+            (idleBehaviour as IBehaviour)?.StopBehaving();
             ResetSpeed();
         }
 
@@ -237,62 +299,218 @@ namespace HW
 
         void Engage()
         {
-            engaged = true;
+            state = State.Engaged;
             Debug.Log("Engaged");
 
+            // Set now
+            lastPlayerOnSight = System.DateTime.UtcNow;
+
             // Stop idle mode
-            (idleBehaviour as IBehaviour).StopBehaving();
+            (idleBehaviour as IBehaviour)?.StopBehaving();
 
             // Reset speed
             ResetSpeed();
         }
 
-        // Returns true if player is engaged otherwise false
-        void CheckForEngagement()
+
+        void Alert(Vector3 position)
         {
-            if (!engaged)
-            {
-                // Get the largest awareness range
-                float range = GetAwarenessLargestRange();
-
-                // Vector to the player
-                Vector3 toPlayer = player.transform.position - transform.position;
-                toPlayer.y = 0; // Get rid of the y
-
-                
-                float sqrDistance = toPlayer.sqrMagnitude;
-
-                if (sqrAwarenessRange > 0 && sqrDistance < sqrAwarenessRange)
-                    Engage();
-
-                if (engaged)
-                    Debug.Log("Player engaged at distance:" + toPlayer.magnitude);
-            }
-            else // Already engaged
-            {
-
-            }
-
-           
-        }
-
-   
-
-        // Get the largest range between awareness, hearing and sighting ranges
-        float GetAwarenessLargestRange()
-        {
-            float r = awarenessRange;
-            if (hearingRange > r)
-                r = hearingRange;
-            if (sightingRange > r)
-                r = sightingRange;
-            return r;
-        }
-
-        void SeekTarget()
-        {
-            MoveTo(target.position);
             
+            // Always update alert position
+            alertPosition = position;
+            
+            // If true there is already a coroutine running
+            if (state == State.Alerted)
+            {
+                // Maybe coroutine started moving AI, so we need to update manually the direction
+                if (movingAlerted)
+                    MoveTo(alertPosition);
+
+                return;
+            }
+                
+            // Set alerted state
+            state = State.Alerted;
+
+            movingAlerted = false;
+            StartCoroutine(DoAlert());
+        }
+
+        IEnumerator DoAlert()
+        {
+            // Stop idle mode
+            (idleBehaviour as IBehaviour)?.StopBehaving();
+
+            // Reset speed
+            ResetSpeed();
+
+            // Stop moving
+            agent.ResetPath();
+
+            // Wait a while
+            yield return new WaitForSeconds(waitingTimer);
+
+            // State might be changed in the meantime
+            if (state != State.Alerted)
+                yield break;
+
+            // Move to alert position
+            if(transform.position != alertPosition)
+                MoveTo(alertPosition);
+
+            // We want to know if coroutine started moving the IA, in order to update the alert position
+            movingAlerted = true;
+
+            // Wait a while
+            yield return new WaitForSeconds(alertTimer);
+
+            // AI is no longer moving to alert position
+            movingAlerted = false;
+
+            // State might be changed in the meantime
+            if (state != State.Alerted)
+                yield break;
+
+            // Return in idle mode
+            Idle();
+        }
+
+        
+
+        void Idle()
+        {
+           
+            state = State.Idle;
+
+            // Start idle mode
+            (idleBehaviour as IBehaviour)?.StartBehaving();
+        }
+
+        // Returns true if player is engaged otherwise false
+        bool CheckForEngagement()
+        {
+
+            if ((System.DateTime.UtcNow - lastEngagementCheckTime).TotalSeconds < engagementCheckTimer)
+                return false;
+
+            lastEngagementCheckTime = System.DateTime.UtcNow;
+
+            // I should not be here... anyway
+            if (state == State.Engaged) 
+                return true;
+            
+            // Vector to player
+            Vector3 toPlayer = player.transform.position - transform.position;
+            toPlayer.y = 0; // Get rid of the y
+
+            // Distance from player
+            float sqrDistance = toPlayer.sqrMagnitude;
+
+            // Is the player within the proximity range ?
+            if (sqrProximityRange > 0 && sqrDistance < sqrProximityRange)
+                return true;
+
+            if (sqrHearingRange > 0 && sqrDistance < sqrHearingRange && player.GetComponent<PlayerController>().IsRunning())
+                return true;
+
+            if (IsInFieldView(player.transform, sightRange, sightAngle) && !IsObstacled(player.transform))
+                return true;
+
+            return false;
+            
+        }
+
+        bool CheckForDisengagement()
+        {
+            if ((System.DateTime.UtcNow - lastEngagementCheckTime).TotalSeconds < engagementCheckTimer)
+                return false;
+
+            lastEngagementCheckTime = System.DateTime.UtcNow;
+
+            // I should not be here... anyway
+            if (state != State.Engaged)
+                return true;
+
+            if (IsDead())
+                return true;
+
+            if(IsInFieldView(player.transform, sightRange, sightAngle) && !IsObstacled(player.transform))
+            {
+                lastPlayerOnSight = System.DateTime.UtcNow;
+            }
+            else
+            {
+                if ((System.DateTime.UtcNow - lastPlayerOnSight).TotalSeconds > playerLostMaxTime)
+                    return true;
+            }
+
+            return false;
+        }
+
+        // Check for the target to be inside a visual cone given angle and distance 
+        bool IsInFieldView(Transform target, float maxDistance, float maxAngle)
+        {
+            // Vector to target
+            Vector3 toTarget = target.position - transform.position;
+
+            float distance = toTarget.magnitude;
+
+            // If target is not within the max distance return false
+            if (distance > maxDistance)
+                return false;
+
+            // If target if out of max angle then return false
+            if (Vector3.Angle(toTarget, transform.forward) > maxAngle)
+                return false;
+
+
+            return true;
+        }
+
+        bool IsObstacled(Transform target)
+        {
+            Vector3 toTarget = target.position - transform.position;
+
+            float distance = toTarget.magnitude;
+            RaycastHit hit;
+            Ray ray = new Ray(transform.position, toTarget.normalized);
+            if (Physics.Raycast(ray, out hit, distance))
+            {
+                if (hit.transform != target)
+                    return true;
+            }
+
+            return false;
+
+        }
+
+        // Engages you if you hit something with your melee weapon within a given range ( not engaged if you miss the target )
+        void HandlePlayerOnHitSomething(Weapon weapon)
+        {
+
+            if (state == State.Engaged || state == State.Dead)
+                return;
+
+            if(weapon.GetType() == typeof(MeleeWeapon))
+            {
+                float sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
+                if (sqrDistance < sqrHearingRange)
+                    Engage();
+                    
+            }
+        }
+
+        // Engages you if you shoot within a given range
+        void HandlePlayerOnShoot()
+        {
+            
+            if (state == State.Engaged || state == State.Dead)
+                return;
+
+            float sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
+            if (sqrDistance < sqrShotHearingRange)
+                Alert(player.transform.position);
+                
         }
 
         #endregion
