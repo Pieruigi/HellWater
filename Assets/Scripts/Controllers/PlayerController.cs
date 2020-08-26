@@ -38,6 +38,9 @@ namespace HW
 
         [SerializeField]
         float angularSpeed;
+
+        [SerializeField]
+        bool chargeMeleeAttack = false;
         #endregion
 
         #region LOCOMOTION FIELDS
@@ -435,6 +438,9 @@ namespace HW
            
             if (!meleeWeapon)
                 return;
+
+            if(!chargeMeleeAttack)
+                attackCharged = true; // Only if you want to attack without charging
 
             // Check is attack will succeed
             if (attackCharged)
