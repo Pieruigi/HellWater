@@ -59,9 +59,10 @@ namespace HW
         // Update is called once per frame
         void LateUpdate()
         {
-           
+
             // Update locomotion
-            animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
+            //animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
+            animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed());
 
             // If player is aiming then check rotation
             if (animator.GetBool(paramAiming))
@@ -129,7 +130,7 @@ namespace HW
         {
             Debug.Log("OnHit.................");
 
-            if (hitInfo.PhysicalReaction == HitPhysicalReaction.Push)
+            if (hitInfo.PhysicalReaction != HitPhysicalReaction.None)
                 animator.SetTrigger(paramHit);
 
             if (playerController.IsDead())

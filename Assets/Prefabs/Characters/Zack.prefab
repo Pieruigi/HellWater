@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 2499119780258199973}
   - component: {fileID: 106462172894740015}
   - component: {fileID: 1593133559}
+  - component: {fileID: 1663608488}
   m_Layer: 0
   m_Name: Zack
   m_TagString: Enemy
@@ -63,7 +64,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 2499119780258199970}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 1
+  m_Radius: 0.3
   m_Speed: 2.8
   m_Acceleration: 8
   avoidancePriority: 50
@@ -136,13 +137,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 845bbf73701ef8447b3690f588ee451f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  proximityRange: 2
-  hearingRange: 4
-  sightRange: 8
-  shotHearingRange: 20
+  proximityRange: 4
+  hearingRange: 7
+  sightRange: 11
+  shotHearingRange: 12
   idleBehaviour: {fileID: 2499119780258199973}
-  fightBehaviour: {fileID: 0}
-  speedClass: 1
+  fightBehaviour: {fileID: 1663608488}
+  speedClass: 3
   canNotBePushed: 0
 --- !u!114 &2499119780258199973
 MonoBehaviour:
@@ -159,7 +160,7 @@ MonoBehaviour:
   spotGroup: {fileID: 0}
   stayInSpotMinTime: 2
   stayInSpotMaxTime: 4
-  speedClass: 1
+  speedClass: 2
 --- !u!114 &106462172894740015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,6 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd2ce8c6dc988b6458c8d92d4f972f7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fightAnimationCount: 0
 --- !u!114 &1593133559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +187,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
+--- !u!114 &1663608488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2499119780258199970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13a32beb112fbb440900e38a387a2009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 1.25
+  damageAmount: 30
 --- !u!1 &2499119781273023471
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,6 +6,9 @@ namespace HW
 {
     public class EnemyAnimationController : MonoBehaviour
     {
+        [SerializeField]
+        int fightAnimationCount;
+
         // This is the speed that better fit the running animation
         float locomotioMaxSpeed = GameplayUtility.GetMovementSpeedValue(SpeedClass.VeryFast);
 
@@ -17,6 +20,8 @@ namespace HW
         string paramStopReaction = "StopReaction";
         string paramPushReaction = "PushReaction";
         string paramDead = "Dead";
+        string paramFightingAnimId = "AttackId";
+        string paramFight = "Attack";
         #endregion
 
         private void Awake()
@@ -25,7 +30,7 @@ namespace HW
             animator = GetComponent<Animator>();
 
             enemy.OnGotHit += HandleOnGotHit;
-            
+            enemy.OnFight += HandleOnFight;
         }
 
         // Start is called before the first frame update
@@ -60,6 +65,17 @@ namespace HW
             if (enemy.IsDead())
                 animator.SetBool(paramDead, true);
 
+        }
+
+        void HandleOnFight()
+        {
+            if (enemy.IsDead())
+                return;
+
+            int animationId = Random.Range(0, fightAnimationCount);
+            animationId = 0;
+            animator.SetFloat(paramFightingAnimId, (float)animationId);
+            animator.SetTrigger(paramFight);
         }
 
     }

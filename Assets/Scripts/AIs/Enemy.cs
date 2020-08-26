@@ -12,7 +12,7 @@ namespace HW
     {
         enum State { Dead, Idle, Alerted, Engaged }
 
-        public UnityAction OnAttack;
+        public UnityAction OnFight;
         public UnityAction<HitInfo> OnGotHit;
 
         [Header("Engagement ranges")]
@@ -31,6 +31,7 @@ namespace HW
         [SerializeField]
         float shotHearingRange = 8f; // Enemy can hear you if you shoot within this distance ( zero or negative to disable )
         float sqrShotHearingRange;
+
 
         [SerializeField]
         MonoBehaviour idleBehaviour;
@@ -51,11 +52,12 @@ namespace HW
         #region FIGHTING
         // The target this enemy is looking for ( can be both the player and any NPC )
         Transform target;
-        float attackRange = 1.25f;
+        //float attackRange = 1.25f;
         bool reacting = false;
         float pushDistance = .75f;
         float pushSpeed = 4;
         Health health;
+        bool fighting = false;
         #endregion
 
         #region MOVEMENT
@@ -78,7 +80,7 @@ namespace HW
         System.DateTime lastEngagementCheckTime;
         float engagementCheckTimer = 0.2f;
         System.DateTime lastPlayerOnSight;
-        float playerLostMaxTime = 5f;
+        float playerLostMaxTime = 3f;
         NavMeshAgent agent;
         GameObject player;
         bool active = false;
@@ -97,6 +99,7 @@ namespace HW
             sqrHearingRange = hearingRange * hearingRange;
             sqrSightRange = sightRange * sightRange;
             sqrShotHearingRange = shotHearingRange * shotHearingRange;
+           
 
             health = GetComponent<Health>();
         }
@@ -119,7 +122,7 @@ namespace HW
             if (!active)
                 return;
 
-            if(reacting)
+            if(reacting || fighting)
             {
                 return;
             }
@@ -135,17 +138,24 @@ namespace HW
                     else
                     {
                         // Withing the fighting range
-                        if ((transform.position - target.position).magnitude < attackRange)
+                        if ((transform.position - target.position).magnitude < (fightBehaviour as IFighter).GetFightingRange())
                         {
                             agent.velocity = Vector3.MoveTowards(agent.velocity, Vector3.zero, closeEnoughDeceleration * Time.deltaTime);
+                            
+                            if (!fighting)
+                            {
+                                fighting = true;
+                                OnFight?.Invoke();
+                                agent.ResetPath();
+                                
+                            }
 
-                            (fightBehaviour as IFighter)?.Fight();
                         }
                         else // Out of the fighting range
                         {
                             
                             // Move to target
-                            if(!IsObstacled(player.transform))
+                            if(!IsOccluded(player.transform))
                                 MoveTo(target.position);
                         }
                     }
@@ -398,7 +408,15 @@ namespace HW
             // I should not be here... anyway
             if (state == State.Engaged) 
                 return true;
-            
+
+            // Can't be eangaged by dead enemies
+            if (IsDead())
+                return false;
+
+            // If player is dead disengage
+            if (player.GetComponent<PlayerController>().IsDead())
+                return false;
+
             // Vector to player
             Vector3 toPlayer = player.transform.position - transform.position;
             toPlayer.y = 0; // Get rid of the y
@@ -413,7 +431,7 @@ namespace HW
             if (sqrHearingRange > 0 && sqrDistance < sqrHearingRange && player.GetComponent<PlayerController>().IsRunning())
                 return true;
 
-            if (IsInFieldView(player.transform, sightRange, sightAngle) && !IsObstacled(player.transform))
+            if (IsInFieldView(player.transform, sightRange, sightAngle) && !IsOccluded(player.transform))
                 return true;
 
             return false;
@@ -422,19 +440,27 @@ namespace HW
 
         bool CheckForDisengagement()
         {
+            // Time to check?
             if ((System.DateTime.UtcNow - lastEngagementCheckTime).TotalSeconds < engagementCheckTimer)
                 return false;
 
+            // Lets check
             lastEngagementCheckTime = System.DateTime.UtcNow;
 
             // I should not be here... anyway
             if (state != State.Engaged)
                 return true;
 
+            // Can't be eangaged by dead enemies
             if (IsDead())
                 return true;
 
-            if(IsInFieldView(player.transform, sightRange, sightAngle) && !IsObstacled(player.transform))
+            // If player is dead disengage
+            if (player.GetComponent<PlayerController>().IsDead())
+                return true;
+
+            // Check the last time the enemy saw you
+            if(IsInFieldView(player.transform, sightRange, sightAngle) && !IsOccluded(player.transform))
             {
                 lastPlayerOnSight = System.DateTime.UtcNow;
             }
@@ -467,14 +493,15 @@ namespace HW
             return true;
         }
 
-        bool IsObstacled(Transform target)
+        bool IsOccluded(Transform target)
         {
             Vector3 toTarget = target.position - transform.position;
 
+            int layer = LayerMask.GetMask("SightOccluder");
             float distance = toTarget.magnitude;
             RaycastHit hit;
             Ray ray = new Ray(transform.position, toTarget.normalized);
-            if (Physics.Raycast(ray, out hit, distance))
+            if (Physics.Raycast(ray, out hit, distance, layer))
             {
                 if (hit.transform != target)
                     return true;
@@ -521,6 +548,23 @@ namespace HW
         {
             ResetSpeed();
             reacting = false;
+            fighting = false;
+        }
+
+        public void DeadCompleted()
+        {
+            if(GetComponent<Collider>())
+                GetComponent<Collider>().enabled = false;
+        }
+
+        public void AttackCompleted()
+        {
+            fighting = false;
+        }
+
+        public void Hit()
+        {
+            (fightBehaviour as IFighter).Fight(player.transform);
             
         }
         #endregion

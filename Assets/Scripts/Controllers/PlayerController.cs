@@ -163,6 +163,11 @@ namespace HW
         #region INTERFACES IMPLEMENTATION
         public void GetHit(HitInfo hitInfo)
         {
+            reloading = false;
+            shooting = false;
+            attacking = false;
+            chargingAttack = false;
+
             // You are already dead
             if (IsDead())
                 return;
@@ -176,6 +181,9 @@ namespace HW
 
             // Apply damage
             health.Damage(hitInfo.DamageAmount);
+
+            if (IsDead())
+                GetComponent<Collider>().enabled = false;
 
             // Hit event
             OnGotHit?.Invoke(hitInfo);
@@ -583,8 +591,14 @@ namespace HW
         void RealtimeAction()
         {
             // You can't do anything else while you are doing one of these actions
-            if (disabled || reloading || shooting || attacking || hit)
+            if (disabled || /*reloading ||*/ shooting || attacking || hit || IsDead())
                 return;
+
+            if (reloading)
+            {
+                if (GetAxisRaw(horizontalAxis) != 0 || GetAxisRaw(verticalAxis) != 0)
+                    reloading = false;
+            }
 
             // Is charging melee attack
             if (chargingAttack)
@@ -842,6 +856,8 @@ namespace HW
             (currentWeapon as MeleeWeapon).Strike();
 
         }
+
+        
         #endregion
 
 

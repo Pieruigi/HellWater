@@ -20,6 +20,8 @@ public class _TestFighting : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+
         playerController = GameObject.FindObjectOfType<PlayerController>();
         gun = playerController.GetComponentInChildren<FireWeapon>();
         bat = playerController.GetComponentInChildren<MeleeWeapon>();

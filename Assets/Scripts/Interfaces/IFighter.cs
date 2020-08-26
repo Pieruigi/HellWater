@@ -1,12 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace HW.Interfaces
 {
     public interface IFighter
     {
-        void Fight();
+        bool Fight(Transform target);
+
+        float GetFightingRange();
+
+       
     }
 
 }

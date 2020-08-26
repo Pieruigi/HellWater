@@ -55,7 +55,7 @@ MonoBehaviour:
   range: 5
   animationId: 2
   weaponObject: {fileID: 1086094884162635255}
-  maxMagazineAmmo: 14
+  maxMagazineAmmo: 9
 --- !u!114 &5468824119535138588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,11 +552,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f5c68ae736158b488a511021736a660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxWalkingSpeed: 3
+  maxWalkingSpeed: 1.4
   maxRunningSpeed: 5
   acceleration: 10
   deceleration: 20
   angularSpeed: 360
+  chargeMeleeAttack: 1
 --- !u!54 &7762933675538711263
 Rigidbody:
   m_ObjectHideFlags: 0
