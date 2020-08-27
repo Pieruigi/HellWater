@@ -7,6 +7,8 @@ namespace HW.Interfaces
     public interface ITargetable
     {
         bool IsTargetable();
+
+        
     }
 
 }

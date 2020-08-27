@@ -61,7 +61,7 @@ namespace HW
         public static float GetAccuracyPenalty(FireWeapon weapon, float distance)
         {
             if (weapon.tooCloseDistance > distance)
-                return 0.3f;
+                return 0.5f;
 
             if (distance > weapon.Range && distance < weapon.tooFarDistance)
                 return 0.5f;

@@ -75,24 +75,6 @@ namespace HW
                     animator.SetInteger(paramAimingDirection, dir);
             }
 
-            //if(chargingEvalDir != 0)
-            //{
-            //    chargingSpeed += chargingEvalDir * chargingEvalSpeed * Time.deltaTime;
-
-            //    animator.speed = Mathf.Clamp(chargingSpeed, chargingSpeedMin, 1);
-            //    //Debug.Log("AnimSpeed:" + animator.speed);
-
-            //    if(chargingEvalDir < 0)
-            //    {
-            //        if (chargingSpeed == chargingSpeedMin)
-            //            chargingEvalDir = 0;
-            //    }
-            //    else
-            //    {
-            //        if (chargingSpeed == 1)
-            //            chargingEvalDir = 0;
-            //    }
-            //}
         }
 
 

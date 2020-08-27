@@ -15,8 +15,7 @@ namespace HW.UI
 
         Transform target;
         Weapon weapon;
-
-        float verticalOffset = 70f;
+        CapsuleCollider targetCollider;
 
         float cameraSizeDefault;
 
@@ -44,7 +43,7 @@ namespace HW.UI
             if (!IsVisible())
                 return;
 
-            crosshairImage.transform.position = Camera.main.WorldToScreenPoint(target.position) + Vector3.up * verticalOffset * cameraSizeDefault / Camera.main.orthographicSize;
+            crosshairImage.transform.position = Camera.main.WorldToScreenPoint(target.position + Vector3.forward*targetCollider.height/2f);
 
             // Set color
             SetColor();
@@ -71,6 +70,9 @@ namespace HW.UI
                 }
                 this.target = target;
                 this.weapon = weapon;
+                if (target)
+                    targetCollider = target.GetComponent<Collider>() as CapsuleCollider;
+                
             }
             else
             {
