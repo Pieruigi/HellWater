@@ -9,18 +9,21 @@ namespace HW
     public class PlayerController : MonoBehaviour, IHitable
     {
         #region ACTIONS
-        public UnityAction OnShoot;
-        public UnityAction OnStartAiming;
-        public UnityAction OnStopAiming;
-        public UnityAction OnChargeAttack;
-        public UnityAction<bool> OnAttackCharged;
-        public UnityAction<bool> OnAttack;
-        public UnityAction OnIsOutOfAmmo;
-        public UnityAction OnReload;
-        public UnityAction<Weapon> OnSetCurrentWeapon;
-        public UnityAction OnResetCurrentWeapon;
-        public UnityAction<HitInfo> OnGotHit;
-        public UnityAction<Weapon> OnHitSomething;
+        public UnityAction OnShoot; // Called on shoot
+        public UnityAction OnStartAiming; // Called when you start aiming
+        public UnityAction OnStopAiming; // Called when you stop aiming
+        public UnityAction OnChargeAttack; // Called when you start charging melee attack
+        public UnityAction<bool> OnAttackCharged; // Called passing true if melee attack is charged, otherwise false is passed
+        public UnityAction<bool> OnAttack; // Called when melee charging stops; param tell if attack has been charged
+        public UnityAction OnIsOutOfAmmo; // Called when your firegun is out of ammo
+        public UnityAction OnReload; // Called on reloading
+        public UnityAction OnReloadInterrupted; // Call when reloading is interrupted ( you move or you get hit )
+        public UnityAction<Weapon> OnSetCurrentWeapon; // Call when you holster up some weapon
+        public UnityAction OnResetCurrentWeapon; // Called when you holster the weapon you are holding
+        public UnityAction<HitInfo> OnGotHit; // Called when you get hit ( hit info are sent as param )
+        public UnityAction<Weapon> OnHitSomething; // Called when you hit something with your weapon
+        public UnityAction<Weapon, Transform> OnTargeting; // Called everytime you acquire or switch a target ( null means no target )
+        
         #endregion
 
         #region SERIALIZED FIELDS
@@ -163,7 +166,13 @@ namespace HW
         #region INTERFACES IMPLEMENTATION
         public void GetHit(HitInfo hitInfo)
         {
-            reloading = false;
+            if (reloading)
+            {
+                reloading = false;
+                OnReloadInterrupted?.Invoke();
+                (currentWeapon as FireWeapon).OnReloadInterrupted?.Invoke();
+            }
+
             shooting = false;
             attacking = false;
             chargingAttack = false;
@@ -594,10 +603,17 @@ namespace HW
             if (disabled || /*reloading ||*/ shooting || attacking || hit || IsDead())
                 return;
 
+            // If you are reloading you can still move, but reloading will be interrupted
             if (reloading)
             {
                 if (GetAxisRaw(horizontalAxis) != 0 || GetAxisRaw(verticalAxis) != 0)
+                {
                     reloading = false;
+                    OnReloadInterrupted?.Invoke();
+                    (currentWeapon as FireWeapon).OnReloadInterrupted?.Invoke();
+                }
+
+                return;
             }
 
             // Is charging melee attack
@@ -625,6 +641,8 @@ namespace HW
 
             if (!aiming)
             {
+                OnTargeting?.Invoke(currentWeapon, null);
+
                 // Time to holster weapon?
                 currentReleaseWeaponTimer -= Time.deltaTime;
                 if (currentReleaseWeaponTimer < 0)
@@ -674,12 +692,19 @@ namespace HW
                         List<Transform> targets = GetAvailableTargets(fireWeapon.Range * 2f);
 
                         // Set the target or null
+                        //Transform lastTarget = currentTarget;
                         currentTarget = GetClosestTarget(targets);
+
+                        // Send information about targeting
+                        //if(lastTarget != currentTarget)
+                            
 
                         TryChargeAttack();
                     }
                         
                 }
+
+                
             }
             else // Is aiming
             {
@@ -690,6 +715,9 @@ namespace HW
                 // Get all the targets inside the weapon range which are not hidden by any obstacle
                 List<Transform> targets = GetAvailableTargets(fireWeapon.Range);
 
+                // Last target will be useful to decide to call or not an event
+                Transform lastTarget = currentTarget;
+
                 // Clear current target if not longer available
                 if (currentTarget && !targets.Contains(currentTarget))
                     currentTarget = null;
@@ -698,6 +726,7 @@ namespace HW
                 // If there no target yet then set the closest one if available
                 if (!currentTarget)
                 {
+                    // Set the new target if available
                     currentTarget = GetClosestTarget(targets);
                 }
                 else
@@ -707,9 +736,16 @@ namespace HW
 
                     // Get the target the player is aiming or null
                     Transform newTarget = GetNewTarget(targets, direction, fireWeapon.Range);
+                    
+                    // 
                     if (newTarget && newTarget != currentTarget)
                         currentTarget = newTarget;
+    
                 }
+
+                // Check for event to be called
+                if(lastTarget != currentTarget)
+                    OnTargeting?.Invoke(currentWeapon, currentTarget);
 
                 // Rotate the player towards the choosen target if there is one
                 TryRotateTowardsTarget();

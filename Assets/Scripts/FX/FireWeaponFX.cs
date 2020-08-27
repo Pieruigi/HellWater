@@ -35,6 +35,7 @@ namespace HW
             fireWeapon.OnShoot += HandleOnShoot;
             fireWeapon.OnReload += HandleOnReload;
             fireWeapon.OnOutOfAmmo += HandleOnOutOfAmmo;
+            fireWeapon.OnReloadInterrupted += HandleOnReloadInterrupted;
         }
 
         // Start is called before the first frame update
@@ -62,6 +63,11 @@ namespace HW
         void HandleOnOutOfAmmo()
         {
             PlayClip(outOfAmmoClip, outOfAmmoVolume);
+        }
+
+        void HandleOnReloadInterrupted()
+        {
+            audioSource.Stop();
         }
 
         void PlayClip(AudioClip clip, float volume)

@@ -11,6 +11,7 @@ namespace HW
         public UnityAction OnShoot;
         public UnityAction OnReload;
         public UnityAction OnOutOfAmmo;
+        public UnityAction OnReloadInterrupted;
 
         [SerializeField]
         int maxMagazineAmmo;
