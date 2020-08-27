@@ -14,23 +14,55 @@ namespace HW
         {
             Debug.Log("Shoot");
 
-            // Raycast 
-            RaycastHit hit;
-            Ray ray = new Ray(transform.root.position, transform.root.forward);
-            if(Physics.Raycast(ray, out hit, fireWeapon.Range))
+            if (!GameObject.FindObjectOfType<PlayerController>().FireWeaponAccuracySystem)
             {
-                Debug.Log("Hit:" + hit.transform.name);
-
-                // Check if the object we hit has a hitable object
-                IHitable hitable = hit.transform.GetComponent<IHitable>();
-
-                // Yes, send hit info
-                if (hitable != null)
+                // Raycast 
+                RaycastHit hit;
+                Ray ray = new Ray(transform.root.position, transform.root.forward);
+                if (Physics.Raycast(ray, out hit, fireWeapon.Range))
                 {
-                    HitInfo hitInfo = new HitInfo(hit.point, hit.normal, fireWeapon.HitPhysicalReaction, fireWeapon.DamageAmount, fireWeapon.StunnedEffect);
-                    hitable.GetHit(hitInfo);
+                    Debug.Log("Hit:" + hit.transform.name);
+
+                    // Check if the object we hit has a hitable object
+                    IHitable hitable = hit.transform.GetComponent<IHitable>();
+
+                    // Yes, send hit info
+                    if (hitable != null)
+                    {
+                        HitInfo hitInfo = new HitInfo(hit.point, hit.normal, fireWeapon.HitPhysicalReaction, fireWeapon.DamageAmount, fireWeapon.StunnedEffect);
+                        hitable.GetHit(hitInfo);
+                    }
                 }
             }
+            else // Accuracy system
+            {
+                RaycastHit hit;
+                Ray ray = new Ray(transform.root.position, transform.root.forward);
+                if (Physics.Raycast(ray, out hit, FireWeapon.GlobalAimingRange))
+                {
+                    Debug.Log("Hit:" + hit.transform.name);
+
+                    // Check if the object we hit has a hitable object
+                    IHitable hitable = hit.transform.GetComponent<IHitable>();
+
+                    // Yes, send hit info
+                    if (hitable != null)
+                    {
+                        float distance = ((hitable as MonoBehaviour).transform.position - transform.root.position).magnitude;
+
+                        float acc = 1 - FireWeapon.GetAccuracyPenalty(fireWeapon, distance);
+                        bool accSucceeded = (Random.Range(0f, 1f) < acc);
+
+                        if (accSucceeded)
+                        {
+                            HitInfo hitInfo = new HitInfo(hit.point, hit.normal, fireWeapon.HitPhysicalReaction, fireWeapon.DamageAmount, fireWeapon.StunnedEffect);
+                            hitable.GetHit(hitInfo);
+                        }
+                        
+                    }
+                }
+            }
+
 
             
         }

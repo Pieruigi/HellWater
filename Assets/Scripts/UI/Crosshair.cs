@@ -14,11 +14,15 @@ namespace HW.UI
         PlayerController playerController;
 
         Transform target;
+        Weapon weapon;
 
-        float verticalOffset = 100f;
+        float verticalOffset = 70f;
+
+        float cameraSizeDefault;
 
         private void Awake()
         {
+            cameraSizeDefault = Camera.main.orthographicSize;
             Show(false);
         }
 
@@ -40,7 +44,10 @@ namespace HW.UI
             if (!IsVisible())
                 return;
 
-            crosshairImage.transform.position = Camera.main.WorldToScreenPoint(target.position) + Vector3.up * verticalOffset;
+            crosshairImage.transform.position = Camera.main.WorldToScreenPoint(target.position) + Vector3.up * verticalOffset * cameraSizeDefault / Camera.main.orthographicSize;
+
+            // Set color
+            SetColor();
         }
 
         void Show(bool value)
@@ -63,6 +70,7 @@ namespace HW.UI
                     Show(true);
                 }
                 this.target = target;
+                this.weapon = weapon;
             }
             else
             {
@@ -71,6 +79,32 @@ namespace HW.UI
             }
             
             
+        }
+
+        void SetColor()
+        {
+            float distance = (target.position - playerController.transform.position).magnitude;
+
+            FireWeapon fw = weapon as FireWeapon;
+            if(fw.TooCloseDistance > distance)
+            {
+                crosshairImage.color = Color.yellow;
+                return;
+            }
+
+            if(distance > fw.Range && distance < fw.TooFarDistance)
+            {
+                crosshairImage.color = Color.yellow;
+                return;
+            }
+
+            if(distance > fw.TooFarDistance)
+            {
+                crosshairImage.color = Color.red;
+                return;
+            }
+
+            crosshairImage.color = Color.green;
         }
     }
 

@@ -44,7 +44,16 @@ namespace HW
 
         [SerializeField]
         bool chargeMeleeAttack = false;
+
+        [SerializeField]
+        bool fireWeaponAccuracySystem = false;
+        public bool FireWeaponAccuracySystem
+        {
+            get { return fireWeaponAccuracySystem; }
+        }
         #endregion
+
+
 
         #region LOCOMOTION FIELDS
         // The max speed the player can reach depending on whether is running or not
@@ -89,6 +98,7 @@ namespace HW
 
         //Transform desiredTarget;
         Transform currentTarget;
+        
 
         System.DateTime lastShoot;
         float shootTime = 0.35f;
@@ -106,7 +116,7 @@ namespace HW
         #region MISC FIELDS
         Rigidbody rb;
         bool disabled = false; // Is this controller disabled ?
-        float sphereCastRadius = 1.0f; // Used to get targets
+        float sphereCastRadius = 2.0f; // Used to get targets
         bool qteAction = false;
         float angularSpeedInRadians;
         #endregion
@@ -568,11 +578,26 @@ namespace HW
 
         Transform GetNewTarget(List<Transform> targets, Vector3 aimingDirection, float distance)
         {
-            Transform ret = null;
+            //Debug.Log("Targets.Count:" + targets.Count);
+            //Transform ret = null;
+            //float angle = 0;
+            //foreach(Transform target in targets)
+            //{
 
+            //    Vector3 toTarget = target.position - transform.position;
+            //    float tmpAngle = Vector3.Angle(aimingDirection, toTarget);
+            //    Debug.Log("Target:" + target.name + "; angle:" +tmpAngle);
+            //    if (ret == null || tmpAngle < angle)
+            //    {
+            //        ret = target;
+            //        angle = tmpAngle;                    
+            //    }
+
+            //}
+
+            Transform ret = null;
             RaycastHit hitInfo;
-            
-            if (Physics.SphereCast (transform.position, sphereCastRadius, aimingDirection, out hitInfo, distance))
+            if (Physics.SphereCast(transform.position, sphereCastRadius, aimingDirection, out hitInfo, distance))
                 ret = targets.Find(t => t == hitInfo.transform);
 
             return ret;
@@ -713,7 +738,12 @@ namespace HW
                 //
 
                 // Get all the targets inside the weapon range which are not hidden by any obstacle
-                List<Transform> targets = GetAvailableTargets(fireWeapon.Range);
+                List<Transform> targets;
+                if (!fireWeaponAccuracySystem)
+                    targets = GetAvailableTargets(fireWeapon.Range);
+                else
+                    targets = GetAvailableTargets(FireWeapon.GlobalAimingRange);
+
 
                 // Last target will be useful to decide to call or not an event
                 Transform lastTarget = currentTarget;
@@ -734,12 +764,17 @@ namespace HW
                     // Get the aiming direction
                     Vector3 direction = new Vector3(GetAxisRaw(horizontalAxis), 0, GetAxisRaw(verticalAxis)).normalized;
 
-                    // Get the target the player is aiming or null
-                    Transform newTarget = GetNewTarget(targets, direction, fireWeapon.Range);
+                    // I'm trying to target someone else
+                    if(direction != Vector3.zero)
+                    {
+                        // Get the target the player is aiming or null
+                        Transform newTarget = GetNewTarget(targets, direction, fireWeapon.Range);
+
+                        // 
+                        if (newTarget && newTarget != currentTarget)
+                            currentTarget = newTarget;
+                    }
                     
-                    // 
-                    if (newTarget && newTarget != currentTarget)
-                        currentTarget = newTarget;
     
                 }
 

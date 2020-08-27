@@ -32,7 +32,7 @@ namespace HW
                     break;
 
             }
-
+            ret = 0;
             return ret;
         }
 
@@ -58,7 +58,7 @@ namespace HW
                     ret = 2.1f;
                     break;
             }
-
+            
             return ret;
         }
     }
