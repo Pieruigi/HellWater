@@ -32,7 +32,7 @@ namespace HW
                     break;
 
             }
-            ret = 0;
+            
             return ret;
         }
 
