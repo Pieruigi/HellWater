@@ -22,6 +22,7 @@ namespace HW
         string paramDead = "Dead";
         string paramFightingAnimId = "AttackId";
         string paramFight = "Attack";
+        string paramFightMultiplier = "AttackMultiplier";
         #endregion
 
         private void Awake()
@@ -29,6 +30,10 @@ namespace HW
             enemy = GetComponent<Enemy>();
             animator = GetComponent<Animator>();
 
+            // Set the fighting animiation speed multiplier
+            animator.SetFloat(paramFightMultiplier, GameplayUtility.GetAttackAnimationMultiplierValue(enemy.SpeedClass));
+
+            // Set handles
             enemy.OnGotHit += HandleOnGotHit;
             enemy.OnFight += HandleOnFight;
         }
@@ -52,29 +57,36 @@ namespace HW
             animator.SetFloat(paramSpeed, ratio);
         }
 
+        // Handle reaction on hit
         void HandleOnGotHit(HitInfo hitInfo)
         {
+            // If there is some reaction
             if(hitInfo.PhysicalReaction != HitPhysicalReaction.None)
             {
                 if(hitInfo.PhysicalReaction == HitPhysicalReaction.Stop || enemy.CanNotBePushed)
-                    animator.SetTrigger(paramStopReaction);
+                    animator.SetTrigger(paramStopReaction); // Just stop
                 else
-                    animator.SetTrigger(paramPushReaction);
+                    animator.SetTrigger(paramPushReaction); // Push
             }
 
+            // If is dead then set param
             if (enemy.IsDead())
                 animator.SetBool(paramDead, true);
 
         }
 
+        // Handle fighting
         void HandleOnFight()
         {
+            // If dead do nothing
             if (enemy.IsDead())
                 return;
 
+            // We might have different types of animations
             int animationId = Random.Range(0, fightAnimationCount);
-            animationId = 0;
             animator.SetFloat(paramFightingAnimId, (float)animationId);
+
+            // Start fighting
             animator.SetTrigger(paramFight);
         }
 

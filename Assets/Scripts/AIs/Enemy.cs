@@ -41,6 +41,10 @@ namespace HW
 
         [SerializeField]
         SpeedClass speedClass = SpeedClass.Average;
+        public SpeedClass SpeedClass
+        {
+            get { return speedClass;}
+        }
 
         [SerializeField]
         bool canNotBePushed = false;
