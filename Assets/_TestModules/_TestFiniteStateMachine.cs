@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using HW;
 
+using HW.FSM;
 
 
 public class _TestFiniteStateMachine : MonoBehaviour
 {
     
     [SerializeField]
-    DoorFSM fsm;
+    FiniteStateMachine fsm;
 
     // Start is called before the first frame update
     void Start()
@@ -22,19 +23,16 @@ public class _TestFiniteStateMachine : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            fsm.Lookup(DoorAction.Unlock);
+            fsm.Lookup();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            fsm.Lookup(DoorAction.Lock);
+            fsm.Lookup("Open");
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            fsm.Lookup(DoorAction.Open);
+            fsm.Lookup("Lock");
         }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            fsm.Lookup(DoorAction.Close);
-        }
+        
     }
 }

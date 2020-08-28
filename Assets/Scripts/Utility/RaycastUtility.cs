@@ -7,6 +7,8 @@ namespace HW
 {
     public class RaycastUtility
     {
+        public static readonly float RaycastVerticalOffset = 1f;
+
         // Returns multiple hitable objects which are inside a given cone and are not obscured by any obstacle
         public static List<RaycastHit> GetMultipleHits(Ray ray, float distance, int raysPerSide, float maxAngle)
         {

@@ -28,7 +28,7 @@ namespace HW
             bool hitSomething = false;
 
             // Get the original ray
-            Ray ray = new Ray(transform.root.position, transform.root.forward);
+            Ray ray = new Ray(transform.root.position + Vector3.up * RaycastUtility.RaycastVerticalOffset, transform.root.forward);
 
             // Raycast
             RaycastHit hit;

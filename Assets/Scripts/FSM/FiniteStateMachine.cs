@@ -1,104 +1,254 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HW.Collections;
+using UnityEngine.Events;
 
-namespace HW
+namespace HW.FSM
 {
-
-
-    [System.Serializable]
-    public abstract class FiniteStateMachine<TState,TAction>: MonoBehaviour
+    
+    [ExecuteAlways]
+    public class FiniteStateMachine: MonoBehaviour
     {
-        // Transition from one state to another
+
+        // Called on state change except when ForceState() is called with callEvent = false; int param is the old state
+        public UnityAction<FiniteStateMachine, int> OnStateChange; 
+
+
+        /**
+         * Transitions take care about switching from one state to onother by checking some conditions.
+         * A condition is satisfied when the finite state machine to which refers is in a given state.
+         * */
         [System.Serializable]
-        protected class Transition
+        private class Transition
         {
-            // Should be the current state
+            // Class to manage conditions
+            [System.Serializable]
+            private class OtherToCheck
+            {
+                [SerializeField]
+                FiniteStateMachine fsm;
+                public FiniteStateMachine FiniteStateMachine
+                {
+                    get { return fsm; }
+                }
+
+                [SerializeField]
+                int desiredStateId;
+                public int DesiredStateId
+                {
+                    get { return desiredStateId; }
+                }
+            }
+
+            // Can be used to choose between different transitions heading to the same state ( or just as label )
             [SerializeField]
-            TState fromState;
-            public TState FromState
+            string tag;
+            public string Tag
             {
-                get { return fromState; }
+                get { return tag; }
             }
 
-            // The next state
+            // The state we start from ( it should be the current state the machine is in )
             [SerializeField]
-            TState toState; // The next state the fsm will reach when all conditions are true
-            public TState ToState
+            int fromStateId;
+            public int FromStateId
             {
-                get { return toState; }
+                get { return fromStateId; }
             }
-       
-            // The action that calls this transition
+
+            // The new state we want the machine if this transition passes
             [SerializeField]
-            TAction action;
-            public TAction Action
+            int toStateId;
+            public int ToStateId
             {
-                get { return action; }
+                get { return toStateId; }
             }
 
-            public Transition() { }
+            // Conditions
+            [SerializeField]
+            List<OtherToCheck> othersToCheck;
 
-            public Transition(TState fromState, TState toState, TAction action)
+            // If true the machine can change state
+            public bool Checked()
             {
-                this.fromState = fromState;
-                this.toState = toState;
-                this.action = action;
+                foreach (OtherToCheck other in othersToCheck)
+                {
+                    if (other.FiniteStateMachine.currentStateId != other.DesiredStateId)
+                        return false;
+                }
+                return true;
             }
-
-            // Check whether we can go to the next state or not
-            public bool CheckConditions() { return true; }
         }
 
+        /**
+         * Represents the core of the finite state machine.
+         * */
+        [System.Serializable]
+        private class State
+        {
+            /**
+             * When a finite state machine changes state it can happen that also other machines are forced in a new state;
+             * the new state is forces without checking any condition, but we can still call the change state event
+             * by setting callEvent true.
+             * */
+            [System.Serializable]
+            private class OtherToSet
+            {
+                [SerializeField]
+                FiniteStateMachine fsm;
+                public FiniteStateMachine FiniteStateMachine
+                {
+                    get { return fsm; }
+                }
 
-        // Internal transition list ( you need to fill this by the child )
+                [SerializeField]
+                int newStateId;
+                public int NewStateId
+                {
+                    get { return newStateId; }
+                }
+
+                // Call the event in the machine forced to change its state
+                [SerializeField]
+                bool callEvent;
+                public bool CallEvent
+                {
+                    get { return callEvent; }
+                }
+            }
+
+            // Name of the state
+            [SerializeField]
+            string name;
+            public string Name
+            {
+                get { return name; }
+            }
+
+            // Is the position in the array
+            [ReadOnly]
+            [SerializeField]
+            public int id;
+
+            // Other fsm to be set
+            [SerializeField]
+            List<OtherToSet> othersToSet = new List<OtherToSet>();
+
+            // Sets the other fsm
+            public void SetOthers()
+            {
+                foreach(OtherToSet other in othersToSet)
+                {
+                    other.FiniteStateMachine.ForceState(other.NewStateId, other.CallEvent);
+                }
+            }
+        }
+
+        
+        // All the available states
+        [SerializeField]
+        List<State> states;
+
+        // All the available transitions
+        [SerializeField]
         List<Transition> transitions;
 
+        // Shows the state name in the inspector
+        [ReadOnly]
         [SerializeField]
-        TState currentState; // The current state
+        string currentStateName;
 
-        // Implement this to get all the transitions from children
-        protected abstract List<Transition> GetTransitions();
+        [SerializeField]
+        int currentStateId;
 
-        private void Awake()
+        void Awake()
         {
-            // Init transitions field
-            SetTransitions(GetTransitions());
+            // Fill the id for each state
+            for(int i=0; i<states.Count; i++)
+            {
+                states[i].id = i;
+            }
+
+            currentStateName = states[currentStateId].Name;
         }
 
-        // Look for the given action in the current state and try to move to the next state
-        public void Lookup(TAction action)
+        /**
+         * Try to move to the next state looking for the first checked transition in the current state.
+         * */
+        public void Lookup()
         {
-            // Get transition from current state given the action
-            Transition transition = transitions.Find(t => t.FromState.Equals(currentState) && t.Action.Equals(action));
+            // If disabled then return
+            if (currentStateId < 0)
+                return;
+
+            // Get the first checked transition
+            Transition transition = transitions.Find(t => t.FromStateId == currentStateId && t.Checked());
 
             // If no transition return
             if (transition == null)
                 return;
 
-            // If conditions are not satisfied return 
-            if (!transition.CheckConditions())
+            // Change state
+            ChangeState(transition);
+
+
+        }
+
+        /** 
+         * Try to move to the next state by looking for a specific transition ( by tag ) in the current state.
+         * Why on earht you would check for a particular transition? 
+         * Say for example you have a locked door that can be opened both using the key of the picklock; then you need
+         * two transitions heading to the save state but with different some different condition to check;
+         * in this case you can set each transition with a given tag and the look for the right one.
+         * */
+        public void Lookup(string tag)
+        {
+            // If disabled then return
+            if (currentStateId < 0)
                 return;
 
-            // Ok, lets move to the next state
-            currentState = transition.ToState;
+            // Get the transition we are looking for
+            Transition transition = transitions.Find(t=>t.FromStateId == currentStateId && tag.ToLower().Equals(t.Tag.ToLower()));
+
+            // If no transition has been found the return
+            if (transition == null)
+                return;
+
+            // If transition is not checked return
+            if (!transition.Checked())
+                return;
+
+            // Change state
+            ChangeState(transition);
         }
 
-
-        // Fill the transitions field at startup
-        void SetTransitions(List<Transition> transitions)
+        // Forse the state machine to a new state without taking into account any condition
+        public void ForceState(int stateId, bool callEvent)
         {
-            this.transitions = new List<Transition>();
-            foreach(Transition t in transitions)
-            {
-                
-                this.transitions.Add(new Transition(t.FromState, t.ToState, t.Action));
-            }
-            
+            int oldState = currentStateId;
+            currentStateId = stateId;
 
+            if (callEvent)
+                OnStateChange?.Invoke(this, oldState);
         }
 
-        
-    }
+        private void ChangeState(Transition transition)
+        {
+            // Store old state
+            int oldStateId = currentStateId;
 
+            // Switch to the new state
+            currentStateId = transition.ToStateId;
+
+            // Show the name in the inspector
+            currentStateName = states[currentStateId].Name;
+
+            // Call event
+            OnStateChange?.Invoke(this, oldStateId);
+
+            // Set others
+            states[currentStateId].SetOthers();
+        }
+    }
 }

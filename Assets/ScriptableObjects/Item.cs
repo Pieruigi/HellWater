@@ -13,6 +13,10 @@ namespace HW.Collections
 
         [SerializeField]
         ItemType type;
+        public ItemType Type
+        {
+            get { return type; }
+        }
 
         [SerializeField]
         string description;

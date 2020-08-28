@@ -43,6 +43,7 @@ namespace HW.UI
             if (!IsVisible())
                 return;
 
+            Debug.Log("Camera main:" + Camera.main);
             crosshairImage.transform.position = Camera.main.WorldToScreenPoint(target.position + Vector3.forward*targetCollider.height/2f);
 
             // Set color

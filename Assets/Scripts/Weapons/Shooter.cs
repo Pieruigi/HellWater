@@ -10,6 +10,7 @@ namespace HW
     public class Shooter : MonoBehaviour, IShooter
     {
        
+
         public void Shoot(FireWeapon fireWeapon)
         {
             Debug.Log("Shoot");
@@ -18,7 +19,7 @@ namespace HW
             {
                 // Raycast 
                 RaycastHit hit;
-                Ray ray = new Ray(transform.root.position, transform.root.forward);
+                Ray ray = new Ray(transform.root.position+Vector3.up*RaycastUtility.RaycastVerticalOffset, transform.root.forward);
                 if (Physics.Raycast(ray, out hit, fireWeapon.Range))
                 {
                     Debug.Log("Hit:" + hit.transform.name);
@@ -37,7 +38,7 @@ namespace HW
             else // Accuracy system
             {
                 RaycastHit hit;
-                Ray ray = new Ray(transform.root.position, transform.root.forward);
+                Ray ray = new Ray(transform.root.position + Vector3.up * RaycastUtility.RaycastVerticalOffset, transform.root.forward);
                 if (Physics.Raycast(ray, out hit, FireWeapon.GlobalAimingRange))
                 {
                     Debug.Log("Hit:" + hit.transform.name);
