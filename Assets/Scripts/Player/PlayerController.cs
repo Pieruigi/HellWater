@@ -129,7 +129,7 @@ namespace HW
             rb = GetComponent<Rigidbody>();
             angularSpeedInRadians = angularSpeed * Mathf.Deg2Rad;
             health = GetComponent<Health>();
-            raycastOffset = Vector3.up * RaycastUtility.RaycastVerticalOffset;
+            raycastOffset = Vector3.up * Constants.RaycastVerticalOffset;
         }
 
         // Start is called before the first frame update
@@ -213,7 +213,7 @@ namespace HW
         #endregion
 
         #region PUBLIC
-        public bool GetActionInputDown()
+        public bool GetActionDown()
         {
             return GetAxisRaw(actionAxis) > 0 ? true : false;
         }

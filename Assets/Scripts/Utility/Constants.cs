@@ -14,7 +14,17 @@ namespace HW
     }
 
 
+    public class Constants
+    {
+        // Interaction
+        public static readonly float InteractionCooldownTime = 1.5f;
+        public static readonly int DoorLockedState = 0;
+        public static readonly int DoorClosedState = 1;
+        public static readonly int DoorOpenState = 2;
 
+        // Raycast
+        public static readonly float RaycastVerticalOffset = 1f;
+    }
 
 
 }

@@ -7,19 +7,24 @@ namespace HW
 {
     public class InteractionTrigger : MonoBehaviour
     {
-        [SerializeField]
         // By default only positive fwd is used to check position, two way also use negative which means you can
         // click whereever you want.
-        bool twoWay; 
-        
+        [SerializeField]
+        bool twoWay;
+
         [SerializeField]
         GameObject interactableObject;
+
+        [SerializeField]
+        ActionController playerActionController;
 
         bool inside;
 
         IInteractable interactable;
 
         GameObject player;
+
+        
 
         private void Awake()
         {
@@ -57,10 +62,23 @@ namespace HW
 
                     if (canInteract)
                     {
-                        if(player.GetComponent<PlayerController>().GetActionInputDown())
+                        // No action required
+                        if (!playerActionController)
+                        {
                             interactable.Interact();
+                        }
+                        else // We need to play a little
+                        {
+                            if(!playerActionController.Acting)
+                                StartActing();
+                        }
+
                     }
-                        
+                    else
+                    {
+                        if(playerActionController.Acting)
+                            StopActing();
+                    }    
                 }
                    
             }
@@ -71,15 +89,38 @@ namespace HW
             if(other.tag == Tags.Player)
             {
                 inside = true;
+
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
             if (other.tag == Tags.Player)
-                inside = false;       
-                 
+            {
+                inside = false;
+                
+                if(playerActionController.Acting)
+                    StopActing();
+            }
         }
+
+        void HandleOnActionPerformed(ActionController controller)
+        {
+            interactable.Interact();
+        }
+
+        void StartActing()
+        {
+            ActionController.OnActionPerformed += HandleOnActionPerformed;
+            playerActionController.StartActing();
+        }
+
+        void StopActing()
+        {
+            playerActionController.StopActing();
+            ActionController.OnActionPerformed -= HandleOnActionPerformed;
+        }
+        
     }
 
 }

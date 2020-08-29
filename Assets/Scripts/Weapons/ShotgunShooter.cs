@@ -26,7 +26,7 @@ namespace HW
         public void Shoot(FireWeapon weapon)
         {
             // Get the original ray
-            Ray ray = new Ray(transform.root.position + Vector3.up * RaycastUtility.RaycastVerticalOffset, transform.root.forward);
+            Ray ray = new Ray(transform.root.position + Vector3.up * Constants.RaycastVerticalOffset, transform.root.forward);
 
             // Get multiple hits
             List<RaycastHit> hits = RaycastUtility.GetMultipleHits(ray, weapon.Range, raysPerSide, maxAngle);

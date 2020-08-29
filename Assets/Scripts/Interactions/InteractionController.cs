@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using HW.Interfaces;
 using System;
+using UnityEngine.Events;
 
 namespace HW
 {
     public class InteractionController : MonoBehaviour, IInteractable
     {
-        public static readonly float CooldownTime = 1;
+        public UnityAction<int, int> OnStateChange;
+
 
         [SerializeField]
         List<int> unavailableStates = new List<int>();
@@ -21,6 +23,7 @@ namespace HW
         private void Awake()
         {
             fsm = GetComponent<FiniteStateMachine>();
+            fsm.OnStateChange += HandleOnStateChange;
         }
 
         // Start is called before the first frame update
@@ -39,7 +42,7 @@ namespace HW
         {
             Debug.Log("Interact...");
 
-            if ((DateTime.UtcNow - lastInteractionTime).TotalSeconds < CooldownTime)
+            if (!IsAvailable())
                 return;
 
             lastInteractionTime = DateTime.UtcNow;
@@ -50,7 +53,7 @@ namespace HW
         public bool IsAvailable()
         {
             // Cooldown wait
-            if ((DateTime.UtcNow - lastInteractionTime).TotalSeconds < CooldownTime)
+            if ((DateTime.UtcNow - lastInteractionTime).TotalSeconds < Constants.InteractionCooldownTime)
                 return false;
 
             // State machine is unavailable
@@ -58,6 +61,11 @@ namespace HW
                 return false;
 
             return true;
+        }
+
+        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        {
+            OnStateChange?.Invoke(oldState, fsm.CurrentStateId);
         }
     }
 

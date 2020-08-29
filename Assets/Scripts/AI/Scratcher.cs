@@ -32,7 +32,7 @@ namespace HW
         public bool Fight(Transform target)
         {
             // Get the original ray
-            Ray ray = new Ray(transform.root.position + Vector3.up * RaycastUtility.RaycastVerticalOffset, transform.root.forward);
+            Ray ray = new Ray(transform.root.position + Vector3.up * Constants.RaycastVerticalOffset, transform.root.forward);
 
             // Raycast
             RaycastHit hit;
