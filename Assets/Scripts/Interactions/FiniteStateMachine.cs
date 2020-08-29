@@ -4,7 +4,7 @@ using UnityEngine;
 using HW.Collections;
 using UnityEngine.Events;
 
-namespace HW.FSM
+namespace HW
 {
     
     [ExecuteAlways]
@@ -161,6 +161,10 @@ namespace HW.FSM
 
         [SerializeField]
         int currentStateId;
+        public int CurrentStateId
+        {
+            get { return currentStateId; }
+        }
 
         void Awake()
         {
@@ -176,23 +180,23 @@ namespace HW.FSM
         /**
          * Try to move to the next state looking for the first checked transition in the current state.
          * */
-        public void Lookup()
+        public bool Lookup()
         {
             // If disabled then return
             if (currentStateId < 0)
-                return;
+                return false;
 
             // Get the first checked transition
             Transition transition = transitions.Find(t => t.FromStateId == currentStateId && t.Checked());
 
             // If no transition return
             if (transition == null)
-                return;
+                return false;
 
             // Change state
             ChangeState(transition);
 
-
+            return true;
         }
 
         /** 
@@ -202,25 +206,27 @@ namespace HW.FSM
          * two transitions heading to the save state but with different some different condition to check;
          * in this case you can set each transition with a given tag and the look for the right one.
          * */
-        public void Lookup(string tag)
+        public bool Lookup(string tag)
         {
             // If disabled then return
             if (currentStateId < 0)
-                return;
+                return false;
 
             // Get the transition we are looking for
             Transition transition = transitions.Find(t=>t.FromStateId == currentStateId && tag.ToLower().Equals(t.Tag.ToLower()));
 
             // If no transition has been found the return
             if (transition == null)
-                return;
+                return false;
 
             // If transition is not checked return
             if (!transition.Checked())
-                return;
+                return false;
 
             // Change state
             ChangeState(transition);
+
+            return true;
         }
 
         // Forse the state machine to a new state without taking into account any condition

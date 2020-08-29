@@ -111,6 +111,7 @@ namespace HW
         string aimAxis = "Aim";
         string reloadAxis = "Reload";
         string shootAxis = "Shoot";
+        string actionAxis = "Action";
         #endregion
 
         #region MISC FIELDS
@@ -212,6 +213,11 @@ namespace HW
         #endregion
 
         #region PUBLIC
+        public bool GetActionInputDown()
+        {
+            return GetAxisRaw(actionAxis) > 0 ? true : false;
+        }
+
         public bool IsRunning()
         {
             return running;

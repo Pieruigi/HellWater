@@ -1,7 +1,7 @@
 ﻿// Toony Colors Pro+Mobile 2
 // (c) 2014-2020 Jean Moreno
 
-Shader "Toony Colors Pro 2/Examples/Default/Dissolve"
+Shader "Toony Colors Pro 2/User/My TCP2 Shader"
 {
 	Properties
 	{
@@ -22,14 +22,6 @@ Shader "Toony Colors Pro 2/Examples/Default/Dissolve"
 		_RampSmooth ("Ramp Smoothing", Range(0.001,1)) = 0.1
 	[TCP2Separator]
 
-	[TCP2HeaderHelp(TRANSPARENCY)]
-		//Blending
-		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlendTCP2 ("Blending Source", Float) = 5
-		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlendTCP2 ("Blending Dest", Float) = 10
-		//Alpha Testing
-		_Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
-	[TCP2Separator]
-
 
 		//Avoid compile error if the properties are ending with a drawer
 		[HideInInspector] __dummy__ ("unused", Float) = 0
@@ -38,12 +30,11 @@ Shader "Toony Colors Pro 2/Examples/Default/Dissolve"
 	SubShader
 	{
 
-		Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
-		Blend [_SrcBlendTCP2] [_DstBlendTCP2]
+		Tags { "RenderType"="Opaque" }
 
 		CGPROGRAM
 
-		#pragma surface surf ToonyColorsCustom fullforwardshadows keepalpha exclude_path:deferred exclude_path:prepass
+		#pragma surface surf ToonyColorsCustom  exclude_path:deferred exclude_path:prepass
 		#pragma target 3.0
 
 		//================================================================
@@ -51,8 +42,6 @@ Shader "Toony Colors Pro 2/Examples/Default/Dissolve"
 
 		fixed4 _Color;
 		sampler2D _MainTex;
-		fixed _SketchSpeed;
-		fixed _Cutoff;
 
 		#define UV_MAINTEX uv_MainTex
 
@@ -129,11 +118,6 @@ Shader "Toony Colors Pro 2/Examples/Default/Dissolve"
 			c.rgb += s.Albedo * gi.indirect.diffuse;
 		#endif
 
-		#if defined(UNITY_PASS_FORWARDADD)
-			//multiply RGB with alpha for additive lights for proper transparency behavior
-			c.rgb *= c.a;
-		#endif
-
 			return c;
 		}
 
@@ -153,70 +137,9 @@ Shader "Toony Colors Pro 2/Examples/Default/Dissolve"
 			fixed4 mainTex = tex2D(_MainTex, IN.UV_MAINTEX);
 			o.Albedo = mainTex.rgb * _Color.rgb;
 			o.Alpha = mainTex.a * _Color.a;
-
-			//Sharpen Alpha-to-Coverage
-			o.Alpha = (o.Alpha - _Cutoff) / max(fwidth(o.Alpha), 0.0001) + 0.5;
 		}
 
 		ENDCG
-
-		//Shadow Caster (for shadows and depth texture)
-		Pass
-		{
-			Name "ShadowCaster"
-			Tags { "LightMode" = "ShadowCaster" }
-
-			CGPROGRAM
-
-			#include "UnityCG.cginc"
-			#pragma vertex vertShadowCaster
-			#pragma fragment fragShadowCaster
-			#pragma multi_compile_shadowcaster
-			#pragma multi_compile_instancing
-
-
-			half4		_Color;
-			half		_Cutoff;
-			sampler2D	_MainTex;
-			float4		_MainTex_ST;
-			sampler3D	_DitherMaskLOD;
-
-			struct VertexInput
-			{
-				float4 vertex	: POSITION;
-				float3 normal	: NORMAL;
-				float2 uv0		: TEXCOORD0;
-		#if UNITY_VERSION >= 550
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-		#endif
-			};
-
-			struct VertexOutputShadowCaster
-			{
-				V2F_SHADOW_CASTER_NOPOS
-				float2 tex : TEXCOORD1;
-			};
-
-			void vertShadowCaster(VertexInput v, out VertexOutputShadowCaster o, out float4 opos : SV_POSITION)
-			{
-				
-				TRANSFER_SHADOW_CASTER_NOPOS(o,opos)
-				o.tex = TRANSFORM_TEX(v.uv0, _MainTex);
-			}
-
-			half4 fragShadowCaster(VertexOutputShadowCaster i, UNITY_VPOS_TYPE vpos : VPOS) : SV_Target
-			{
-				half alpha = tex2D(_MainTex, i.tex).a * _Color.a;
-				// Use dither mask for alpha blended shadows, based on pixel position xy
-				// and alpha level. Our dither texture is 4x4x16.
-				half alphaRef = tex3D(_DitherMaskLOD, float3(vpos.xy*0.25,alpha*0.9375)).a;
-				clip (alphaRef - 0.01);
-
-				SHADOW_CASTER_FRAGMENT(i)
-			}
-
-			ENDCG
-		}
 	}
 
 	Fallback "Diffuse"
