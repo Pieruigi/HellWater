@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   twoWay: 1
   interactableObject: {fileID: 7187900804719546769}
-  playerActionController: {fileID: 7187900804719546765}
+  playerActionController: {fileID: 1684910833}
 --- !u!1 &7187900803818512251
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,8 +252,8 @@ GameObject:
   - component: {fileID: 7187900804719546770}
   - component: {fileID: 7187900804719546771}
   - component: {fileID: 7187900804719546764}
-  - component: {fileID: 7187900804719546765}
   - component: {fileID: 7187900804719546766}
+  - component: {fileID: 1684910833}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -328,18 +328,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unavailableStates: 02000000
---- !u!114 &7187900804719546765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7187900804719546769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38e71be0c26251845a5e2f40f7c7d57e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7187900804719546766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,3 +342,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneObject: {fileID: 7187900803818512251}
   invertAngle: 0
+--- !u!114 &1684910833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7187900804719546769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38e71be0c26251845a5e2f40f7c7d57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
