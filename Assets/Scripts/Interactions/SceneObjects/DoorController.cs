@@ -19,6 +19,8 @@ namespace HW
 
         GameObject player;
 
+        float openAngle = 0;
+
         private void Awake()
         {
             interactionController = GetComponent<InteractionController>();
@@ -42,24 +44,24 @@ namespace HW
             float angle = 90;
             if(newState == Constants.DoorOpenState)
             {
-                Vector3 dir = sceneObject.transform.position - player.transform.position;
+                Vector3 dir = transform.position - player.transform.position;
                 if (Vector3.Dot(dir, sceneObject.transform.forward) > 0)
                     angle = -90;
-                
+
+                if (invertAngle)
+                    angle *= -1;
             }
             else
             {
                 if (newState == Constants.DoorClosedState)
                 {
-                    Vector3 dir = sceneObject.transform.position - player.transform.position;
-                    if (Vector3.Dot(dir, sceneObject.transform.forward) < 0)
-                        angle = -90;
-
+                    angle = openAngle * -1f;
                 }
             }
 
-            if (invertAngle)
-                angle *= -1;
+            
+
+            openAngle = angle;
 
             LeanTween.rotateAroundLocal(sceneObject, Vector3.up, angle, 0.5f).setEaseOutElastic();
         }

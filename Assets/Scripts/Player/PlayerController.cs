@@ -23,6 +23,7 @@ namespace HW
         public UnityAction<HitInfo> OnGotHit; // Called when you get hit ( hit info are sent as param )
         public UnityAction<Weapon> OnHitSomething; // Called when you hit something with your weapon
         public UnityAction<Weapon, Transform> OnTargeting; // Called everytime you acquire or switch a target ( null means no target )
+        public UnityAction OnDead;
         
         #endregion
 
@@ -204,18 +205,27 @@ namespace HW
             // Apply damage
             health.Damage(hitInfo.DamageAmount);
 
-            if (IsDead())
-                GetComponent<Collider>().enabled = false;
-
             // Hit event
             OnGotHit?.Invoke(hitInfo);
+
+            if (IsDead())
+            {
+                GetComponent<Collider>().enabled = false;
+                OnDead?.Invoke();
+            }
+                
         }
         #endregion
 
         #region PUBLIC
-        public bool GetActionDown()
+        public bool GetActionButtonDown()
         {
-            return GetAxisRaw(actionAxis) > 0 ? true : false;
+            return GetButtonDown(actionAxis);
+        }
+
+        public bool GetActionButtonUp()
+        {
+            return GetButtonUp(actionAxis);
         }
 
         public bool IsRunning()
@@ -522,6 +532,36 @@ namespace HW
             }
 
             return Input.GetAxisRaw(axis + suffix);
+        }
+
+        bool GetButtonDown(string button)
+        {
+            // No suffix for mouse and keyboard
+            string suffix = "_0";
+
+            // Are we using the gamepad ?
+            if (JoystickManager.Instance.Connected)
+            {
+                // If so which type ?
+                suffix = JoystickManager.Instance.Suffix;
+            }
+
+            return Input.GetButtonDown(button + suffix);
+        }
+
+        bool GetButtonUp(string button)
+        {
+            // No suffix for mouse and keyboard
+            string suffix = "_0";
+
+            // Are we using the gamepad ?
+            if (JoystickManager.Instance.Connected)
+            {
+                // If so which type ?
+                suffix = JoystickManager.Instance.Suffix;
+            }
+
+            return Input.GetButtonUp(button + suffix);
         }
 
         // Returns all the available target depending on radius and obstacles

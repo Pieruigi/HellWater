@@ -8,14 +8,14 @@ namespace HW
     {
         
         FiniteStateMachine fsm;
-        DoorController dc;
+      
         
 
         // Start is called before the first frame update
         void Start()
         {
             fsm = GetComponentInParent<FiniteStateMachine>();
-            dc = GetComponentInParent<DoorController>();
+   
         }
 
         // Update is called once per frame

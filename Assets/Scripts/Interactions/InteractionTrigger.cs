@@ -16,7 +16,7 @@ namespace HW
         GameObject interactableObject;
 
         [SerializeField]
-        ActionController playerActionController;
+        ActionController actionController;
 
         bool inside;
 
@@ -24,17 +24,19 @@ namespace HW
 
         GameObject player;
 
-        
+        PlayerController playerController;
 
         private void Awake()
         {
             interactable = interactableObject.GetComponent<IInteractable>();
+            
         }
 
         // Start is called before the first frame update
         void Start()
         {
             player = GameObject.FindGameObjectWithTag(Tags.Player);
+            playerController = player.GetComponent<PlayerController>();
         }
 
         // Update is called once per frame
@@ -63,20 +65,20 @@ namespace HW
                     if (canInteract)
                     {
                         // No action required
-                        if (!playerActionController)
+                        if (!actionController)
                         {
                             interactable.Interact();
                         }
                         else // We need to play a little
                         {
-                            if(!playerActionController.Acting)
+                            if(!actionController.Acting)
                                 StartActing();
                         }
 
                     }
                     else
                     {
-                        if(playerActionController.Acting)
+                        if(actionController.Acting)
                             StopActing();
                     }    
                 }
@@ -90,6 +92,8 @@ namespace HW
             {
                 inside = true;
 
+                // Remove weapons
+                playerController.HolsterWeapon();
             }
         }
 
@@ -99,7 +103,7 @@ namespace HW
             {
                 inside = false;
                 
-                if(playerActionController.Acting)
+                if(actionController.Acting)
                     StopActing();
             }
         }
@@ -107,20 +111,21 @@ namespace HW
         void HandleOnActionPerformed(ActionController controller)
         {
             interactable.Interact();
+            StopActing();
         }
 
         void StartActing()
         {
             ActionController.OnActionPerformed += HandleOnActionPerformed;
-            playerActionController.StartActing();
+            actionController.StartActing();
         }
 
         void StopActing()
         {
-            playerActionController.StopActing();
+            actionController.StopActing();
             ActionController.OnActionPerformed -= HandleOnActionPerformed;
         }
-        
+
     }
 
 }

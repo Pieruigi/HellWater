@@ -19,13 +19,12 @@ namespace HW
             get { return acting; }
         }
 
-        //protected abstract bool PerformAction();
-
         PlayerController playerController;
         protected PlayerController PlayerController
         {
             get { return playerController; }
-        } 
+        }
+
 
         // Start is called before the first frame update
         void Start()
@@ -40,20 +39,17 @@ namespace HW
                 return;
 
             if (PerformAction())
-            {
-                StopActing();
                 OnActionPerformed?.Invoke(this);
-            }
+            
         }
 
-        public void StartActing()
+        public virtual void StartActing()
         {
             acting = true;
-
             OnStartActing?.Invoke(this);
         }
 
-        public void StopActing()
+        public virtual void StopActing()
         {
             acting = false;
             OnStopActing?.Invoke(this);
@@ -61,7 +57,7 @@ namespace HW
 
         protected virtual bool PerformAction()
         {
-            if (playerController.GetActionDown())
+            if (playerController.GetActionButtonDown())
                 return true;
 
             return false;
