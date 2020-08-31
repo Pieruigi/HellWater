@@ -36,6 +36,7 @@ namespace HW
 
             // Raycast
             RaycastHit hit;
+            //if (Physics.SphereCast(ray, 0.75f, out hit, attackRange))
             if (Physics.Raycast(ray, out hit, attackRange))
             {
                 IHitable hitable = hit.transform.GetComponent<IHitable>();

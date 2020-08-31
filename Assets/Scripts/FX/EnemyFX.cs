@@ -18,9 +18,6 @@ namespace HW
         AudioSource attackAudioSource;
 
         [SerializeField]
-        AudioSource reactionAudioSource;
-
-        [SerializeField]
         List<AudioClip> idleClips;
 
         [SerializeField]
@@ -31,6 +28,30 @@ namespace HW
 
         [SerializeField]
         List<AudioClip> reactionClips;
+
+        [SerializeField]
+        List<float> idleVolumes;
+
+        [SerializeField]
+        List<float> subIdleVolumes;
+
+        [SerializeField]
+        List<float> attackVolumes;
+
+        [SerializeField]
+        List<float> reactionVolumes;
+
+        [SerializeField]
+        bool testEnabled = false;
+        [SerializeField]
+        int idleTestId;
+        [SerializeField]
+        int subIdleTestId;
+        [SerializeField]
+        int attackTestId;
+        [SerializeField]
+        int reactionTestId;
+
 
         Enemy enemy;
 
@@ -74,7 +95,15 @@ namespace HW
                 return;
 
             // Get random clip and play delayed
-            idleAudioSource.clip = idleClips[Random.Range(0, idleClips.Count)];
+            int r; 
+
+            if(testEnabled)
+                r = idleTestId;
+            else
+                r = Random.Range(0, idleClips.Count);
+
+            idleAudioSource.clip = idleClips[r];
+            idleAudioSource.volume = idleVolumes[r];
             idleAudioSource.PlayDelayed(Random.Range(minIdleRandomTime, maxIdleRandomTime));
         }
 
@@ -85,20 +114,46 @@ namespace HW
                 return;
 
             // Get random clip and play delayed
-            subIdleAudioSource.clip = subIdleClips[Random.Range(0, subIdleClips.Count)];
+            int r;
+            if(testEnabled)
+                r = subIdleTestId;
+            else
+                r = Random.Range(0, subIdleClips.Count);
+
+            subIdleAudioSource.clip = subIdleClips[r];
+            subIdleAudioSource.volume = subIdleVolumes[r];
+
             subIdleAudioSource.PlayDelayed(Random.Range(minSubIdleRandomTime, maxSubIdleRandomTime));
         }
 
         void HandleOnFight()
         {
-            attackAudioSource.clip = attackClips[Random.Range(0, attackClips.Count)];
+            int r;
+
+            if(testEnabled)
+                r = attackTestId;
+            else
+                r = Random.Range(0, attackClips.Count);
+
+            attackAudioSource.clip = attackClips[r];
+            attackAudioSource.volume = attackVolumes[r];
             attackAudioSource.Play();
         }
 
         void HandleOnGotHit(HitInfo hitInfo)
         {
-            reactionAudioSource.clip = reactionClips[Random.Range(0, reactionClips.Count)];
-            reactionAudioSource.Play();
+            if (attackAudioSource.isPlaying)
+                attackAudioSource.Stop();
+
+            int r;
+            if(testEnabled)
+                r = reactionTestId;
+            else
+                r = Random.Range(0, reactionClips.Count);
+
+            attackAudioSource.clip = reactionClips[r];
+            attackAudioSource.volume = reactionVolumes[r];
+            attackAudioSource.Play();
         }
     }
 

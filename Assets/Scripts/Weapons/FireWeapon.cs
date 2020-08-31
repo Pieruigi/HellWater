@@ -6,6 +6,8 @@ using UnityEngine.Events;
 
 namespace HW
 {
+    public enum FireWeaponType { Gun, Shotgun, CombatRifle, Rifle }
+
     public class FireWeapon : Weapon
     {
         public static readonly float GlobalAimingRange = 14;

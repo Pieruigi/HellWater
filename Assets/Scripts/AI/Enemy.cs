@@ -128,6 +128,15 @@ namespace HW
 
             if(reacting || fighting)
             {
+                if (fighting)
+                {
+                    Vector3 dir = player.transform.position - transform.position;
+                    dir.y = 0;
+                    dir.Normalize();
+
+                    transform.forward = Vector3.RotateTowards(transform.forward, dir, agent.angularSpeed * Time.deltaTime, 0);
+                }
+
                 return;
             }
 
