@@ -41,18 +41,6 @@ namespace HW
         [SerializeField]
         List<float> reactionVolumes;
 
-        [SerializeField]
-        bool testEnabled = false;
-        [SerializeField]
-        int idleTestId;
-        [SerializeField]
-        int subIdleTestId;
-        [SerializeField]
-        int attackTestId;
-        [SerializeField]
-        int reactionTestId;
-
-
         Enemy enemy;
 
         float minIdleRandomTime = 0.5f;
@@ -95,12 +83,7 @@ namespace HW
                 return;
 
             // Get random clip and play delayed
-            int r; 
-
-            if(testEnabled)
-                r = idleTestId;
-            else
-                r = Random.Range(0, idleClips.Count);
+            int r = Random.Range(0, idleClips.Count);
 
             idleAudioSource.clip = idleClips[r];
             idleAudioSource.volume = idleVolumes[r];
@@ -114,11 +97,7 @@ namespace HW
                 return;
 
             // Get random clip and play delayed
-            int r;
-            if(testEnabled)
-                r = subIdleTestId;
-            else
-                r = Random.Range(0, subIdleClips.Count);
+            int r = Random.Range(0, subIdleClips.Count);
 
             subIdleAudioSource.clip = subIdleClips[r];
             subIdleAudioSource.volume = subIdleVolumes[r];
@@ -128,12 +107,7 @@ namespace HW
 
         void HandleOnFight()
         {
-            int r;
-
-            if(testEnabled)
-                r = attackTestId;
-            else
-                r = Random.Range(0, attackClips.Count);
+            int r = Random.Range(0, attackClips.Count);
 
             attackAudioSource.clip = attackClips[r];
             attackAudioSource.volume = attackVolumes[r];
@@ -145,11 +119,7 @@ namespace HW
             if (attackAudioSource.isPlaying)
                 attackAudioSource.Stop();
 
-            int r;
-            if(testEnabled)
-                r = reactionTestId;
-            else
-                r = Random.Range(0, reactionClips.Count);
+            int r = Random.Range(0, reactionClips.Count);
 
             attackAudioSource.clip = reactionClips[r];
             attackAudioSource.volume = reactionVolumes[r];
