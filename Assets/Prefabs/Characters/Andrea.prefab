@@ -31,6 +31,7 @@ GameObject:
   - component: {fileID: 5369152565341281892}
   - component: {fileID: 5369152566761597663}
   - component: {fileID: 6095159992055216919}
+  - component: {fileID: 3191077533924812392}
   m_Layer: 0
   m_Name: Andrea
   m_TagString: Player
@@ -285,6 +286,19 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2985db8ea848a964c87bccd78899b3a9, type: 3}
   - {fileID: 8300000, guid: 2adcfe40a92cbe945a5dd4bc680aa559, type: 3}
   deathClip: {fileID: 8300000, guid: d694ce0ada3772e4e8fcdf6782ca1f65, type: 3}
+--- !u!114 &3191077533924812392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2393791586869615464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04c2e9a21c0fc064c8c0e0d586d36595, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  code: 001
 --- !u!1 &6141315174229515246
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,6 +346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 033ff626f8080044780d8e6b281a22d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: d1c02517515fbf147bc3186076c4c520, type: 2}
   damageAmount: 30
   stunnedEffect: 1
   hitPhysicalReaction: 2
@@ -512,13 +527,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02deadb4a41b486439968aee73a0770f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: d2977a1507f74ee4b962739e1831c044, type: 2}
   damageAmount: 10
   stunnedEffect: 0
   hitPhysicalReaction: 1
   range: 5
   animationId: 2
   weaponObject: {fileID: 7888088053408870090}
+  type: 0
   maxMagazineAmmo: 9
+  ammonition: {fileID: 11400000, guid: 8e666777898ea31439631f11ddf38661, type: 2}
   tooCloseDistance: 0
   tooFarDistance: 7
 --- !u!114 &2877530790484375139

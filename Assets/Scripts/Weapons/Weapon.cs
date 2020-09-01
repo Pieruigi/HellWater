@@ -1,12 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HW.Collections;
 
 namespace HW
 {
     public abstract class Weapon : MonoBehaviour
     {
-      
+        [SerializeField]
+        Item item;
+        public Item Item
+        {
+            get { return item; }
+        }
+
         [SerializeField]
         float damageAmount; // The amount of damage delivered
         public float DamageAmount
@@ -34,7 +41,6 @@ namespace HW
         {
             get { return range; }
         }
-
 
         [SerializeField]
         int animationId = 0; // 1:bat; 2:gun; 3:shotgun; 4:combat rifle; 5:rifle

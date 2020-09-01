@@ -10,6 +10,10 @@ namespace HW.Collections
     {
         [SerializeField]
         string code;
+        public string Code
+        {
+            get { return code; }
+        }
 
         [SerializeField]
         ItemType type;

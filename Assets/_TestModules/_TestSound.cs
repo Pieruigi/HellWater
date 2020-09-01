@@ -29,6 +29,20 @@ public class _TestSound : MonoBehaviour
     float source3Volume = 1;
 
     [SerializeField]
+    AudioSource source4;
+    [SerializeField]
+    int source4ClipsElementId = -1;
+    [SerializeField]
+    float source4Volume = 1;
+
+    [SerializeField]
+    AudioSource source5;
+    [SerializeField]
+    int source5ClipsElementId = -1;
+    [SerializeField]
+    float source5Volume = 1;
+
+    [SerializeField]
     List<AudioClip> clips;
 
     // Start is called before the first frame update
@@ -72,6 +86,26 @@ public class _TestSound : MonoBehaviour
             }
 
             
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (source4ClipsElementId >= 0)
+            {
+                source4.clip = clips[source4ClipsElementId];
+                source4.volume = source4Volume;
+                source4.Play();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            if (source5ClipsElementId >= 0)
+            {
+                source5.clip = clips[source5ClipsElementId];
+                source5.volume = source5Volume;
+                source5.Play();
+            }
         }
     }
 }

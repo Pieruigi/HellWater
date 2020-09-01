@@ -24,6 +24,9 @@ namespace HW
 
         // Raycast
         public static readonly float RaycastVerticalOffset = 1f;
+
+        // Resources
+        public static readonly string ResourcesFolderEquipment = "Items/Equipment";
     }
 
 

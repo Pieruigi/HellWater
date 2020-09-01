@@ -45,7 +45,10 @@ namespace HW
             currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         }
 
-
+        public void Init(float amount)
+        {
+            currentHealth = amount;
+        }
     }
 
 }

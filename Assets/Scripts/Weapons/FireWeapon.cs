@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HW.Interfaces;
 using UnityEngine.Events;
+using HW.Collections;
 
 namespace HW
 {
@@ -18,9 +19,19 @@ namespace HW
         public UnityAction OnReloadInterrupted;
 
         [SerializeField]
+        FireWeaponType type;
+        public FireWeaponType Type
+        {
+            get { return type; }
+        }
+
+        [SerializeField]
         int maxMagazineAmmo;
- 
-        int leftAmmo = 0;
+
+        [SerializeField]
+        Item ammonition;
+
+        //int leftAmmo = 0;
 
         int currentMagazineAmmo = 0;
 
@@ -106,15 +117,25 @@ namespace HW
                 return false;
 
             int count = maxMagazineAmmo - currentMagazineAmmo;
-            if(leftAmmo >= count)
-            {
-                leftAmmo -= count;
-            }
-            else
-            {
+
+            int leftAmmo = Equipment.Instance.GetNumberOfAmmonitions(ammonition);
+            
+            //if(leftAmmo >= count)
+            //{
+            //    //leftAmmo -= count;
+            //    //Equipment.Instance.DecreaseAmmo(ammonition, count);
+            //}
+            //else
+            //{
+            //    count = leftAmmo;
+            //    //leftAmmo = 0;
+            //    //Equipment.Instance.DecreaseAmmo(ammonition, count);
+            //}
+
+            if(leftAmmo < count)
                 count = leftAmmo;
-                leftAmmo = 0;
-            }
+
+            Equipment.Instance.RemoveAmmonitions(ammonition, count);
 
             currentMagazineAmmo += count;
 
@@ -133,13 +154,14 @@ namespace HW
 
         public bool IsOutOfAmmo()
         {
-            return leftAmmo == 0;
+            return Equipment.Instance.GetNumberOfAmmonitions(ammonition) == 0;
         }
 
-        public void AddAmmo(int amount)
-        {
-            leftAmmo += amount;
-        }
+        //public void AddAmmo(int amount)
+        //{
+        //    Equipment.Instance.AddAmmonitions(ammonition, amount);
+        //    //leftAmmo += amount;
+        //}
     }
 
 }

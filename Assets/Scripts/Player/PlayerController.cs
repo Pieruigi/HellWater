@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HW.Interfaces;
 using UnityEngine.Events;
+using HW.Collections;
 
 namespace HW
 {
@@ -87,7 +88,17 @@ namespace HW
         }
 
         FireWeapon fireWeapon;
+        public FireWeapon FireWeapon
+        {
+            get { return fireWeapon; }
+        }
+
         MeleeWeapon meleeWeapon;
+        public MeleeWeapon MeleeWeapon
+        {
+            get { return meleeWeapon; }
+        }
+
         Weapon currentWeapon;
         public Weapon CurrentWeapon
         {
@@ -289,9 +300,22 @@ namespace HW
             ResetCurrentWeapon();
         }
 
+        public void EquipWeapon(Item item)
+        {
+            if (item.Type != ItemType.Weapon)
+                throw new System.Exception("EquipWeapon() can't be called with param of type " + item.Type + ".");
+
+            // Get weapon
+            Weapon weapon = new List<Weapon>(GetComponentsInChildren<Weapon>()).Find(w => w.Item == item);
+
+            if (weapon == null)
+                throw new System.Exception("No weapon can be found from item " + item + ".");
+
+            EquipWeapon(weapon);
+        }
 
         // Equips and holds fire or melee weapon
-        public void EquipWeapon(Weapon weapon)
+        private void EquipWeapon(Weapon weapon)
         {
 
             // Is it a fire weapon ?

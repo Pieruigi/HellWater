@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HW;
 using HW.Interfaces;
+using HW.Collections;
 
 public class _TestFighting : MonoBehaviour
 {
@@ -10,7 +11,16 @@ public class _TestFighting : MonoBehaviour
     FireWeapon gun;
 
     [SerializeField]
+    Item gunItem;
+
+    [SerializeField]
+    Item gunAmmo;
+
+    [SerializeField]
     MeleeWeapon bat;
+
+    [SerializeField]
+    Item batItem;
 
     [SerializeField]
     Enemy enemy;
@@ -26,18 +36,16 @@ public class _TestFighting : MonoBehaviour
         gun = playerController.GetComponentInChildren<FireWeapon>();
         bat = playerController.GetComponentInChildren<MeleeWeapon>();
 
-        if (gun)
-        {
-            playerController.EquipWeapon(gun);
-            gun.AddAmmo(18);
-            gun.Reload();
-        }
-            
+        Equipment.Instance.Add(gunAmmo, 24);
+        Equipment.Instance.Add(batItem);
+        Equipment.Instance.Add(gunItem);
+        
 
-        if (bat)
-        {
-            playerController.EquipWeapon(bat);
-        }
+        playerController.EquipWeapon(batItem);
+        playerController.EquipWeapon(gunItem);
+
+        playerController.FireWeapon.Reload();
+
 
         playerController.HolsterWeapon();
 
@@ -53,15 +61,6 @@ public class _TestFighting : MonoBehaviour
             HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Push, 20, false);
             playerController.GetComponent<IHitable>().GetHit(hitInfo);
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            playerController.HolsterWeapon();
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            playerController.EquipWeapon(bat);
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            playerController.EquipWeapon(gun);
 
         if (Input.GetKeyDown(KeyCode.Y))
         {
