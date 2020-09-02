@@ -32,6 +32,7 @@ GameObject:
   - component: {fileID: 5369152566761597663}
   - component: {fileID: 6095159992055216919}
   - component: {fileID: 3191077533924812392}
+  - component: {fileID: 644055266}
   m_Layer: 0
   m_Name: Andrea
   m_TagString: Player
@@ -151,7 +152,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0
   MaxDistance: 10
   Pan2D: 0
   rolloffMode: 1
@@ -299,6 +300,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   code: 001
+--- !u!135 &644055266
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2393791586869615464}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.1
+  m_Center: {x: 0, y: 1.89, z: 1.23}
 --- !u!1 &6141315174229515246
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,7 +388,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0
   MaxDistance: 10
   Pan2D: 0
   rolloffMode: 1
@@ -572,10 +586,10 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
+  MinDistance: 0
+  MaxDistance: 10
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -880,15 +894,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b909324104d8f0418d93cdadccf3022, type: 3}
---- !u!1 &7888088053408870090 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 7b909324104d8f0418d93cdadccf3022,
-    type: 3}
-  m_PrefabInstance: {fileID: 2187046673790760899}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6567171375166315737 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 7b909324104d8f0418d93cdadccf3022,
+    type: 3}
+  m_PrefabInstance: {fileID: 2187046673790760899}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7888088053408870090 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 7b909324104d8f0418d93cdadccf3022,
     type: 3}
   m_PrefabInstance: {fileID: 2187046673790760899}
   m_PrefabAsset: {fileID: 0}

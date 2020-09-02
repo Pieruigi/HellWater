@@ -22,11 +22,22 @@ public class CameraSpeedController : MonoBehaviour
         
     }
 
+    //private void LateUpdate()
+    //{
+    //    float diff = (transform.position.z - lastZ) * ( 1 - Mathf.Cos(Mathf.Deg2Rad * camera3DPivot.eulerAngles.x));
+    //    //diff = diff - diff * Mathf.Cos(Mathf.Deg2Rad * 40f);
+    //    transform.position -= Vector3.forward * diff;
+    //    lastZ = transform.position.z;
+    //}
+
     private void LateUpdate()
     {
-        float diff = (transform.position.z - lastZ) * ( 1 - Mathf.Cos(Mathf.Deg2Rad * camera3DPivot.eulerAngles.x));
-        //diff = diff - diff * Mathf.Cos(Mathf.Deg2Rad * 40f);
-        transform.position -= Vector3.forward * diff;
-        lastZ = transform.position.z;
+        float diff =  camera3DPivot.position.z - lastZ;
+        if(diff != 0)
+        {
+            transform.position += Vector3.forward * diff * (1f-.766f);
+        }
+        
+        lastZ = camera3DPivot.position.z;
     }
 }

@@ -13,6 +13,8 @@ namespace HW
         string backgroundLayer = "CameraLayer2";
         string foregroundLayer = "CameraLayer4";
 
+        int backgroundCount = 0;
+
         void Awake()
         {
             MoveToForeground();
@@ -32,12 +34,19 @@ namespace HW
 
         public void MoveToBackground()
         {
+            backgroundCount++;
+
             foreach (GameObject renderer in renderers)
                 renderer.layer = LayerMask.NameToLayer(backgroundLayer);
         }
 
         public void MoveToForeground()
         {
+            backgroundCount = Mathf.Max(0, backgroundCount - 1);
+
+            if (backgroundCount > 0)
+                return;
+
             foreach (GameObject renderer in renderers)
                 renderer.layer = LayerMask.NameToLayer(foregroundLayer);
         }

@@ -153,9 +153,9 @@ Shader "Toony Colors Pro 2/Examples/Default/Dissolve"
 			fixed4 mainTex = tex2D(_MainTex, IN.UV_MAINTEX);
 			o.Albedo = mainTex.rgb * _Color.rgb;
 			o.Alpha = mainTex.a * _Color.a;
-
-			//Sharpen Alpha-to-Coverage
-			o.Alpha = (o.Alpha - _Cutoff) / max(fwidth(o.Alpha), 0.0001) + 0.5;
+	
+			//Cutout (Alpha Testing)
+			clip (o.Alpha - _Cutoff);
 		}
 
 		ENDCG
