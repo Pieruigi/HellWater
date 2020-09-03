@@ -7,8 +7,9 @@ namespace HW.CachingSystem
 {
     public class PlayerCacher : Cacher
     {
-        PlayerController playerController;
         Health health;
+
+        PlayerController playerController;
 
         protected override void Awake()
         {
@@ -30,11 +31,15 @@ namespace HW.CachingSystem
             // Load resources
             List<Item> items = new List<Item>(Resources.LoadAll<Item>(Constants.ResourcesFolderEquipment));
 
+            // Init weapons
             if (!"-".Equals(data.MeleeWeaponCode))
                 playerController.EquipWeapon(items.Find(i => i.Code == data.MeleeWeaponCode));
 
             if (!"-".Equals(data.FireWeaponCode))
                 playerController.EquipWeapon(items.Find(i => i.Code == data.FireWeaponCode));
+
+            // Holster weapon
+            playerController.HolsterWeapon();
         }
 
         protected override string GetCacheValue()

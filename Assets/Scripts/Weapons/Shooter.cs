@@ -15,28 +15,28 @@ namespace HW
         {
             Debug.Log("Shoot");
 
-            if (!GameObject.FindObjectOfType<PlayerController>().FireWeaponAccuracySystem)
-            {
-                // Raycast 
-                RaycastHit hit;
-                Ray ray = new Ray(transform.root.position+Vector3.up* Constants.RaycastVerticalOffset, transform.root.forward);
-                if (Physics.Raycast(ray, out hit, fireWeapon.Range))
-                {
-                    Debug.Log("Hit:" + hit.transform.name);
+            //if (!PlayerController.Instance.FireWeaponAccuracySystem)
+            //{
+            //    // Raycast 
+            //    RaycastHit hit;
+            //    Ray ray = new Ray(transform.root.position+Vector3.up* Constants.RaycastVerticalOffset, transform.root.forward);
+            //    if (Physics.Raycast(ray, out hit, fireWeapon.Range))
+            //    {
+            //        Debug.Log("Hit:" + hit.transform.name);
 
-                    // Check if the object we hit has a hitable object
-                    IHitable hitable = hit.transform.GetComponent<IHitable>();
+            //        // Check if the object we hit has a hitable object
+            //        IHitable hitable = hit.transform.GetComponent<IHitable>();
 
-                    // Yes, send hit info
-                    if (hitable != null)
-                    {
-                        HitInfo hitInfo = new HitInfo(hit.point, hit.normal, fireWeapon.HitPhysicalReaction, fireWeapon.DamageAmount, fireWeapon.StunnedEffect);
-                        hitable.GetHit(hitInfo);
-                    }
-                }
-            }
-            else // Accuracy system
-            {
+            //        // Yes, send hit info
+            //        if (hitable != null)
+            //        {
+            //            HitInfo hitInfo = new HitInfo(hit.point, hit.normal, fireWeapon.HitPhysicalReaction, fireWeapon.DamageAmount, fireWeapon.StunnedEffect);
+            //            hitable.GetHit(hitInfo);
+            //        }
+            //    }
+            //}
+            //else // Accuracy system
+            //{
                 RaycastHit hit;
                 Ray ray = new Ray(transform.root.position + Vector3.up * Constants.RaycastVerticalOffset, transform.root.forward);
                 if (Physics.Raycast(ray, out hit, FireWeapon.GlobalAimingRange))
@@ -62,7 +62,7 @@ namespace HW
                         
                     }
                 }
-            }
+            //}
 
 
             

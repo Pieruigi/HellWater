@@ -34,9 +34,19 @@ namespace HW
             }
         }
 
-
+        public void ForceBlackScreen()
+        {
+            Color c = Color.black;
+            c.a = 1;
+            image.color = c;
+        }
 
         public void FadeIn(UnityAction callback = null)
+        {
+            StartCoroutine(FadeInCoroutine(speed, callback));
+        }
+
+        public void FadeIn(float speed, UnityAction callback = null)
         {
             StartCoroutine(FadeInCoroutine(speed, callback));
         }
@@ -56,7 +66,7 @@ namespace HW
             StartCoroutine(FadeOutInCoroutine(speed, length, callback));
         }
 
-        private IEnumerator FadeInCoroutine(float speed, UnityAction callback = null)
+        public IEnumerator FadeInCoroutine(float speed, UnityAction callback = null)
         {
             Color c = Color.black;
             c.a = 0;
@@ -67,7 +77,12 @@ namespace HW
             callback?.Invoke();
         }
 
-        private IEnumerator FadeOutCoroutine(float speed, UnityAction callback = null)
+        public IEnumerator FadeInCoroutine(UnityAction callback = null)
+        {
+            yield return FadeInCoroutine(speed, callback);
+        }
+
+        public IEnumerator FadeOutCoroutine(float speed, UnityAction callback = null)
         {
             Color c = Color.black;
             c.a = 1;
@@ -78,7 +93,12 @@ namespace HW
             callback?.Invoke();
         }
 
-        private IEnumerator FadeOutInCoroutine(float speed, float length, UnityAction callback)
+        public IEnumerator FadeOutCoroutine(UnityAction callback = null)
+        {
+            yield return FadeOutCoroutine(speed, callback);
+        }
+
+        public IEnumerator FadeOutInCoroutine(float speed, float length, UnityAction callback)
         {
             yield return FadeOutCoroutine(speed);
 

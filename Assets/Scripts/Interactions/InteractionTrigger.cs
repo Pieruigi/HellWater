@@ -22,9 +22,9 @@ namespace HW
 
         IInteractable interactable;
 
-        GameObject player;
+        //GameObject player;
 
-        PlayerController playerController;
+        //PlayerController playerController;
 
         private void Awake()
         {
@@ -35,8 +35,8 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
-            player = GameObject.FindGameObjectWithTag(Tags.Player);
-            playerController = player.GetComponent<PlayerController>();
+            //player = GameObject.FindGameObjectWithTag(Tags.Player);
+            //playerController = player.GetComponent<PlayerController>();
         }
 
         // Update is called once per frame
@@ -52,13 +52,13 @@ namespace HW
                     // You must be look at the trigger positive fwd
                     if (!twoWay)
                     {
-                        if (Vector3.Dot(transform.forward, player.transform.forward) > 0)
+                        if (Vector3.Dot(transform.forward, PlayerController.Instance.transform.forward) > 0)
                             canInteract = true;
                     }
                     else // Just look at the center 
                     {
-                        Vector3 dir = transform.position - player.transform.position;
-                        if (Vector3.Dot(dir, player.transform.forward) > 0)
+                        Vector3 dir = transform.position - PlayerController.Instance.transform.position;
+                        if (Vector3.Dot(dir, PlayerController.Instance.transform.forward) > 0)
                             canInteract = true;
                     }
 
@@ -93,7 +93,7 @@ namespace HW
                 inside = true;
 
                 // Remove weapons
-                playerController.HolsterWeapon();
+                PlayerController.Instance.HolsterWeapon();
             }
         }
 

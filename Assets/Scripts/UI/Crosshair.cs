@@ -11,8 +11,6 @@ namespace HW.UI
         [SerializeField]
         Image crosshairImage;
         
-        PlayerController playerController;
-
         Transform target;
         Weapon weapon;
         CapsuleCollider targetCollider;
@@ -28,8 +26,7 @@ namespace HW.UI
         // Start is called before the first frame update
         void Start()
         {
-            playerController = GameObject.FindObjectOfType<PlayerController>();
-            playerController.OnTargeting += HandleOnTargeting;
+            PlayerController.Instance.OnTargeting += HandleOnTargeting;
         }
 
         // Update is called once per frame
@@ -86,7 +83,7 @@ namespace HW.UI
 
         void SetColor()
         {
-            float distance = (target.position - playerController.transform.position).magnitude;
+            float distance = (target.position - PlayerController.Instance.transform.position).magnitude;
 
             FireWeapon fw = weapon as FireWeapon;
             if(fw.TooCloseDistance > distance)

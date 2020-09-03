@@ -86,7 +86,7 @@ namespace HW
         System.DateTime lastPlayerOnSight;
         float playerLostMaxTime = 3f;
         NavMeshAgent agent;
-        GameObject player;
+        //GameObject player;
         bool active = false;
         float sightAngle = 30f;
         
@@ -114,10 +114,10 @@ namespace HW
         {
             Activate(true);
 
-            player = GameObject.FindGameObjectWithTag(Tags.Player);
-            player.GetComponent<PlayerController>().OnHitSomething += HandlePlayerOnHitSomething;
-            player.GetComponent<PlayerController>().OnShoot += HandlePlayerOnShoot;
-            target = player.transform;
+            //player = GameObject.FindGameObjectWithTag(Tags.Player);
+            PlayerController.Instance.OnHitSomething += HandlePlayerOnHitSomething;
+            PlayerController.Instance.OnShoot += HandlePlayerOnShoot;
+            target = PlayerController.Instance.transform;
         }
 
         // Update is called once per frame
@@ -130,7 +130,7 @@ namespace HW
             {
                 if (fighting)
                 {
-                    Vector3 dir = player.transform.position - transform.position;
+                    Vector3 dir = PlayerController.Instance.transform.position - transform.position;
                     dir.y = 0;
                     dir.Normalize();
 
@@ -168,7 +168,7 @@ namespace HW
                         {
                             
                             // Move to target
-                            if(!IsOccluded(player.transform))
+                            if(!IsOccluded(PlayerController.Instance.transform))
                                 MoveTo(target.position);
                         }
                     }
@@ -231,7 +231,7 @@ namespace HW
 
             if (state != State.Engaged)
             {
-                if((player.transform.position - transform.position).sqrMagnitude < sqrSightRange)
+                if((PlayerController.Instance.transform.position - transform.position).sqrMagnitude < sqrSightRange)
                     Engage();
             }
                 
@@ -427,11 +427,11 @@ namespace HW
                 return false;
 
             // If player is dead disengage
-            if (player.GetComponent<PlayerController>().IsDead())
+            if (PlayerController.Instance.IsDead())
                 return false;
 
             // Vector to player
-            Vector3 toPlayer = player.transform.position - transform.position;
+            Vector3 toPlayer = PlayerController.Instance.transform.position - transform.position;
             toPlayer.y = 0; // Get rid of the y
 
             // Distance from player
@@ -441,10 +441,10 @@ namespace HW
             if (sqrProximityRange > 0 && sqrDistance < sqrProximityRange)
                 return true;
 
-            if (sqrHearingRange > 0 && sqrDistance < sqrHearingRange && player.GetComponent<PlayerController>().IsRunning())
+            if (sqrHearingRange > 0 && sqrDistance < sqrHearingRange && PlayerController.Instance.IsRunning())
                 return true;
 
-            if (IsInFieldView(player.transform, sightRange, sightAngle) && !IsOccluded(player.transform))
+            if (IsInFieldView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
                 return true;
 
             return false;
@@ -469,11 +469,11 @@ namespace HW
                 return true;
 
             // If player is dead disengage
-            if (player.GetComponent<PlayerController>().IsDead())
+            if (PlayerController.Instance.IsDead())
                 return true;
 
             // Check the last time the enemy saw you
-            if(IsInFieldView(player.transform, sightRange, sightAngle) && !IsOccluded(player.transform))
+            if(IsInFieldView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
             {
                 lastPlayerOnSight = System.DateTime.UtcNow;
             }
@@ -533,7 +533,7 @@ namespace HW
 
             if(weapon.GetType() == typeof(MeleeWeapon))
             {
-                float sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
+                float sqrDistance = (PlayerController.Instance.transform.position - transform.position).sqrMagnitude;
                 if (sqrDistance < sqrHearingRange)
                     Engage();
                     
@@ -547,9 +547,9 @@ namespace HW
             if (state == State.Engaged || state == State.Dead)
                 return;
 
-            float sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
+            float sqrDistance = (PlayerController.Instance.transform.position - transform.position).sqrMagnitude;
             if (sqrDistance < sqrShotHearingRange)
-                Alert(player.transform.position);
+                Alert(PlayerController.Instance.transform.position);
                 
         }
 
@@ -577,7 +577,7 @@ namespace HW
 
         public void Hit()
         {
-            (fightBehaviour as IFighter).Fight(player.transform);
+            (fightBehaviour as IFighter).Fight(PlayerController.Instance.transform);
             
         }
         #endregion

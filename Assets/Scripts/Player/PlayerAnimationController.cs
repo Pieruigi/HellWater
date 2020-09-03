@@ -116,7 +116,7 @@ namespace HW
             if (hitInfo.PhysicalReaction != HitPhysicalReaction.None)
                 animator.SetTrigger(paramHit);
 
-            if (playerController.IsDead())
+            if (PlayerController.Instance.IsDead())
                 animator.SetBool(paramDead, true);
         }
 

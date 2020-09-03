@@ -17,8 +17,7 @@ namespace HW
         
         InteractionController interactionController;
 
-        GameObject player;
-
+       
         float openAngle = 0;
 
         private void Awake()
@@ -30,7 +29,7 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
-            player = GameObject.FindGameObjectWithTag(Tags.Player);
+            
         }
 
         // Update is called once per frame
@@ -44,7 +43,7 @@ namespace HW
             float angle = 90;
             if(newState == Constants.DoorOpenState)
             {
-                Vector3 dir = transform.position - player.transform.position;
+                Vector3 dir = transform.position - PlayerController.Instance.transform.position;
                 if (Vector3.Dot(dir, sceneObject.transform.forward) > 0)
                     angle = -90;
 

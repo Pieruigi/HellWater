@@ -20,31 +20,13 @@ namespace HW
 
         protected override bool PerformAction()
         {
-            //if ((System.DateTime.UtcNow - lastClickTime).TotalSeconds > clickTime)
-            //{
-            //    charging = false;
-            //    charge = Mathf.Max(0, charge - Time.deltaTime);
-            //}
-
-
-            //if (PlayerController.GetActionButtonDown())
-            //{
-            //    if (charging)
-            //    {
-            //        float time = (float)(System.DateTime.UtcNow - lastClickTime).TotalSeconds;
-            //        charge = Mathf.Min(1, charge + time);
-            //    }
-
-            //    lastClickTime = System.DateTime.UtcNow;
-            //    charging = true;
-            //}
-
+            
            
             charge = Mathf.Max(0, charge - Time.deltaTime);
             
             Debug.Log("Charge:" + charge);
 
-            if (PlayerController.GetActionButtonDown())
+            if (PlayerController.Instance.GetActionButtonDown())
                 charge = Mathf.Min(1, charge + speed);
                 
 

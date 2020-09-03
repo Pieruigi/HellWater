@@ -20,8 +20,7 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
-            PlayerController playerController = GameObject.FindObjectOfType<PlayerController>();
-            playerController.OnAttackCharged += HandleOnAttackCharged;
+            PlayerController.Instance.OnAttackCharged += HandleOnAttackCharged;
 
         }
 

@@ -34,7 +34,7 @@ namespace HW
         {
             if (!charging)
             {
-                if (PlayerController.GetActionButtonDown())
+                if (PlayerController.Instance.GetActionButtonDown())
                 {
                     charging = true;
                 }
@@ -42,7 +42,7 @@ namespace HW
             }
             else
             {
-                if (PlayerController.GetActionButtonUp())
+                if (PlayerController.Instance.GetActionButtonUp())
                     charging = false;
                 
                     

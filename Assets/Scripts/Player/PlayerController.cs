@@ -135,13 +135,24 @@ namespace HW
         Vector3 raycastOffset;
         #endregion
 
+        public static PlayerController Instance { get; private set; } 
+
         #region NATIVE METHODS
         private void Awake()
         {
-            rb = GetComponent<Rigidbody>();
-            angularSpeedInRadians = angularSpeed * Mathf.Deg2Rad;
-            health = GetComponent<Health>();
-            raycastOffset = Vector3.up * Constants.RaycastVerticalOffset;
+            if (Instance == null)
+            {
+                Instance = this;
+                rb = GetComponent<Rigidbody>();
+                angularSpeedInRadians = angularSpeed * Mathf.Deg2Rad;
+                health = GetComponent<Health>();
+                raycastOffset = Vector3.up * Constants.RaycastVerticalOffset;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+            
         }
 
         // Start is called before the first frame update
@@ -276,8 +287,7 @@ namespace HW
                 desiredVelocity = Vector3.zero;
                 ResetMaxSpeed();
 
-                // Show fire weapon
-                //ShowFireWeapon();
+                // Hold the equipped fire weapon
                 SetCurrentWeapon(fireWeapon);
 
                 OnStartAiming?.Invoke();
@@ -286,11 +296,6 @@ namespace HW
             {
                 currentTarget = null;
                
-
-                // Hide weapon
-                //HideWeapon();
-                //ResetCurrentWeapon();
-
                 OnStopAiming?.Invoke();
             }
         }

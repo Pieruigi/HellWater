@@ -19,17 +19,12 @@ namespace HW
             get { return acting; }
         }
 
-        PlayerController playerController;
-        protected PlayerController PlayerController
-        {
-            get { return playerController; }
-        }
-
+        
 
         // Start is called before the first frame update
         void Start()
         {
-            playerController = GameObject.FindObjectOfType<PlayerController>();
+           
         }
 
         // Update is called once per frame
@@ -57,7 +52,7 @@ namespace HW
 
         protected virtual bool PerformAction()
         {
-            if (playerController.GetActionButtonDown())
+            if (PlayerController.Instance.GetActionButtonDown())
                 return true;
 
             return false;
