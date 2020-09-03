@@ -12,8 +12,10 @@ namespace HW
     {
 
         // Called on state change except when ForceState() is called with callEvent = false; int param is the old state
-        public UnityAction<FiniteStateMachine, int> OnStateChange; 
+        public UnityAction<FiniteStateMachine, int> OnStateChange;
 
+        // Called everytime a lookup fails ( normally when conditions are not satisfied ); returns the error id
+        public UnityAction<FiniteStateMachine, int> OnFail; 
 
         /**
          * Transitions take care about switching from one state to onother by checking some conditions.
@@ -68,6 +70,10 @@ namespace HW
             // Conditions
             [SerializeField]
             List<OtherToCheck> othersToCheck;
+
+            // The error that will be sent out when conditions are not satisfied
+            [SerializeField]
+            int errorId = -1;
 
             // If true the machine can change state
             public bool Checked()
@@ -166,6 +172,8 @@ namespace HW
             get { return currentStateId; }
         }
 
+        
+
         void Awake()
         {
             // Fill the id for each state
@@ -173,7 +181,7 @@ namespace HW
             {
                 states[i].id = i;
             }
-
+            
             currentStateName = states[currentStateId].Name;
         }
 

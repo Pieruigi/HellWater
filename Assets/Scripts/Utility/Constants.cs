@@ -5,6 +5,8 @@ using UnityEngine;
 namespace HW
 {
 
+    public enum Language { English, Italian }
+
     // Tags
     public class Tags
     {
@@ -27,6 +29,7 @@ namespace HW
 
         // Resources
         public static readonly string ResourcesFolderEquipment = "Items/Equipment";
+        public static readonly string ResourcesFolderMessageCollection = "MessageCollection";
     }
 
 

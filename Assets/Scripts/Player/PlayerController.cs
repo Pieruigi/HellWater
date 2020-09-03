@@ -270,8 +270,13 @@ namespace HW
             return maxRunningSpeed;
         }
 
+        
+
         public void SetDisabled(bool value)
         {
+            if (disabled == value)
+                return;
+
             disabled = value;
 
             if(value)

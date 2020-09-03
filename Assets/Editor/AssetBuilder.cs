@@ -41,7 +41,43 @@ namespace HW.Editor
             Selection.activeObject = asset;
         }
 
-       
+        [MenuItem("Assets/Create/HW/CSSlideText")]
+        public static void CreateText()
+        {
+            Text asset = ScriptableObject.CreateInstance<Text>();
+
+            string name = "text.asset";
+            string folder = "Assets/Resources/CSSlideText/";
+
+            if (!System.IO.Directory.Exists(folder))
+                System.IO.Directory.CreateDirectory(folder);
+
+            AssetDatabase.CreateAsset(asset, folder + name);
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+
+            Selection.activeObject = asset;
+        }
+
+        [MenuItem("Assets/Create/HW/MessageCollection")]
+        public static void CreateMessageCollection()
+        {
+            MessageCollection asset = ScriptableObject.CreateInstance<MessageCollection>();
+
+            string name = "messageCollection.asset";
+            string folder = "Assets/Resources/MessageCollection/";
+
+            if (!System.IO.Directory.Exists(folder))
+                System.IO.Directory.CreateDirectory(folder);
+
+            AssetDatabase.CreateAsset(asset, folder + name);
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+
+            Selection.activeObject = asset;
+        }
     }
 
 }
