@@ -32,7 +32,9 @@ namespace HW.CachingSystem
 
         void HandleOnSave()
         {
-            CacheManager.Instance.UpdateCacheValue(code, GetCacheValue());
+            string cacheValue = GetCacheValue();
+            if(!"".Equals(cacheValue))
+                CacheManager.Instance.UpdateCacheValue(code, GetCacheValue());
         }
     }
 

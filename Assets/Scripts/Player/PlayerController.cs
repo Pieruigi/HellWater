@@ -124,6 +124,7 @@ namespace HW
         string reloadAxis = "Reload";
         string shootAxis = "Shoot";
         string actionAxis = "Action";
+        string backAxis = "Back";
         #endregion
 
         #region MISC FIELDS
@@ -248,6 +249,16 @@ namespace HW
         public bool GetActionButtonUp()
         {
             return GetButtonUp(actionAxis);
+        }
+
+        public bool GetBackButtonDown()
+        {
+            return GetButtonDown(backAxis);
+        }
+
+        public bool GetBackButtonUp()
+        {
+            return GetButtonUp(backAxis);
         }
 
         public bool IsRunning()

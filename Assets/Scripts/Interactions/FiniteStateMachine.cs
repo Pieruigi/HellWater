@@ -172,17 +172,18 @@ namespace HW
             get { return currentStateId; }
         }
 
-        
-
-        void Awake()
+        void Update()
         {
             // Fill the id for each state
             for(int i=0; i<states.Count; i++)
             {
                 states[i].id = i;
             }
-            
-            currentStateName = states[currentStateId].Name;
+
+            if (currentStateId < 0)
+                currentStateName = "Disabled";
+            else
+                currentStateName = states[currentStateId].Name;
         }
 
         /**

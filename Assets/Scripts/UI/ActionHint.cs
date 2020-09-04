@@ -17,20 +17,27 @@ namespace HW.UI
 
        
         bool loop = false;
-        ActionController actionController;
+        ActionController activeController;
 
         private void Awake()
         {
-            ActionController.OnStartActing += HandleOnStartActing;
-            ActionController.OnStopActing += HandleOnStopActing;
-            ActionController.OnActionPerformed += HandleOnActionPerformed;
+            //ActionController.OnStartActing += HandleOnStartActing;
+            //ActionController.OnStopActing += HandleOnStopActing;
+            //ActionController.OnActionPerformed += HandleOnActionPerformed;
 
             Show(false);
         }
         // Start is called before the first frame update
         void Start()
         {
-
+            ActionController[] controllers = GameObject.FindObjectsOfType<ActionController>();
+            Debug.Log("Controllers.Length:" + controllers.Length);
+            foreach(ActionController controller in controllers)
+            {
+                controller.OnStartActing += HandleOnStartActing;
+                controller.OnStopActing += HandleOnStopActing;
+                controller.OnActionPerformed += HandleOnActionPerformed;
+            }
         }
 
         // Update is called once per frame
@@ -39,15 +46,15 @@ namespace HW.UI
             if (!loop)
                 return;
 
-            if (actionController.GetType() == typeof(HoldActionController))
+            if (activeController.GetType() == typeof(HoldActionController))
             {
-                HoldActionController ac = actionController as HoldActionController;
+                HoldActionController ac = activeController as HoldActionController;
                 backgroundImage.fillAmount = ac.Charge;
             }
             else
-                if (actionController.GetType() == typeof(RepeatActionController))
+                if (activeController.GetType() == typeof(RepeatActionController))
                 {
-                    RepeatActionController ac = actionController as RepeatActionController;
+                    RepeatActionController ac = activeController as RepeatActionController;
                     backgroundImage.fillAmount = ac.Charge;
             }
             
@@ -55,7 +62,8 @@ namespace HW.UI
 
         void HandleOnStartActing(ActionController controller)
         {
-            actionController = controller;
+
+            activeController = controller;
             loop = true;
 
             Show(true);
@@ -64,7 +72,7 @@ namespace HW.UI
         void HandleOnStopActing(ActionController controller)
         {
             loop = false;
-            actionController = null;
+            activeController = null;
             Show(false);
         }
 
@@ -77,7 +85,7 @@ namespace HW.UI
         {
             
             hintImage.enabled = value;
-            backgroundImage.enabled = (value && (actionController.GetType() != typeof(ActionController)));
+            backgroundImage.enabled = (value && (activeController.GetType() != typeof(ActionController)));
             backgroundImage.fillAmount = 0;           
         }
     }

@@ -6,6 +6,7 @@ namespace HW
 {
 
     public enum Language { English, Italian }
+    public enum CutSceneState { Executed = 0, Ready = 1 }
 
     // Tags
     public class Tags

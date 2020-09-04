@@ -9,9 +9,9 @@ namespace HW
 
     public class ActionController : MonoBehaviour
     {
-        public static UnityAction<ActionController> OnStartActing;
-        public static UnityAction<ActionController> OnStopActing;
-        public static UnityAction<ActionController> OnActionPerformed;
+        public UnityAction<ActionController> OnStartActing;
+        public UnityAction<ActionController> OnStopActing;
+        public UnityAction<ActionController> OnActionPerformed;
 
         bool acting = false;
         public bool Acting

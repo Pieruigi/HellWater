@@ -13,8 +13,10 @@ GameObject:
   - component: {fileID: 4312975752927512902}
   - component: {fileID: 4312975752927512901}
   - component: {fileID: -8509313167297763450}
+  - component: {fileID: 1741093062}
+  - component: {fileID: 1741093067}
   m_Layer: 0
-  m_Name: Intro
+  m_Name: SlideshowIntro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,13 +50,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forceBlackScreenOnEnter: 1
   fadeSpeedOnEnter: -1
-  fadeInDelayOnEnter: 3
+  fadeInDelayOnEnter: 0
   exitSoon: 0
-  playerStateOnEnter: 3
+  playerStateOnEnter: 2
   keepBlackScreenOnExit: 0
   fadeSpeedOnExit: -1
-  fadeInDelayOnExit: 3
-  delayOnExit: 2
+  fadeInDelayOnExit: 0
+  delayOnExit: 0
   playerStateOnExit: 1
 --- !u!114 &4312975752927512902
 MonoBehaviour:
@@ -68,6 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2617ab66445cfa441859007b7f5d1721, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  executeOnEnter: 1
   slides:
   - sprite: {fileID: 21300000, guid: b718527c33ee7c8449c42d4293e75fc0, type: 3}
     length: 4
@@ -75,7 +78,6 @@ MonoBehaviour:
     length: 2
   - sprite: {fileID: 21300000, guid: 810e03cc9c71ad444953b94343d85b6e, type: 3}
     length: 3
-  executeOnEnter: 1
 --- !u!114 &4312975752927512901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83,7 +85,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4312975752927512921}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e2d0132db7448104db3a429b47dd7ae1, type: 3}
   m_Name: 
@@ -92,11 +94,16 @@ MonoBehaviour:
   - name: Executed
     id: 0
     othersToSet: []
-  - name: ToBeExecuted
+  - name: Ready
     id: 1
     othersToSet: []
-  transitions: []
-  currentStateName: ToBeExecuted
+  transitions:
+  - tag: Execute
+    fromStateId: 1
+    toStateId: 0
+    othersToCheck: []
+    errorId: 0
+  currentStateName: Ready
   currentStateId: 1
 --- !u!114 &-8509313167297763450
 MonoBehaviour:
@@ -111,3 +118,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   code: 
+--- !u!114 &1741093062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4312975752927512921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b45fbbec97e79af41a000f2950602c8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1741093067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4312975752927512921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7488f48bc04d2e49a53590de9563fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialog: {fileID: 11400000, guid: 6954d88f8f3980e4e9b07a006cbab593, type: 2}

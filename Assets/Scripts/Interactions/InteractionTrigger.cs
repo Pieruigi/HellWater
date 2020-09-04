@@ -116,14 +116,14 @@ namespace HW
 
         void StartActing()
         {
-            ActionController.OnActionPerformed += HandleOnActionPerformed;
+            actionController.OnActionPerformed += HandleOnActionPerformed;
             actionController.StartActing();
         }
 
         void StopActing()
         {
             actionController.StopActing();
-            ActionController.OnActionPerformed -= HandleOnActionPerformed;
+            actionController.OnActionPerformed -= HandleOnActionPerformed;
         }
 
     }

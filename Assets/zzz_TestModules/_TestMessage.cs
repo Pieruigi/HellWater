@@ -15,10 +15,15 @@ public class _TestMessage : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            Debug.Log("message:" + HW.MessageFactory.Instance.GetMessage(0));
+            ShowMessage(HW.MessageFactory.Instance.GetMessage(0));
         if (Input.GetKeyDown(KeyCode.Alpha2))
-            Debug.Log("message:" + HW.MessageFactory.Instance.GetMessage(1));
+            ShowMessage(HW.MessageFactory.Instance.GetMessage(1));
         if (Input.GetKeyDown(KeyCode.Alpha3))
-            Debug.Log("message:" + HW.MessageFactory.Instance.GetMessage(2));
+            ShowMessage(HW.MessageFactory.Instance.GetMessage(2));
+    }
+
+    void ShowMessage(string message)
+    {
+        HW.UI.MessageViewer.Instance.ShowMessage(message);
     }
 }

@@ -17,7 +17,12 @@ namespace HW.CachingSystem
 
         protected override string GetCacheValue()
         {
+            if (fsm.CurrentStateId < 0)
+                return "";
+            
             return new FiniteStateMachineData(fsm.CurrentStateId).Format();
+
+            
         }
 
         protected override void Init(string cacheValue)

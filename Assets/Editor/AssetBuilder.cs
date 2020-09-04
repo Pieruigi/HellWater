@@ -78,6 +78,26 @@ namespace HW.Editor
 
             Selection.activeObject = asset;
         }
+
+        [MenuItem("Assets/Create/HW/Dialog")]
+        public static void CreateDialog()
+        {
+            Dialog asset = ScriptableObject.CreateInstance<Dialog>();
+
+            string name = "dialog.asset";
+            string folder = "Assets/Resources/Dialog/";
+
+            if (!System.IO.Directory.Exists(folder))
+                System.IO.Directory.CreateDirectory(folder);
+
+            AssetDatabase.CreateAsset(asset, folder + name);
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+
+            Selection.activeObject = asset;
+        }
+
     }
 
 }
