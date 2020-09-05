@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1987984061981666049}
   - component: {fileID: 1987984061981666060}
   - component: {fileID: -8732910834313229509}
+  - component: {fileID: 8837135772450295388}
   m_Layer: 0
   m_Name: InGameCutScene
   m_TagString: Untagged
@@ -52,7 +53,7 @@ MonoBehaviour:
   fadeSpeedOnEnter: -1
   fadeInDelayOnEnter: 0
   exitSoon: 0
-  playerStateOnEnter: 3
+  playerStateOnEnter: 2
   keepBlackScreenOnExit: 0
   fadeSpeedOnExit: -1
   fadeInDelayOnExit: 0
@@ -136,4 +137,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   executeOnEnter: 1
-  timeline: {fileID: 0}
+--- !u!111 &8837135772450295388
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2327367462235331230}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 6acff38ef75a69e469fb02feac4d97d1, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 6acff38ef75a69e469fb02feac4d97d1, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
