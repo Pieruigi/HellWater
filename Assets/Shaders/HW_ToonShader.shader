@@ -51,10 +51,6 @@ Shader "HW_Shaders/ToonShader"
 
 		//This property will be ignored and will draw the custom normals GUI instead
 		[TCP2OutlineNormalsGUI] __outline_gui_dummy__ ("_unused_", Float) = 0
-		//Blending
-		[TCP2Header(OUTLINE BLENDING)]
-		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlendOutline ("Blending Source", Float) = 5
-		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlendOutline ("Blending Dest", Float) = 10
 	[TCP2Separator]
 
 
@@ -197,31 +193,6 @@ Shader "HW_Shaders/ToonShader"
 
 		// OUTLINE INCLUDE END
 		//================================================================
-		//Outline
-		Pass
-		{
-			Cull Off
-			ZWrite Off
-			Offset [_Offset1],[_Offset2]
-
-			Tags { "LightMode"="ForwardBase" "Queue"="Transparent" "IgnoreProjectors"="True" "RenderType"="Transparent" }
-			Blend [_SrcBlendOutline] [_DstBlendOutline]
-
-			CGPROGRAM
-
-			#pragma vertex TCP2_Outline_Vert
-			#pragma fragment TCP2_Outline_Frag
-
-			#pragma multi_compile TCP2_NONE TCP2_ZSMOOTH_ON
-			#pragma multi_compile TCP2_NONE TCP2_OUTLINE_CONST_SIZE
-			#pragma multi_compile TCP2_NONE TCP2_COLORS_AS_NORMALS TCP2_TANGENT_AS_NORMALS TCP2_UV2_AS_NORMALS
-			#pragma multi_compile TCP2_NONE TCP2_OUTLINE_TEXTURED
-			#pragma multi_compile_instancing
-
-			#pragma target 3.0
-
-			ENDCG
-		}
 
 		Tags { "RenderType"="Opaque" }
 
@@ -269,7 +240,6 @@ Shader "HW_Shaders/ToonShader"
 		struct SurfaceOutputCustom
 		{
 			half atten;
-			float4 WorldPos_LightCoords;	//WorldPos for POINT, LightCoords for SPOT
 			fixed3 Albedo;
 			fixed3 Normal;
 			fixed3 Emission;
@@ -278,31 +248,6 @@ Shader "HW_Shaders/ToonShader"
 			fixed Alpha;
 			fixed3 ShadowColorTex;
 		};
-
-		//----------------------------------------------------------------------
-		//Override UNITY_LIGHT_ATTENUATION macro
-		// - Only include shadowmap in 'atten' for Point/Spot lights
-		// - Falloff/cookie will be based on the ramp
-
-	#ifdef SPOT
-		#if defined(UNITY_LIGHT_ATTENUATION)
-			#undef UNITY_LIGHT_ATTENUATION
-			#if UNITY_VERSION >= 560
-				#define UNITY_LIGHT_ATTENUATION(destName, input, worldPos) \
-					unityShadowCoord4 lightCoord = mul(unity_WorldToLight, unityShadowCoord4(worldPos, 1)); \
-					fixed shadow = UNITY_SHADOW_ATTENUATION(input, worldPos); \
-					fixed destName = (lightCoord.z > 0) * shadow; \
-					o.WorldPos_LightCoords = lightCoord;	// o = SurfaceOutputCustom, avoid recalculating worldPos
-			#else
-				#define UNITY_LIGHT_ATTENUATION(destName, input, worldPos) \
-					unityShadowCoord4 lightCoord = mul(unity_WorldToLight, unityShadowCoord4(worldPos, 1)); \
-					fixed destName = (lightCoord.z > 0) * SHADOW_ATTENUATION(input); \
-					o.WorldPos_LightCoords = lightCoord;	// o = SurfaceOutputCustom, avoid recalculating worldPos
-			#endif
-		#endif
-	#endif
-
-		//----------------------------------------------------------------------
 
 		inline half4 LightingToonyColorsCustom (inout SurfaceOutputCustom s, half3 viewDir, UnityGI gi)
 		{
@@ -317,29 +262,14 @@ Shader "HW_Shaders/ToonShader"
 			half atten = 1;
 		#endif
 
-		#if SPOT
-			float4 lightCoord = s.WorldPos_LightCoords;
-			float lightFalloff = 1 - dot(lightCoord.xyz, lightCoord.xyz);
-			//custom cookie so that it follows a 1D ramp instead of the built-in 2D circle texture
-			float2 cookieCoords = lightCoord.xy / lightCoord.w;
-			float rampCoords = saturate(1 - dot(cookieCoords, cookieCoords) * 4) * lightFalloff;
-		#endif
-
 			IN_NORMAL = normalize(IN_NORMAL);
 			fixed ndl = max(0, dot(IN_NORMAL, lightDir));
-		#if SPOT
-			#define NDL	rampCoords
-		#else
 			#define NDL ndl
-		#endif
 
 			#define		RAMP_THRESHOLD	(1-_RampThresholdRGB.rgb)
 			#define		RAMP_SMOOTH		_RampSmooth.xxx
 
 			fixed3 ramp = smoothstep(RAMP_THRESHOLD - RAMP_SMOOTH*0.5, RAMP_THRESHOLD + RAMP_SMOOTH*0.5, NDL);
-		#if SPOT
-			ramp *= step(0.0001, ndl);
-		#endif
 		#if !(POINT) && !(SPOT)
 			ramp *= atten;
 		#endif
@@ -361,9 +291,10 @@ Shader "HW_Shaders/ToonShader"
 
 		void LightingToonyColorsCustom_GI(inout SurfaceOutputCustom s, UnityGIInput data, inout UnityGI gi)
 		{
+			half colorNoAtten = max(gi.light.color.r, max(gi.light.color.g, gi.light.color.b));
 			gi = UnityGlobalIllumination(data, 1.0, IN_NORMAL);
 
-			s.atten = data.atten;	//transfer attenuation to lighting function
+			s.atten = max(gi.light.color.r, max(gi.light.color.g, gi.light.color.b)) / colorNoAtten;	//try to extract attenuation (shadowmap + shadowmask) for lighting function
 			gi.light.color = _LightColor0.rgb;	//remove attenuation
 		}
 
@@ -395,6 +326,31 @@ Shader "HW_Shaders/ToonShader"
 		}
 
 		ENDCG
+
+		//Outline
+		Pass
+		{
+			Cull Front
+			Offset [_Offset1],[_Offset2]
+
+			Tags { "LightMode"="ForwardBase" "IgnoreProjectors"="True" }
+
+			CGPROGRAM
+
+			#pragma vertex TCP2_Outline_Vert
+			#pragma fragment TCP2_Outline_Frag
+
+			#pragma multi_compile TCP2_NONE TCP2_ZSMOOTH_ON
+			#pragma multi_compile TCP2_NONE TCP2_OUTLINE_CONST_SIZE
+			#pragma multi_compile TCP2_NONE TCP2_COLORS_AS_NORMALS TCP2_TANGENT_AS_NORMALS TCP2_UV2_AS_NORMALS
+			#pragma multi_compile TCP2_NONE TCP2_OUTLINE_TEXTURED			
+			#pragma multi_compile_instancing
+
+
+			#pragma target 3.0
+
+			ENDCG
+		}
 	}
 
 	Fallback "Diffuse"

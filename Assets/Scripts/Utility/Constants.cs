@@ -34,6 +34,9 @@ namespace HW
         // Resources
         public static readonly string ResourcesFolderEquipment = "Items/Equipment";
         public static readonly string ResourcesFolderMessageCollection = "MessageCollection";
+
+        // Misc
+        public static readonly float OrthographicAngle = 60f;
     }
 
 

@@ -11,7 +11,7 @@ namespace HW
         List<GameObject> renderers;
 
         string backgroundLayer = "CameraLayer2";
-        string foregroundLayer = "CameraLayer4";
+        string foregroundLayer = "CameraLayer3";
 
         int backgroundCount = 0;
 
