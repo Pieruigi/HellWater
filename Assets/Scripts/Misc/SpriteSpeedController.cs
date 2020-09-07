@@ -12,9 +12,11 @@ public class SpriteSpeedController : MonoBehaviour
 
     // Last z position
     float lastCamZ = 0;
-    float lastCamX = 0;
+    //float lastCamX = 0;
 
     float cosDisp;
+
+    bool skip = true;
 
     // Start is called before the first frame update
     void Awake()
@@ -23,9 +25,16 @@ public class SpriteSpeedController : MonoBehaviour
             transform.eulerAngles = new Vector3(0, 0, 0);
 
         lastCamZ = camera3DPivot.position.z;
-        lastCamX = camera3DPivot.position.x;
-        //cosDisp = 1f - Mathf.Cos(Mathf.Deg2Rad * camera3DPivot.eulerAngles.x);
-        cosDisp = Mathf.Cos(Mathf.Deg2Rad * camera3DPivot.eulerAngles.x);
+        Debug.Log("Awake - LastCamZ:" + lastCamZ);
+        //lastCamX = camera3DPivot.position.x;
+        cosDisp = 1f - Mathf.Cos(Mathf.Deg2Rad * camera3DPivot.eulerAngles.x);
+        //cosDisp = Mathf.Cos(Mathf.Deg2Rad * camera3DPivot.eulerAngles.x);
+    }
+
+    private void Start()
+    {
+        Debug.Log("Start - CurrCamZ:" + camera3DPivot.position.z);
+        
     }
 
     // Update is called once per frame
@@ -44,19 +53,34 @@ public class SpriteSpeedController : MonoBehaviour
 
     private void LateUpdate()
     {
+        // We need to skip the first frame
+        if (skip)
+        {
+            skip = false;
+
+            // Reset last camera position
+            lastCamZ = camera3DPivot.position.z;
+            return;
+        }
+
         float diff =  camera3DPivot.position.z - lastCamZ;
 
-        //if(diff != 0)
-        //    transform.position += Vector3.forward * diff * cosDisp;
-        if (diff != 0)
-            transform.position -= Vector3.up * diff * cosDisp;
+        if(diff != 0)
+            transform.position += Vector3.forward * diff * cosDisp;
+        
+        //if (diff != 0)
+        //    transform.position -= Vector3.up * diff * cosDisp;
 
+        /*
         diff = camera3DPivot.position.x - lastCamX;
 
         if (diff != 0)
             transform.position -= Vector3.right * diff;
-
+            */
         lastCamZ = camera3DPivot.position.z;
-        lastCamX = camera3DPivot.position.x;
+        // lastCamX = camera3DPivot.position.x;
+
+       
+            
     }
 }

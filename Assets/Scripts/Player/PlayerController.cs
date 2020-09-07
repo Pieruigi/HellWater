@@ -134,6 +134,13 @@ namespace HW
         bool qteAction = false;
         float angularSpeedInRadians;
         Vector3 raycastOffset;
+        Transform startingPoint;
+        bool loadedFromCache = false;
+        public bool LoadedFromCache
+        {
+            get { return loadedFromCache; }
+            set { loadedFromCache = value; }
+        }
         #endregion
 
         public static PlayerController Instance { get; private set; } 
@@ -148,6 +155,7 @@ namespace HW
                 angularSpeedInRadians = angularSpeed * Mathf.Deg2Rad;
                 health = GetComponent<Health>();
                 raycastOffset = Vector3.up * Constants.RaycastVerticalOffset;
+
             }
             else
             {
@@ -159,6 +167,15 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
+            // Set starting point if not loaded from cache
+            if (!loadedFromCache)
+            {
+                Debug.Log("Setting starting position....");
+                startingPoint = GameObject.FindGameObjectWithTag(Tags.StartingPoint).transform;
+                transform.position = startingPoint.position;
+                transform.rotation = startingPoint.rotation;
+            }
+
             Reset();
 
             GetComponentInChildren<MeleeWeapon>().OnHit += HandleOnHitSomething;

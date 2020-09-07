@@ -21,6 +21,8 @@ namespace HW.CachingSystem
 
         protected override void Init(string cacheValue)
         {
+            playerController.LoadedFromCache = true;
+
             PlayerData data = new PlayerData();
             data.Parse(cacheValue);
 

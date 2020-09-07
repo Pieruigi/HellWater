@@ -8,12 +8,15 @@ namespace HW
     public enum Language { English, Italian }
     public enum CutSceneState { Executed = 0, Ready = 1 }
 
+    
+
     // Tags
     public class Tags
     {
         public static readonly string Player = "Player";
         public static readonly string Enemy = "Enemy";
         public static readonly string Npc = "Npc";
+        public static readonly string StartingPoint = "StartingPoint";
     }
 
 
