@@ -185,8 +185,7 @@ namespace HW
         // Update is called once per frame
         void Update()
         {
-            
-
+           
             if (qteAction)
                 QteAction();
             else
@@ -732,8 +731,30 @@ namespace HW
             ResetMaxSpeed();
         }
 
+        bool IsGrounded()
+        {
+            // Check gravity
+            float offset = 0.2f;
+            Ray ray = new Ray(transform.position + Vector3.up * offset, Vector3.down);
+            if (Physics.Raycast(ray, offset))
+                return true;
+            
+            return false;
+        }
+
         void RealtimeAction()
         {
+            if (IsGrounded())
+            {
+                if (rb.useGravity)
+                    rb.useGravity = false;
+            }
+            else
+            {
+                if (!rb.useGravity)
+                    rb.useGravity = true;
+            }
+
             // You can't do anything else while you are doing one of these actions
             if (disabled || /*reloading ||*/ shooting || attacking || hit || IsDead())
                 return;

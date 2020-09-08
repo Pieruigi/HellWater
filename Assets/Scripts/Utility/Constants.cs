@@ -37,6 +37,9 @@ namespace HW
 
         // Misc
         public static readonly float OrthographicAngle = 60f;
+
+        // Layers
+        public static readonly string LayerSightOccluder = "SightOccluder";
     }
 
 

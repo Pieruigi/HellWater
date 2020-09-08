@@ -41,7 +41,7 @@ namespace HW.UI
                 return;
 
             Debug.Log("Camera main:" + Camera.main);
-            crosshairImage.transform.position = Camera.main.WorldToScreenPoint(target.position + Vector3.forward*targetCollider.height/2f);
+            crosshairImage.transform.position = Camera.main.WorldToScreenPoint(target.position + Vector3.up*targetCollider.height*0.8f);
 
             // Set color
             SetColor();
