@@ -103,8 +103,6 @@ namespace HW
         void HideOccluder(Transform occluder)
         {
             occluder.GetComponent<Occluder>().Hide();
-
-
         }
 
         void ShowOccluder(Transform occluder)

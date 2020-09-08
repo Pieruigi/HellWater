@@ -736,7 +736,7 @@ namespace HW
             // Check gravity
             float offset = 0.2f;
             Ray ray = new Ray(transform.position + Vector3.up * offset, Vector3.down);
-            if (Physics.Raycast(ray, offset))
+            if (Physics.Raycast(ray, offset*1.1f))
                 return true;
             
             return false;
@@ -744,6 +744,7 @@ namespace HW
 
         void RealtimeAction()
         {
+
             if (IsGrounded())
             {
                 if (rb.useGravity)

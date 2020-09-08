@@ -31,7 +31,7 @@ namespace HW
             mf.sharedMesh = GetComponent<MeshFilter>().sharedMesh;
             MeshRenderer r = g.AddComponent<MeshRenderer>();
             r.receiveShadows = false;
-            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             r.sharedMaterial = placeholderMaterial;
 
             // Set and disable the place older

@@ -510,11 +510,11 @@ namespace HW
         {
             Vector3 toTarget = target.position - transform.position;
 
-            int layer = LayerMask.GetMask("SightOccluder");
+            //int layer = LayerMask.GetMask("SightOccluder");
             float distance = toTarget.magnitude;
             RaycastHit hit;
             Ray ray = new Ray(transform.position, toTarget.normalized);
-            if (Physics.Raycast(ray, out hit, distance, layer))
+            if (Physics.Raycast(ray, out hit, distance/*, layer*/))
             {
                 if (hit.transform != target)
                     return true;
