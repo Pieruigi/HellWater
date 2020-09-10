@@ -63,7 +63,7 @@ namespace HW
 
         // Is player running ?
         bool running = false; 
-        
+
         // The target velocity
         Vector3 desiredVelocity;
         #endregion
@@ -135,6 +135,7 @@ namespace HW
         float angularSpeedInRadians;
         Vector3 raycastOffset;
         Transform startingPoint;
+        CapsuleCollider coll;
         bool loadedFromCache = false;
         public bool LoadedFromCache
         {
@@ -155,7 +156,7 @@ namespace HW
                 angularSpeedInRadians = angularSpeed * Mathf.Deg2Rad;
                 health = GetComponent<Health>();
                 raycastOffset = Vector3.up * Constants.RaycastVerticalOffset;
-
+                coll = GetComponent<CapsuleCollider>();
             }
             else
             {
@@ -735,10 +736,14 @@ namespace HW
         {
             // Check gravity
             float offset = 0.2f;
-            Ray ray = new Ray(transform.position + Vector3.up * offset, Vector3.down);
-            if (Physics.Raycast(ray, offset*1.1f))
+            //Ray ray = new Ray(transform.position + Vector3.up * offset, Vector3.down);
+            //if (Physics.Raycast(ray, offset*1.1f))
+            //return true;
+            int layerMask = LayerMask.GetMask(Constants.LayerGround);
+            Ray ray = new Ray(transform.position + Vector3.up * (coll.radius + offset), Vector3.down);
+            if (Physics.SphereCast(ray, coll.radius, offset, layerMask))
                 return true;
-            
+
             return false;
         }
 

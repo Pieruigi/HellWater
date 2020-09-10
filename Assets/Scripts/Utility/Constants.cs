@@ -8,7 +8,7 @@ namespace HW
     public enum Language { English, Italian }
     public enum CutSceneState { Executed = 0, Ready = 1 }
 
-    
+    //public enum GroundTypeTag { Concrete, Grass }
 
     // Tags
     public class Tags
@@ -17,6 +17,9 @@ namespace HW
         public static readonly string Enemy = "Enemy";
         public static readonly string Npc = "Npc";
         public static readonly string StartingPoint = "StartingPoint";
+        public const string GroundConcrete = "Concrete";
+        public const string GroundGrass = "Grass";
+        public const string GroundDirt = "Dirt";
     }
 
 
@@ -40,6 +43,7 @@ namespace HW
 
         // Layers
         public static readonly string LayerSightOccluder = "SightOccluder";
+        public static readonly string LayerGround = "Ground";
     }
 
 

@@ -7,6 +7,7 @@ namespace HW
 {
     public class FireWeaponFX : MonoBehaviour
     {
+        [Header("Audio")]
         [SerializeField]
         AudioClip shootClip;
 
@@ -24,6 +25,13 @@ namespace HW
 
         [SerializeField]
         float outOfAmmoVolume = 1;
+
+        [Header("Particle Systems")]
+        [SerializeField]
+        ParticleSystem shootPS;
+
+        [SerializeField]
+        Transform shootPoint;
 
         AudioSource audioSource;
         FireWeapon fireWeapon;
@@ -52,7 +60,20 @@ namespace HW
 
         void HandleOnShoot()
         {
+            // Play audio
             PlayClip(shootClip, shootVolume);
+
+            // Play particle system
+            if (shootPS)
+            {
+                ParticleSystem ps = GameObject.Instantiate(shootPS);
+                ps.transform.position = shootPoint.position;
+                ps.transform.rotation = shootPoint.rotation;
+                ps.transform.localScale = shootPoint.localScale;
+                ps.transform.parent = shootPoint;
+                
+                ps.Play();
+            }
         }
 
         void HandleOnReload()

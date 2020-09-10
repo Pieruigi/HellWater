@@ -139,7 +139,7 @@ BlendTree:
     m_DirectBlendParameter: Speed
     m_Mirror: 0
   m_BlendParameter: Speed
-  m_BlendParameterY: WeaponAnimationId
+  m_BlendParameterY: __WeaponAnimationId
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 1
@@ -444,7 +444,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: WeaponAnimationId
+  m_BlendParameter: __WeaponAnimationId
   m_BlendParameterY: Speed
   m_MinThreshold: 0
   m_MaxThreshold: 1
@@ -656,7 +656,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: WeaponAnimationId
+  m_BlendParameter: __WeaponAnimationId
   m_BlendParameterY: Speed
   m_MinThreshold: 0
   m_MaxThreshold: 3
@@ -706,7 +706,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: WeaponAnimationId
+  m_BlendParameter: __WeaponAnimationId
   m_BlendParameterY: Speed
   m_MinThreshold: 0
   m_MaxThreshold: 3
@@ -887,7 +887,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: WeaponAnimationId
+  m_BlendParameter: __WeaponAnimationId
   m_BlendParameterY: WeaponAnimationId
   m_MinThreshold: 2
   m_MaxThreshold: 3
@@ -999,7 +999,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: WeaponAnimationId
+  - m_Name: __WeaponAnimationId
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -1049,6 +1049,12 @@ AnimatorController:
     m_Controller: {fileID: 0}
   - m_Name: AttackChargeSpeed
     m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: WeaponAnimationId
+    m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -1191,7 +1197,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: WeaponAnimationId
+  m_BlendParameter: __WeaponAnimationId
   m_BlendParameterY: Speed
   m_MinThreshold: 2
   m_MaxThreshold: 3
@@ -1241,7 +1247,7 @@ AnimatorState:
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
+  m_WriteDefaultValues: 0
   m_Mirror: 0
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
@@ -1354,7 +1360,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: WeaponAnimationId
+  m_BlendParameter: __WeaponAnimationId
   m_BlendParameterY: WeaponAnimationId
   m_MinThreshold: 2
   m_MaxThreshold: 3
@@ -1514,7 +1520,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: WeaponAnimationId
+  m_BlendParameter: __WeaponAnimationId
   m_BlendParameterY: WeaponAnimationId
   m_MinThreshold: 2
   m_MaxThreshold: 3
@@ -1685,10 +1691,10 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 3154894216964629197}
-    m_Position: {x: 380, y: 0, z: 0}
+    m_Position: {x: 420, y: 190, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7350783778373820888}
-    m_Position: {x: 580, y: -160, z: 0}
+    m_Position: {x: 610, y: -180, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3404463183124878756}
     m_Position: {x: 150, y: -130, z: 0}
@@ -1700,7 +1706,7 @@ AnimatorStateMachine:
     m_Position: {x: 690, y: 50, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3637974568762817793}
-    m_Position: {x: -10, y: 140, z: 0}
+    m_Position: {x: -30, y: 190, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4678896193974598689}
     m_Position: {x: -150, y: -80, z: 0}
@@ -1710,7 +1716,7 @@ AnimatorStateMachine:
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: 5782018870729012647}
-    m_Position: {x: 340, y: -260, z: 0}
+    m_Position: {x: 360, y: -270, z: 0}
   m_AnyStateTransitions:
   - {fileID: -4295647720387561340}
   m_EntryTransitions: []
@@ -1719,8 +1725,8 @@ AnimatorStateMachine:
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: -180, y: 20, z: 0}
-  m_EntryPosition: {x: 230, y: 150, z: 0}
-  m_ExitPosition: {x: 400, y: 120, z: 0}
+  m_EntryPosition: {x: 190, y: 310, z: 0}
+  m_ExitPosition: {x: 420, y: 280, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 3154894216964629197}
 --- !u!1102 &8724803204146699999

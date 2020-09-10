@@ -6,6 +6,8 @@ namespace HW
 {
     public class PlayerAnimationController : MonoBehaviour
     {
+        enum Locomotion { Idle, Walk, Run }
+
         PlayerController playerController;
         Animator animator;
 
@@ -27,6 +29,8 @@ namespace HW
         string paramAttackOK = "AttackOK";
         string paramAttackKO = "AttackKO";
         string paramAttackChargeSpeed = "AttackChargeSpeed";
+        //string paramLocomotion = "Locomotion";
+        
         #endregion
 
         private void Awake()
@@ -64,6 +68,27 @@ namespace HW
             // Update locomotion
             //animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
             animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed());
+
+            //if (playerController.GetCurrentSpeed() > 0)
+            //{
+            //    if (playerController.IsRunning())
+            //    {
+            //        if (animator.GetInteger(paramLocomotion) != (int)Locomotion.Run)
+            //            animator.SetInteger(paramLocomotion, (int)Locomotion.Run);
+                        
+            //    }
+            //    else
+            //    {
+            //        if (animator.GetInteger(paramLocomotion) != (int)Locomotion.Walk)
+            //            animator.SetInteger(paramLocomotion, (int)Locomotion.Walk);
+            //    }
+
+            //}
+            //else
+            //{
+            //    if (animator.GetInteger(paramLocomotion) != (int)Locomotion.Idle)
+            //        animator.SetInteger(paramLocomotion, (int)Locomotion.Idle);
+            //}
 
             // If player is aiming then check rotation
             if (animator.GetBool(paramAiming))

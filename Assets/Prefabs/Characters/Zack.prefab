@@ -564,8 +564,8 @@ GameObject:
   - component: {fileID: 106462172894740015}
   - component: {fileID: 1593133559}
   - component: {fileID: 1663608488}
-  - component: {fileID: 8550682189642256363}
   - component: {fileID: 766404568}
+  - component: {fileID: 1412539873}
   m_Layer: 0
   m_Name: Zack
   m_TagString: Enemy
@@ -676,7 +676,7 @@ MonoBehaviour:
   hearingRange: 7
   sightRange: 11
   shotHearingRange: 12
-  idleBehaviour: {fileID: 2499119780258199973}
+  idleBehaviour: {fileID: 0}
   fightBehaviour: {fileID: 1663608488}
   speedClass: 3
   canNotBePushed: 0
@@ -695,7 +695,7 @@ MonoBehaviour:
   spotGroup: {fileID: 0}
   stayInSpotMinTime: 2
   stayInSpotMaxTime: 4
-  speedClass: 0
+  speedClass: 2
 --- !u!114 &106462172894740015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -736,20 +736,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 1.25
   damageAmount: 30
---- !u!114 &8550682189642256363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2499119780258199970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63d0868a2590b104485f4169e4398708, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  renderers:
-  - {fileID: 1089566346265178336}
 --- !u!114 &766404568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -807,6 +793,21 @@ MonoBehaviour:
   - 1
   - 1
   - 1
+--- !u!114 &1412539873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2499119780258199970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b6226472b85d444ac8d6cb9322af35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  splatters:
+  - {fileID: 198104090543139058, guid: c895623d283a3264e81dc34dfcd831f6, type: 3}
+  - {fileID: 198615267133080452, guid: 75267e457ea84f14db9394604240641a, type: 3}
 --- !u!1001 &3722857588046302619
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -925,12 +926,6 @@ PrefabInstance:
 --- !u!4 &8561496337748043393 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: be00c305c839c1f438e25c22bfb5a5c9,
-    type: 3}
-  m_PrefabInstance: {fileID: 3722857588046302619}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1089566346265178336 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4374355960060525947, guid: be00c305c839c1f438e25c22bfb5a5c9,
     type: 3}
   m_PrefabInstance: {fileID: 3722857588046302619}
   m_PrefabAsset: {fileID: 0}
