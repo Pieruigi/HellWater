@@ -26,8 +26,15 @@ namespace HW.CachingSystem
             PlayerData data = new PlayerData();
             data.Parse(cacheValue);
 
-            transform.position = data.Position;
-            transform.eulerAngles = data.Rotation;
+            //transform.position = data.Position;
+            //transform.eulerAngles = data.Rotation;
+
+            // Get the spawner
+            Spawner spawner = GetComponent<Spawner>();
+            
+            // We only need to set the spawn point id, the spawner will take care to spawn the player
+            spawner.SpawnPointId = data.SpawnPointId;
+            
             health.Init(data.Health);
 
             // Load resources
@@ -48,8 +55,8 @@ namespace HW.CachingSystem
         {
             string fwCode = playerController.FireWeapon ? playerController.FireWeapon.Item.Code : "-";
             string mwCode = playerController.FireWeapon ? playerController.MeleeWeapon.Item.Code : "-";
-
-            PlayerData data = new PlayerData(transform.position, transform.eulerAngles,
+            
+            PlayerData data = new PlayerData(GetComponent<Spawner>().SpawnPointId,
                 health.CurrentHealth, mwCode, fwCode);
 
             return data.Format();

@@ -78,6 +78,11 @@ namespace HW.CachingSystem
             WriteCache();
         }
 
+        public void Load()
+        {
+            ReadCache();
+        }
+
         private void ReadCache()
         {
             string fileTxt = File.ReadAllText(Path.Combine(folder, file));

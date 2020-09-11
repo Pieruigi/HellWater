@@ -144,7 +144,8 @@ namespace HW
 
         public bool IsFull()
         {
-            return currentMagazineAmmo > 0;
+            //return currentMagazineAmmo > 0;
+            return currentMagazineAmmo == maxMagazineAmmo;
         }
 
         public bool IsEmpty()

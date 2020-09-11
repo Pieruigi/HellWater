@@ -44,6 +44,12 @@ namespace HW
         // Layers
         public static readonly string LayerSightOccluder = "SightOccluder";
         public static readonly string LayerGround = "Ground";
+
+        // Cache codes
+        public static readonly string CacheCodeSceneIndex = "lvl";
+        public static readonly string CacheCodePlayer = "ply";
+        public static readonly string CacheCodeEquipment = "eqp";
+        public static readonly string CacheCodeInventory = "inv";
     }
 
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace HW
 {
@@ -12,6 +13,7 @@ namespace HW
         {
             get { return defaultGroundType; }
         }
+
 
         public static LevelManager Instance { get; private set; }
 
@@ -38,6 +40,13 @@ namespace HW
         {
 
         }
+
+        public int GetLevelId()
+        {
+            return SceneManager.GetActiveScene().buildIndex;
+        }
+
+       
     }
 
 }

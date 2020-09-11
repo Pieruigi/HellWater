@@ -169,13 +169,13 @@ namespace HW
         void Start()
         {
             // Set starting point if not loaded from cache
-            if (!loadedFromCache)
-            {
-                Debug.Log("Setting starting position....");
-                startingPoint = GameObject.FindGameObjectWithTag(Tags.StartingPoint).transform;
-                transform.position = startingPoint.position;
-                transform.rotation = startingPoint.rotation;
-            }
+            //if (!loadedFromCache)
+            //{
+            //    Debug.Log("Setting starting position....");
+            //    startingPoint = GameObject.FindGameObjectWithTag(Tags.StartingPoint).transform;
+            //    transform.position = startingPoint.position;
+            //    transform.rotation = startingPoint.rotation;
+            //}
 
             Reset();
 
@@ -468,13 +468,18 @@ namespace HW
             // Reloading only works on fire weapons
             if (!fireWeapon)
                 return;
-
+            Debug.Log("CheckIsFull");
             if (fireWeapon.IsFull())
                 return;
 
+            if (GetCurrentSpeed() > 0)
+                return;
+
             // Check button
-            if (GetAxisRaw(reloadAxis) > 0)
+            if (GetButtonDown(reloadAxis))
             {
+                
+                Debug.Log("Reload");
                 TryReload();
             }
                 
@@ -497,6 +502,7 @@ namespace HW
             }
             else
             {
+               
                 // Reset all
                 Reset();
 
