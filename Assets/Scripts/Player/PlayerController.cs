@@ -290,7 +290,12 @@ namespace HW
 
         public float GetCurrentSpeed()
         {
+            //Debug.Log("HSpeed:" + rb.velocity);
+            Vector3 speed = rb.velocity;
+            speed.y = 0;
+            float mag = speed.magnitude;
             return rb.velocity.magnitude;
+            //return (mag > 0.01f ? mag : 0);
         }
 
         public float GetMaximumSpeed()
@@ -736,13 +741,14 @@ namespace HW
         {
             // Check gravity
             float offset = 0.2f;
-            //Ray ray = new Ray(transform.position + Vector3.up * offset, Vector3.down);
-            //if (Physics.Raycast(ray, offset*1.1f))
-            //return true;
             int layerMask = LayerMask.GetMask(Constants.LayerGround);
-            Ray ray = new Ray(transform.position + Vector3.up * (coll.radius + offset), Vector3.down);
-            if (Physics.SphereCast(ray, coll.radius, offset, layerMask))
+            Ray ray = new Ray(transform.position + Vector3.up * offset, Vector3.down);
+            if (Physics.Raycast(ray, offset * 1.1f))
                 return true;
+            //int layerMask = LayerMask.GetMask(Constants.LayerGround);
+            //Ray ray = new Ray(transform.position + Vector3.up * (coll.radius + offset), Vector3.down);
+            //if (Physics.SphereCast(ray, coll.radius, offset, layerMask))
+            //    return true;
 
             return false;
         }

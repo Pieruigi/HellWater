@@ -139,12 +139,12 @@ BlendTree:
     m_DirectBlendParameter: Speed
     m_Mirror: 0
   m_BlendParameter: Speed
-  m_BlendParameterY: __WeaponAnimationId
+  m_BlendParameterY: WeaponAnimationId
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
-  m_BlendType: 3
+  m_BlendType: 2
 --- !u!1101 &-7953068343002954415
 AnimatorStateTransition:
   m_ObjectHideFlags: 3
@@ -444,7 +444,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: __WeaponAnimationId
+  m_BlendParameter: WeaponAnimationId
   m_BlendParameterY: Speed
   m_MinThreshold: 0
   m_MaxThreshold: 1
@@ -656,7 +656,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: __WeaponAnimationId
+  m_BlendParameter: WeaponAnimationId
   m_BlendParameterY: Speed
   m_MinThreshold: 0
   m_MaxThreshold: 3
@@ -706,7 +706,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: __WeaponAnimationId
+  m_BlendParameter: WeaponAnimationId
   m_BlendParameterY: Speed
   m_MinThreshold: 0
   m_MaxThreshold: 3
@@ -887,7 +887,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: __WeaponAnimationId
+  m_BlendParameter: WeaponAnimationId
   m_BlendParameterY: WeaponAnimationId
   m_MinThreshold: 2
   m_MaxThreshold: 3
@@ -999,7 +999,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: __WeaponAnimationId
+  - m_Name: WeaponAnimationId
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -1049,12 +1049,6 @@ AnimatorController:
     m_Controller: {fileID: 0}
   - m_Name: AttackChargeSpeed
     m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: WeaponAnimationId
-    m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -1197,7 +1191,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: __WeaponAnimationId
+  m_BlendParameter: WeaponAnimationId
   m_BlendParameterY: Speed
   m_MinThreshold: 2
   m_MaxThreshold: 3
@@ -1360,7 +1354,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: __WeaponAnimationId
+  m_BlendParameter: WeaponAnimationId
   m_BlendParameterY: WeaponAnimationId
   m_MinThreshold: 2
   m_MaxThreshold: 3
@@ -1520,7 +1514,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
-  m_BlendParameter: __WeaponAnimationId
+  m_BlendParameter: WeaponAnimationId
   m_BlendParameterY: WeaponAnimationId
   m_MinThreshold: 2
   m_MaxThreshold: 3

@@ -200,6 +200,7 @@ namespace HW
         }
 
         #region INTERFACES IMPLEMENTATION
+
         public bool IsTargetable()
         {
             return !IsDead();

@@ -69,6 +69,7 @@ namespace HW
             //animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
             animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed());
 
+
             //if (playerController.GetCurrentSpeed() > 0)
             //{
             //    if (playerController.IsRunning())

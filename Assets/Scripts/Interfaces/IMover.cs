@@ -22,7 +22,7 @@ namespace HW.Interfaces
         float GetMaxSpeed();
         
         float GetSpeed();
-        
+     
 
     }
 
