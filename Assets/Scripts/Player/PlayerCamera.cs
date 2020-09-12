@@ -4,10 +4,14 @@ using UnityEngine;
 
 namespace HW
 {
+    [ExecuteAlways]
     public class PlayerCamera : MonoBehaviour
     {
         [SerializeField]
         bool external;
+
+        [SerializeField]
+        Transform target;
 
         float distance = 100;
         Vector3 eulerAngles;
@@ -29,15 +33,15 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
-            player = PlayerController.Instance.gameObject;
-            transform.position = player.transform.position - transform.forward * distance;
+            //player = PlayerController.Instance.gameObject;
+            transform.position = target.position - transform.forward * distance;
         }
 
         // Update is called once per frame
         void LateUpdate()
         {
             // Follow the player
-            transform.position = player.transform.position - transform.forward * distance;
+            transform.position = target.position - transform.forward * distance;
 
             
         }

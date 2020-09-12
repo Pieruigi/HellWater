@@ -14,16 +14,23 @@ namespace HW
 
         [SerializeField]
         bool invertAngle = false;
+
+        [SerializeField]
+        float speed = 0.5f;
         
         InteractionController interactionController;
 
-       
+        float time;
+
         float openAngle = 0;
 
         private void Awake()
         {
             interactionController = GetComponent<InteractionController>();
             interactionController.OnStateChange += HandleOnStateChange;
+
+            time = 1f / speed;
+         
         }
 
         // Start is called before the first frame update
@@ -58,11 +65,11 @@ namespace HW
                 }
             }
 
-            
-
             openAngle = angle;
 
-            LeanTween.rotateAroundLocal(sceneObject, Vector3.up, angle, 0.5f).setEaseOutElastic();
+            LeanTween.rotateAroundLocal(sceneObject, Vector3.up, angle, time).setEaseOutElastic();
+
+            
         }
     }
 
