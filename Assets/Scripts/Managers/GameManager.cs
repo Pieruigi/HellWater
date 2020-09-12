@@ -31,6 +31,9 @@ namespace HW
             get { return loading; }
         }
 
+        
+        
+
         private void Awake()
         {
             if (!Instance)
@@ -54,6 +57,11 @@ namespace HW
         void Update()
         {
             
+        }
+
+        public bool IsSaveGameAvailable()
+        {
+            return CacheManager.Instance.IsSaveGameAvailable();
         }
 
         public void LoadMainMenu()

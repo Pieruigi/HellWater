@@ -19,6 +19,7 @@ namespace HW.CachingSystem
             get { 
                 if (instance == null)
                     instance = new CacheManager();
+                
                 return instance;
             }
         }
@@ -26,26 +27,36 @@ namespace HW.CachingSystem
         // Cache
         Dictionary<string, string> cache; // Cache name and data
 
+
+
         private CacheManager()
         {
+            Debug.Log("Creating cache system...");
+
             // Init cache list
             cache = new Dictionary<string, string>();
 
-            // Create the base folder if needed
+            // Create the base folder if needed ( the file we'll be created on the first saving )
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
 
-            // Create save file if needed
-            string path = Path.Combine(folder, file);
-            if (!File.Exists(path))
-                using (FileStream fs = File.Create(path)) { }
-                    
-                
+            //// Create save file if needed
+            //string path = Path.Combine(folder, file);
+            //if (!File.Exists(path))
+            //    using (FileStream fs = File.Create(path)) { }
+
+            
 
             // Try to read from disk
-            ReadCache();
+            //ReadCache();
         }
 
+        public bool IsSaveGameAvailable()
+        {
+            string path = Path.Combine(folder, file);
+            return File.Exists(path);
+                
+        }
 
         // Adding data to cache
         public void UpdateCacheValue(string code, string data)
@@ -101,6 +112,11 @@ namespace HW.CachingSystem
 
         private void WriteCache()
         {
+            // Create save file if it doesn't exist
+            string path = Path.Combine(folder, file);
+            if (!File.Exists(path))
+                using (FileStream fs = File.Create(path)) { }
+
             using (StringWriter sw = new StringWriter())
             {
                 List<string> keys = new List<string>(cache.Keys);

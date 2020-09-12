@@ -34,6 +34,10 @@ namespace HW
         //int leftAmmo = 0;
 
         int currentMagazineAmmo = 0;
+        public int NumberOfLoadedAmmo
+        {
+            get { return currentMagazineAmmo; }
+        }
 
         IShooter shooter;
 
@@ -69,7 +73,7 @@ namespace HW
             base.Awake();
         }
 
-        // Start is called before the first frame update
+        
         
         public static float GetAccuracyPenalty(FireWeapon weapon, float distance)
         {
@@ -83,6 +87,11 @@ namespace HW
                 return 1;
 
             return 0;
+        }
+
+        public void Init(int loadedAmmonitions)
+        {
+            currentMagazineAmmo = loadedAmmonitions;
         }
 
         public bool Shoot()

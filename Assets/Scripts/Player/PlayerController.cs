@@ -468,7 +468,7 @@ namespace HW
             // Reloading only works on fire weapons
             if (!fireWeapon)
                 return;
-            Debug.Log("CheckIsFull");
+
             if (fireWeapon.IsFull())
                 return;
 

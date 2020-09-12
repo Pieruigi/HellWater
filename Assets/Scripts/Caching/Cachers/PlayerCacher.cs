@@ -49,15 +49,33 @@ namespace HW.CachingSystem
 
             // Holster weapon
             playerController.HolsterWeapon();
+
+            // Get all player fire weapons ( even the not yet available ones )
+            List<FireWeapon> weapons = new List<FireWeapon>(GetComponentsInChildren<FireWeapon>());
+
+            // Add ammonitions
+            for(int i=0; i<weapons.Count; i++)
+            {
+                weapons[i].Init(data.LoadedAmmonitions[i]);
+            }
+
         }
 
         protected override string GetCacheValue()
         {
             string fwCode = playerController.FireWeapon ? playerController.FireWeapon.Item.Code : "-";
             string mwCode = playerController.FireWeapon ? playerController.MeleeWeapon.Item.Code : "-";
-            
+
+            // Loaded ammonitions for every fire weapon ( even the not yet available ones )
+            List<int> ammos = new List<int>();
+            List<FireWeapon> weapons = new List<FireWeapon>(GetComponentsInChildren<FireWeapon>());
+            foreach(FireWeapon weapon in weapons)
+            {
+                ammos.Add(weapon.NumberOfLoadedAmmo);
+            }
+
             PlayerData data = new PlayerData(GetComponent<Spawner>().SpawnPointId,
-                health.CurrentHealth, mwCode, fwCode);
+                health.CurrentHealth, mwCode, fwCode, ammos);
 
             return data.Format();
         }

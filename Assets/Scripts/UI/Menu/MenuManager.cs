@@ -17,7 +17,9 @@ namespace HW.UI
             get { return menuList.AsReadOnly(); }
         }
 
+        [SerializeField]
         GameObject menuDefault;
+
         GameObject current;
 
         bool isOpened = false;
@@ -36,7 +38,7 @@ namespace HW.UI
         // Start is called before the first frame update
         protected virtual void Start()
         {
-
+            
         }
 
         // Update is called once per frame
