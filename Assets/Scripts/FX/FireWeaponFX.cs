@@ -70,7 +70,7 @@ namespace HW
                 ps.transform.position = shootPoint.position;
                 ps.transform.rotation = shootPoint.rotation;
                 ps.transform.localScale = shootPoint.localScale;
-                ps.transform.parent = shootPoint;
+                //ps.transform.parent = shootPoint;
                 
                 ps.Play();
             }

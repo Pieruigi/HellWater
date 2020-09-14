@@ -11,6 +11,12 @@ namespace HW
         bool external;
 
         [SerializeField]
+        bool overrideAngles;
+
+        [SerializeField]
+        Vector3 angles;
+
+        [SerializeField]
         Transform target;
 
         float distance = 100;
@@ -20,12 +26,19 @@ namespace HW
 
         private void Awake()
         {
-            eulerAngles = new Vector3(0, -20f, 0f);
+            if (!overrideAngles)
+            {
+                eulerAngles = new Vector3(0, -20f, 0f);
 
-            if (external)
-                eulerAngles.x = 20f;
+                if (external)
+                    eulerAngles.x = 20f;
+                else
+                    eulerAngles.x = 50f;
+            }
             else
-                eulerAngles.x = 50f;
+            {
+                eulerAngles = angles;
+            }
 
             transform.eulerAngles = eulerAngles;
         }
