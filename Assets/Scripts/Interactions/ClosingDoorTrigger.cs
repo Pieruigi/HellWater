@@ -7,15 +7,14 @@ namespace HW
     public class ClosingDoorTrigger : MonoBehaviour
     {
         
+        DoorController ctrl;
         FiniteStateMachine fsm;
-      
-        
-
+     
         // Start is called before the first frame update
         void Start()
         {
+            ctrl = GetComponentInParent<DoorController>();
             fsm = GetComponentInParent<FiniteStateMachine>();
-   
         }
 
         // Update is called once per frame
@@ -28,7 +27,7 @@ namespace HW
         {
             if(other.gameObject.tag == Tags.Player)
             {
-                if (fsm.CurrentStateId == Constants.DoorOpenState)
+                if (ctrl.Opened)
                     fsm.Lookup();
             }
         }

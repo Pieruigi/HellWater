@@ -2,75 +2,103 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HW.Interfaces;
+using UnityEngine.Events;
 
 namespace HW
 {
-    public class DoorController : MonoBehaviour
+    public enum DoorState { Locked, Unlocked }
+
+    public abstract class DoorController : MonoBehaviour
     {
-     
+        public UnityAction<DoorController> OnOpen;
+        public UnityAction<DoorController> OnClose;
+        public UnityAction<DoorController> OnStillLocked;
+        public UnityAction<DoorController> OnUnlock;
 
-        [SerializeField]
-        GameObject sceneObject;
+        //[SerializeField]
+        //GameObject sceneObject;
 
-        [SerializeField]
-        bool invertAngle = false;
+        //[SerializeField]
+        //bool invertAngle = false;
 
-        [SerializeField]
-        float speed = 0.5f;
+        //[SerializeField]
+        //float speed = 0.5f;
         
         InteractionController interactionController;
 
-        float time;
+        //float time;
 
-        float openAngle = 0;
+        //float openAngle = 0;
 
-        private void Awake()
+        bool opened = false;
+        public bool Opened
+        {
+            get { return opened; }
+        }
+
+        protected abstract void Open();
+        protected abstract void Close();
+        //protected abstract void Unlock();
+
+        protected virtual void Awake()
         {
             interactionController = GetComponent<InteractionController>();
             interactionController.OnStateChange += HandleOnStateChange;
 
-            time = 1f / speed;
+            //time = 1f / speed;
          
         }
 
         // Start is called before the first frame update
-        void Start()
+        protected virtual void Start()
         {
             
         }
 
         // Update is called once per frame
-        void Update()
+        protected virtual void Update()
         {
 
         }
 
         void HandleOnStateChange(int oldState, int newState)
         {
-            float angle = 90;
-            if(newState == Constants.DoorOpenState)
+            // You are trying to open a locked door
+            if (oldState == newState && newState == (int)DoorState.Locked)
             {
-                Vector3 dir = transform.position - PlayerController.Instance.transform.position;
-                if (Vector3.Dot(dir, sceneObject.transform.forward) > 0)
-                    angle = -90;
-
-                if (invertAngle)
-                    angle *= -1;
+                OnStillLocked?.Invoke(this);
+                return;
             }
-            else
+                
+            // You unlocked the door
+            if(oldState == (int)DoorState.Locked && newState == (int)DoorState.Locked)
             {
-                if (newState == Constants.DoorClosedState)
+                OnUnlock?.Invoke(this);
+                return;
+            }
+
+            // You can open it
+            if(newState == (int)DoorState.Unlocked)
+            {
+                
+                if (!opened)
                 {
-                    angle = openAngle * -1f;
+                    opened = true;
+                    Open();
+                    OnOpen?.Invoke(this);
                 }
+                else
+                {
+                    opened = false;
+                    Close();
+                    OnClose?.Invoke(this);
+                }
+
             }
-
-            openAngle = angle;
-
-            LeanTween.rotateAroundLocal(sceneObject, Vector3.up, angle, time).setEaseOutElastic();
-
             
         }
+
+
     }
 
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HW
 {
 
-    public class MeshDestroyer : MonoBehaviour
+    public class RendererDestroyer : MonoBehaviour
     {
         private void Awake()
         {
