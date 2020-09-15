@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HW.Interfaces;
+using UnityEngine.Playables;
 
 namespace HW.Cinema
 {
     public class InGameCutScene : CutScene
     {
-        Animation timeline;
+        PlayableDirector timeline;
 
         protected override void Awake()
         {
             base.Awake();
 
-            timeline = GetComponent<Animation>();
+            timeline = GetComponent<PlayableDirector>();
         }
 
         public void TestDebug()
@@ -35,6 +36,8 @@ namespace HW.Cinema
 
             timeline.Stop();
         }
+
+
     }
 
 }

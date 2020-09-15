@@ -56,6 +56,11 @@ namespace HW
             StartCoroutine(FadeOutCoroutine(speed, callback));
         }
 
+        public void FadeOut(float speed, UnityAction callback = null)
+        {
+            StartCoroutine(FadeOutCoroutine(speed, callback));
+        }
+
         public void FadeOutIn(float length, UnityAction callback)
         {
             StartCoroutine(FadeOutInCoroutine(speed, length, callback));

@@ -67,6 +67,7 @@ namespace HW.Cinema
 
         public virtual void Exit()
         {
+            Debug.Log("Exit");
             skippable = false;
             StopAllCoroutines();
             cinemaController.Exit();
