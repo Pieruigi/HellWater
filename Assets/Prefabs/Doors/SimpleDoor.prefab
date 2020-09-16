@@ -397,8 +397,9 @@ GameObject:
   - component: {fileID: 768339382067448072}
   - component: {fileID: 6615320985889956866}
   - component: {fileID: 7493957719582420117}
+  - component: {fileID: 145892584191464658}
   m_Layer: 0
-  m_Name: Door
+  m_Name: SimpleDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -474,7 +475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f81514e9266f42b4f8ed04289828c8c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unavailableStates: 02000000
+  unavailableStates: 
 --- !u!114 &768339382067448072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,9 +492,11 @@ MonoBehaviour:
   - name: Locked
     id: 0
     othersToSet: []
+    commonStateErrorId: -1
   - name: Unlocked
     id: 1
     othersToSet: []
+    commonStateErrorId: -1
   transitions:
   - tag: Unlock
     fromStateId: 0
@@ -623,8 +626,20 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: ec2ca054e2397784f90e1f88e94db7e9, type: 3}
     volume: 1
   stillLockedClip:
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 8d1a3cecfce7253488ff8fb4cd605508, type: 3}
     volume: 1
   unlockClip:
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: c24d915a678ebb2429ad986dbcb9d66e, type: 3}
     volume: 1
+--- !u!114 &145892584191464658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8757352342180462650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a664822f6b8ba74296eace05d153587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

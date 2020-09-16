@@ -67,6 +67,9 @@ namespace HW
 
         void PlayClip(AudioClipData data)
         {
+            if (data.Clip == null)
+                return;
+
             source.volume = data.Volume;
             source.clip = data.Clip;
             source.Play();

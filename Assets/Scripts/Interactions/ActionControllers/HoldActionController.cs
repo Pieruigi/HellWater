@@ -21,12 +21,14 @@ namespace HW
         public override void StartActing()
         {
             charge = 0;
+            charging = false;
             base.StartActing();
         }
 
         public override void StopActing()
         {
             charge = 0;
+            charging = false;
             base.StopActing();
         }
 

@@ -9,6 +9,8 @@ namespace HW.Cinema
     public class DialogController : MonoBehaviour
     {
         [SerializeField]
+        string dialogCode;
+
         Dialog dialog;
 
         int currentId = 0;
@@ -25,13 +27,14 @@ namespace HW.Cinema
 
         private void Awake()
         {
-            numberOfSpeeches = dialog.GetNumberOfSpeeches();
+            
         }
 
         // Start is called before the first frame update
         void Start()
         {
-
+            dialog = Dialog.GetDialog(dialogCode, GameManager.Instance.Language);
+            numberOfSpeeches = dialog.GetNumberOfSpeeches();
         }
 
         // Update is called once per frame
@@ -39,45 +42,56 @@ namespace HW.Cinema
         {
         }
 
-        public void StartDialog()
+        //public void StartDialog()
+        //{
+        //    writeDialogCoroutine = StartCoroutine(WriteDialog());
+        //}
+
+        public void NextDialog()
         {
-            writeDialogCoroutine = StartCoroutine(WriteDialog());
+            
+            Dialog.Speech speech = dialog.GetSpeech(currentId);
+
+            DialogViewer.Instance.ShowSpeech(speech.Content, speech.Avatar);
+
+            currentId++;
         }
+
 
         public void StopDialog()
         {
             // Stop coroutine
-            StopCoroutine(writeDialogCoroutine);
+            //StopCoroutine(writeDialogCoroutine);
 
             // Hide dialog
             DialogViewer.Instance.Hide();
         }
 
-        IEnumerator WriteDialog()
-        {
-            Debug.Log("Writing dialog...");
+        //IEnumerator WriteDialog()
+        //{
+        //    Debug.Log("Writing dialog...");
 
-            // Loop through all the dialog elements
-            for(int i=0; i<numberOfSpeeches; i++)
-            {
+        //    // Loop through all the dialog elements
+        //    for(int i=0; i<numberOfSpeeches; i++)
+        //    {
                 
-                // Get next speech
-                Dialog.Speech speech = dialog.GetSpeech(i);
+        //        // Get next speech
+        //        Dialog.Speech speech = dialog.GetSpeech(i);
 
-                Debug.Log("Next speech:" +speech.Content);
+        //        Debug.Log("Next speech:" +speech.Content);
 
-                // Compute the length in seconds ( it depends on the number of words )
-                timer = speech.Content.Split(' ').Length / readSpeed;
+        //        // Compute the length in seconds ( it depends on the number of words )
+        //        timer = speech.Content.Split(' ').Length / readSpeed;
 
-                // Show speech
-                DialogViewer.Instance.ShowSpeech(speech.Content, speech.Avatar);
+        //        // Show speech
+        //        DialogViewer.Instance.ShowSpeech(speech.Content, speech.Avatar);
 
-                // Wait
-                yield return new WaitForSeconds(timer);
-            }
+        //        // Wait
+        //        yield return new WaitForSeconds(timer);
+        //    }
 
-            StopDialog();
-        }
+        //    StopDialog();
+        //}
     }
 
 }

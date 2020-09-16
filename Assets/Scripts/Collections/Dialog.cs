@@ -7,6 +7,8 @@ namespace HW.Collections
 {
     public class Dialog : ScriptableObject
     {
+        public static readonly string ResourceFolder = "Dialogs";
+
         [System.Serializable]
         public class Speech
         {
@@ -33,6 +35,9 @@ namespace HW.Collections
                 get { return index; }
             }
         }
+
+        [SerializeField]
+        string code;
 
         [SerializeField]
         bool useSpeechIndex = false;
@@ -85,6 +90,13 @@ namespace HW.Collections
         //    speeches.AddRange(tmp);
 
         //}
+
+        public static Dialog GetDialog(string code, Language language)
+        {
+            // Get resource
+            return new List<Dialog>(Resources.LoadAll<Dialog>(System.IO.Path.Combine(ResourceFolder, language.ToString()))).Find(d=>d.code == code);
+
+        }
     }
 
 

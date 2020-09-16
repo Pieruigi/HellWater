@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HW.UI;
 
 namespace HW
 {
@@ -27,13 +28,13 @@ namespace HW
 
         void HandleOnFail(FiniteStateMachine fsm, int errorId)
         {
+            // Get the right message depending on the id and language
+            string message = MessageFactory.Instance.GetMessage(errorId);
 
+            // Show message on screen
+            MessageViewer.Instance.ShowMessage(message);
         }
 
-        void ShowMessage(int messageId)
-        {
-
-        }
     }
 }
 

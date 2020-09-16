@@ -74,6 +74,10 @@ namespace HW
             // The error that will be sent out when conditions are not satisfied
             [SerializeField]
             int errorId = -1;
+            public int ErrorId
+            {
+                get { return errorId; }
+            }
 
             // If true the machine can change state
             public bool Checked()
@@ -141,6 +145,13 @@ namespace HW
             [SerializeField]
             List<OtherToSet> othersToSet = new List<OtherToSet>();
 
+            [SerializeField]
+            int commonStateErrorId = -1; // A common error you can use independent on the transition
+            public int CommonStateErrorId
+            {
+                get { return commonStateErrorId; }
+            }
+
             // Sets the other fsm
             public void SetOthers()
             {
@@ -200,7 +211,17 @@ namespace HW
 
             // If no transition return
             if (transition == null)
+            {
+                OnFail?.Invoke(this, states[currentStateId].CommonStateErrorId);
                 return false;
+            }
+                
+
+            if (!transition.Checked())
+            {
+                OnFail?.Invoke(this, transition.ErrorId);
+                return false;
+            }
 
             // Change state
             ChangeState(transition);

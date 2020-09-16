@@ -307,6 +307,7 @@ namespace HW
 
         public void SetDisabled(bool value)
         {
+            Debug.Log("SetDisable:" + value);
             if (disabled == value)
                 return;
 

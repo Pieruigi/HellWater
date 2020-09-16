@@ -15,10 +15,10 @@ public class _TestDialog : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            GetComponent<HW.Cinema.DialogController>().StartDialog();
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //    GetComponent<HW.Cinema.DialogController>().StartDialog();
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            GetComponent<HW.Cinema.DialogController>().StopDialog();
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //    GetComponent<HW.Cinema.DialogController>().StopDialog();
     }
 }

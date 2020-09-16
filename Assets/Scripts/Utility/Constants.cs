@@ -6,7 +6,7 @@ namespace HW
 {
 
     public enum Language { English, Italian }
-    public enum CutSceneState { Executed = 0, Ready = 1 }
+    public enum CutSceneState { Played = 0, Playing = 1, Ready = 2 }
 
     public enum GroundType { Concrete, Grass, Dirt }
 
@@ -37,6 +37,7 @@ namespace HW
         // Resources
         public static readonly string ResourcesFolderEquipment = "Items/Equipment";
         public static readonly string ResourcesFolderMessageCollection = "MessageCollection";
+        //public static readonly string ResourcesFolderMessageCollection = "MessageCollection";
 
         // Misc
         public static readonly float OrthographicAngle = 60f;

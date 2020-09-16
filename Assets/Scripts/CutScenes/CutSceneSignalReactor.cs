@@ -8,6 +8,8 @@ namespace HW.Cinema
     // This class holds basic signal reaction implementation
     public class CutSceneSignalReactor : MonoBehaviour
     {
+        private float fadeSpeed = 1f;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -20,14 +22,14 @@ namespace HW.Cinema
 
         }
 
-        public void FadeOut(float speed)
+        public void FadeOut()
         {
-            CameraFader.Instance.FadeOut(speed);
+            CameraFader.Instance.FadeOut(fadeSpeed);
         }
 
-        public void FadeIn(float speed)
+        public void FadeIn()
         {
-            CameraFader.Instance.FadeIn(speed);
+            CameraFader.Instance.FadeIn(fadeSpeed);
         }
 
         public void ForceBlackScreen()
@@ -35,20 +37,29 @@ namespace HW.Cinema
             CameraFader.Instance.ForceBlackScreen();
         }
 
-        public void PlayerEnable(bool value)
+        public void PlayerEnable()
         {
-            PlayerController.Instance.SetDisabled(!value);
+            PlayerController.Instance.SetDisabled(false);
         }
 
+        public void PlayerDisable()
+        {
+            PlayerController.Instance.SetDisabled(true);
+        }
       
-        public void PlayerShow(bool value)
+        public void PlayerShow()
         {
-            PlayerController.Instance.gameObject.SetActive(value);
+            PlayerController.Instance.gameObject.SetActive(true);
         }
 
-        public void ShowSlide(Sprite sprite)
+        public void PlayerHide()
         {
-            SlideProjector.Instance.ShowSlide(sprite);
+            PlayerController.Instance.gameObject.SetActive(false);
+        }
+
+        public void NextSlide()
+        {
+            //SlideProjector.Instance.ShowSlide(sprite);
         }
     }
 

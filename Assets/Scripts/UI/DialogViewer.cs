@@ -41,6 +41,7 @@ namespace HW.UI
         // Update is called once per frame
         void Update()
         {
+            // Write text
             if(timer > 0)
             {
                 timer -= Time.deltaTime;
@@ -60,10 +61,9 @@ namespace HW.UI
                     if (!"".Equals(currentText))
                         timer = 1f / writeSpeed;
                 }
-
-
-
             }
+
+            // Show and hide
         }
 
         public void ShowSpeech(string text, Sprite avatar)
