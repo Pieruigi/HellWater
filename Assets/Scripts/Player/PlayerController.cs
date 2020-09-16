@@ -1078,7 +1078,11 @@ namespace HW
 
         }
 
-        
+        public void ActionCompleted()
+        {
+            SetDisabled(false);
+        }
+
         #endregion
 
 

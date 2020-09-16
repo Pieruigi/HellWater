@@ -34,8 +34,8 @@ namespace HW.UI
             Debug.Log("Controllers.Length:" + controllers.Length);
             foreach(ActionController controller in controllers)
             {
-                controller.OnStartActing += HandleOnStartActing;
-                controller.OnStopActing += HandleOnStopActing;
+                controller.OnActionEnable += HandleOnActionEnable;
+                controller.OnActionDisable += HandleOnActionDisable;
                 controller.OnActionPerformed += HandleOnActionPerformed;
             }
         }
@@ -60,7 +60,7 @@ namespace HW.UI
             
         }
 
-        void HandleOnStartActing(ActionController controller)
+        void HandleOnActionEnable(ActionController controller)
         {
 
             activeController = controller;
@@ -69,7 +69,7 @@ namespace HW.UI
             Show(true);
         }
 
-        void HandleOnStopActing(ActionController controller)
+        void HandleOnActionDisable(ActionController controller)
         {
             loop = false;
             activeController = null;

@@ -18,18 +18,18 @@ namespace HW
         
         bool charging = false;
 
-        public override void StartActing()
+        public override void EnableAction()
         {
             charge = 0;
             charging = false;
-            base.StartActing();
+            base.EnableAction();
         }
 
-        public override void StopActing()
+        public override void DisableAction()
         {
             charge = 0;
             charging = false;
-            base.StopActing();
+            base.DisableAction();
         }
 
         protected override bool PerformAction()
@@ -39,13 +39,18 @@ namespace HW
                 if (PlayerController.Instance.GetActionButtonDown())
                 {
                     charging = true;
+                    OnActionStart?.Invoke(this);
                 }
                     
             }
             else
             {
                 if (PlayerController.Instance.GetActionButtonUp())
+                {
                     charging = false;
+                    OnActionStop?.Invoke(this);
+                }
+                    
                 
                     
             }
@@ -56,7 +61,11 @@ namespace HW
                 charge = Mathf.Max(0, charge - 2f * Time.deltaTime);
             
             if (charge == 1)
+            {
+                OnActionStop?.Invoke(this);
                 return true;
+            }
+                
 
             return false;
         }

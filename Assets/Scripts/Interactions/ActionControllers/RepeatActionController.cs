@@ -36,16 +36,16 @@ namespace HW
             return false;
         }
 
-        public override void StartActing()
+        public override void EnableAction()
         {
             charge = 0;
-            base.StartActing();
+            base.EnableAction();
         }
 
-        public override void StopActing()
+        public override void DisableAction()
         {
             charge = 0;
-            base.StopActing();
+            base.DisableAction();
         }
     }
 

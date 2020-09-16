@@ -9,14 +9,16 @@ namespace HW
 
     public class ActionController : MonoBehaviour
     {
-        public UnityAction<ActionController> OnStartActing;
-        public UnityAction<ActionController> OnStopActing;
+        public UnityAction<ActionController> OnActionEnable;
+        public UnityAction<ActionController> OnActionDisable;
         public UnityAction<ActionController> OnActionPerformed;
+        public UnityAction<ActionController> OnActionStart;
+        public UnityAction<ActionController> OnActionStop;
 
-        bool acting = false;
-        public bool Acting
+        bool actionEnable = false;
+        public bool ActionEnable
         {
-            get { return acting; }
+            get { return actionEnable; }
         }
 
         
@@ -30,7 +32,7 @@ namespace HW
         // Update is called once per frame
         void Update()
         {
-            if (!acting)
+            if (!actionEnable)
                 return;
 
             if (PerformAction())
@@ -38,16 +40,16 @@ namespace HW
             
         }
 
-        public virtual void StartActing()
+        public virtual void EnableAction()
         {
-            acting = true;
-            OnStartActing?.Invoke(this);
+            actionEnable = true;
+            OnActionEnable?.Invoke(this);
         }
 
-        public virtual void StopActing()
+        public virtual void DisableAction()
         {
-            acting = false;
-            OnStopActing?.Invoke(this);
+            actionEnable = false;
+            OnActionDisable?.Invoke(this);
         }
 
         protected virtual bool PerformAction()

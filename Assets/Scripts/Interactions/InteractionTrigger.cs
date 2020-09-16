@@ -71,14 +71,14 @@ namespace HW
                         }
                         else // We need to play a little
                         {
-                            if(!actionController.Acting)
+                            if(!actionController.ActionEnable)
                                 StartActing();
                         }
 
                     }
                     else
                     {
-                        if(actionController.Acting)
+                        if(actionController.ActionEnable)
                             StopActing();
                     }    
                 }
@@ -103,7 +103,7 @@ namespace HW
             {
                 inside = false;
                 
-                if(actionController.Acting)
+                if(actionController.ActionEnable)
                     StopActing();
             }
         }
@@ -117,12 +117,12 @@ namespace HW
         void StartActing()
         {
             actionController.OnActionPerformed += HandleOnActionPerformed;
-            actionController.StartActing();
+            actionController.EnableAction();
         }
 
         void StopActing()
         {
-            actionController.StopActing();
+            actionController.DisableAction();
             actionController.OnActionPerformed -= HandleOnActionPerformed;
         }
 
