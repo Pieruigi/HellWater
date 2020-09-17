@@ -23,8 +23,9 @@ namespace HW
 
         //[SerializeField]
         //float speed = 0.5f;
-        
-        InteractionController interactionController;
+
+        //InteractionController interactionController;
+        FiniteStateMachine fsm;
 
         //float time;
 
@@ -42,8 +43,10 @@ namespace HW
 
         protected virtual void Awake()
         {
-            interactionController = GetComponent<InteractionController>();
-            interactionController.OnStateChange += HandleOnStateChange;
+            //interactionController = GetComponent<InteractionController>();
+            //interactionController.OnStateChange += HandleOnStateChange;
+            fsm = GetComponent<FiniteStateMachine>();
+            fsm.OnStateChange += HandleOnStateChange;
 
             //time = 1f / speed;
          
@@ -61,26 +64,27 @@ namespace HW
 
         }
 
-        void HandleOnStateChange(int oldState, int newState)
+        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
+            int newState = fsm.CurrentStateId;
             // You are trying to open a locked door
             if (oldState == newState && newState == (int)DoorState.Locked)
             {
                 OnStillLocked?.Invoke(this);
                 return;
             }
-                
+
             // You unlocked the door
-            if(oldState == (int)DoorState.Locked && newState == (int)DoorState.Locked)
+            if (oldState == (int)DoorState.Locked && newState == (int)DoorState.Locked)
             {
                 OnUnlock?.Invoke(this);
                 return;
             }
 
             // You can open it
-            if(newState == (int)DoorState.Unlocked)
+            if (newState == (int)DoorState.Unlocked)
             {
-                
+
                 if (!opened)
                 {
                     opened = true;
@@ -95,8 +99,45 @@ namespace HW
                 }
 
             }
-            
+
         }
+
+        //void HandleOnStateChange(int oldState, int newState)
+        //{
+        //    // You are trying to open a locked door
+        //    if (oldState == newState && newState == (int)DoorState.Locked)
+        //    {
+        //        OnStillLocked?.Invoke(this);
+        //        return;
+        //    }
+
+        //    // You unlocked the door
+        //    if(oldState == (int)DoorState.Locked && newState == (int)DoorState.Locked)
+        //    {
+        //        OnUnlock?.Invoke(this);
+        //        return;
+        //    }
+
+        //    // You can open it
+        //    if(newState == (int)DoorState.Unlocked)
+        //    {
+
+        //        if (!opened)
+        //        {
+        //            opened = true;
+        //            Open();
+        //            OnOpen?.Invoke(this);
+        //        }
+        //        else
+        //        {
+        //            opened = false;
+        //            Close();
+        //            OnClose?.Invoke(this);
+        //        }
+
+        //    }
+
+        //}
 
 
     }
