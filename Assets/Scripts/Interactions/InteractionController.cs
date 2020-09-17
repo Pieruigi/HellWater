@@ -9,7 +9,7 @@ namespace HW
 {
     public class InteractionController : MonoBehaviour, IInteractable
     {
-        public UnityAction<int, int> OnStateChange;
+        //public UnityAction<int, int> OnStateChange;
 
 
         [SerializeField]
@@ -23,7 +23,7 @@ namespace HW
         private void Awake()
         {
             fsm = GetComponent<FiniteStateMachine>();
-            fsm.OnStateChange += HandleOnStateChange;
+            //fsm.OnStateChange += HandleOnStateChange;
         }
 
         // Start is called before the first frame update
@@ -63,10 +63,10 @@ namespace HW
             return true;
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
-        {
-            OnStateChange?.Invoke(oldState, fsm.CurrentStateId);
-        }
+        //void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        //{
+        //    OnStateChange?.Invoke(oldState, fsm.CurrentStateId);
+        //}
     }
 
 }

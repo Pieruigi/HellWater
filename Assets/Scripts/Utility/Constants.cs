@@ -8,6 +8,8 @@ namespace HW
     public enum Language { English, Italian }
     public enum CutSceneState { Played = 0, Playing = 1, Ready = 2 }
 
+    public enum DialogState { Completed, Ready }
+
     public enum GroundType { Concrete, Grass, Dirt }
 
     // Tags

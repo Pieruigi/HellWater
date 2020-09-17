@@ -21,7 +21,14 @@ namespace HW.UI
         float writeSpeed = 50f;
         float timer = 0;
 
+        float fadeSpeed = 1f;
+        int fadeDir = 0;
+
+        Image bgImage;
+
         public static DialogViewer Instance { get; private set; }
+
+
 
         private void Awake()
         {
@@ -29,6 +36,7 @@ namespace HW.UI
             {
                 Instance = this;
                 panel.SetActive(false);
+                bgImage = panel.GetComponent<Image>();
             }
         }
 
@@ -64,6 +72,27 @@ namespace HW.UI
             }
 
             // Show and hide
+            if(fadeDir != 0)
+            {
+                Color targetColor = Color.white;
+
+                if (fadeDir > 0)
+                    targetColor.a = 1;
+                else
+                    targetColor.a = 0;
+
+                bgImage.color = Vector4.MoveTowards(bgImage.color, targetColor, fadeSpeed * Time.deltaTime);
+                avatarImage.color = bgImage.color;//Vector4.MoveTowards(avatarImage.color, targetColor, fadeSpeed * Time.deltaTime);
+
+                if (bgImage.color == targetColor)// && avatarImage.color == targetColor)
+                {
+                    if(fadeDir < 0)
+                        panel.SetActive(false);
+
+                    fadeDir = 0;
+                }
+                    
+            }
         }
 
         public void ShowSpeech(string text, Sprite avatar)
@@ -91,17 +120,36 @@ namespace HW.UI
         public void Hide()
         {
             SetVisible(false);
+            
         }
 
         void SetVisible(bool visible)
         {
-            panel.SetActive(visible);
+            Color c = Color.white;
+           
+
+            if (visible) 
+            {
+                // Set transparent
+                c.a = 0;
+                fadeDir = 1;
+                panel.SetActive(visible);
+            }
+            else
+            {
+                fadeDir = -1;
+            }
+
+            bgImage.color = c;
+            avatarImage.color = c;
         }
 
         bool IsVisible()
         {
             return panel.activeSelf;
         }
+
+ 
     }
 
 }

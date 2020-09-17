@@ -22,6 +22,13 @@ namespace HW.Collections
             }
 
             [SerializeField]
+            float length;
+            public float Length
+            {
+                get { return length; }
+            }
+
+            [SerializeField]
             Sprite avatar;
             public Sprite Avatar
             {

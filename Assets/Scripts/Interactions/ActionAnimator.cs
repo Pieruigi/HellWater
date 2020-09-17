@@ -36,9 +36,11 @@ namespace HW
         string paramActing = "Acting";
 
         bool move = false;
-        float movingSpeed = 10f;
+        float movingSpeed = 2f;
         float angularSpeed = 360f;
         Rigidbody rb;
+
+        System.DateTime lastMove;
 
         private void Awake()
         {
@@ -73,7 +75,12 @@ namespace HW
             rb.position = Vector3.MoveTowards(rb.position, newPos, Time.fixedDeltaTime * movingSpeed);
             //rb.MovePosition(target.position);
             player.forward = Vector3.MoveTowards(player.forward, target.forward, angularSpeed * Time.deltaTime);
+
+            if ((System.DateTime.UtcNow - lastMove).TotalSeconds > 0.5f)
+                move = false;
         }
+
+     
 
         // Also called when holding and repeating
         void HandleOnActionStart(ActionController ctrl)
@@ -81,21 +88,22 @@ namespace HW
             if (state >= 0 && fsm.CurrentStateId != state)
                 return;
 
-            if (actionType == ActionType.None)
-                return;
-
 
             PlayerController.Instance.SetDisabled(true);
 
-            // We don't use trigger but only action id
-            animator.SetInteger(paramActionId, (int)actionType);
-            animator.SetBool(paramActing, true);
+            if(actionType != ActionType.None)
+            {
+                // We don't use trigger but only action id
+                animator.SetInteger(paramActionId, (int)actionType);
+                animator.SetBool(paramActing, true);
+            }
+            
 
             // Move player to the desired position
             if (target)
             {
-                //rb.isKinematic = true;
                 move = true;
+                lastMove = System.DateTime.UtcNow;
             }
                 
         }
@@ -106,19 +114,17 @@ namespace HW
             if (state >= 0 && fsm.CurrentStateId != state)
                 return;
 
-            if (actionType == ActionType.None)
-                return;
+            
 
             PlayerController.Instance.SetDisabled(false);
 
             // We don't use trigger but only action id
-            //animator.SetInteger(paramActionId, (int)actionType);
-            animator.SetBool(paramActing, false);
+            if (actionType != ActionType.None)
+                animator.SetBool(paramActing, false);
 
             // Move player to the desired position
             if (target)
             {
-                //rb.isKinematic = false;
                 move = false;
             }
                 
@@ -130,18 +136,27 @@ namespace HW
             if (state >= 0 && fsm.CurrentStateId != state)
                 return;
 
-            if (actionType == ActionType.None)
-                return;
+           
 
             // We only use this on simple action controller. For holding and repeating check actionStart and actionStop.
             if(actionController.GetType() == typeof(ActionController))
             {
                 // Set disable, animation must send an ActionCompleted event in order to enable the player again
                 PlayerController.Instance.SetDisabled(true);
-                
+
                 // Start animation
-                animator.SetInteger(paramActionId, (int)actionType);
-                animator.SetTrigger(paramDoAction);
+                if (actionType != ActionType.None)
+                {
+                    animator.SetInteger(paramActionId, (int)actionType);
+                    animator.SetTrigger(paramDoAction);
+                }
+
+                // Move player to the desired position
+                if (target)
+                {
+                    move = true;
+                    lastMove = System.DateTime.UtcNow;
+                }
             }
         }
     }
