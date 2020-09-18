@@ -12,6 +12,14 @@ namespace HW
         [SerializeField]
         int spawnPointIndex; // Where the player must show up in the new scene
 
+        Spawner playerSpawner;
+
+        protected override void Start()
+        {
+            playerSpawner = new List<Spawner>(GameObject.FindObjectsOfType<Spawner>()).Find(s => s.Target == PlayerController.Instance.transform);
+            base.Start();
+        }
+
         protected override void Close()
         {
             //throw new System.NotImplementedException();
@@ -30,7 +38,7 @@ namespace HW
 
             yield return new WaitForSeconds(1);
 
-            PlayerController.Instance.GetComponent<Spawner>().SpawnPointId = spawnPointIndex;
+            playerSpawner.SpawnPointId = spawnPointIndex;
             GameManager.Instance.LoadScene(sceneBuildingIndex);
         }
     }
