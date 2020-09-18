@@ -7,6 +7,13 @@ namespace HW
     public class Spawner: MonoBehaviour
     {
         [SerializeField]
+        Transform target;
+        public Transform Target
+        {
+            get { return target; }
+        }
+
+        [SerializeField]
         List<Transform> spawnPoints;
 
         int spawnPointId = 0; // 0 is the player starting point id for a new game
@@ -25,8 +32,8 @@ namespace HW
             Debug.Log("SpawnPoint:" + sp);
 
             // Set position and rotation
-            transform.position = sp.position;
-            transform.rotation = sp.rotation;
+            target.position = sp.position;
+            target.rotation = sp.rotation;
         }
 
         // Update is called once per frame
