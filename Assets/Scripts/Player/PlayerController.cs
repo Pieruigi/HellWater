@@ -785,6 +785,11 @@ namespace HW
             //        rb.useGravity = true;
             //}
 
+            // Compute acceleration/deceleration
+            float speedChange = ((currentVelocity.sqrMagnitude < desiredVelocity.sqrMagnitude) ? acceleration : deceleration) * Time.fixedDeltaTime;
+
+            currentVelocity = Vector3.MoveTowards(currentVelocity, desiredVelocity, speedChange);
+
             // You can't do anything else while you are doing one of these actions
             if (disabled || /*reloading ||*/ shooting || attacking || hit || IsDead())
                 return;
@@ -824,7 +829,7 @@ namespace HW
 
             // Check if player is aiming
             CheckIsAiming();
-
+            
             if (!aiming)
             {
                 OnTargeting?.Invoke(currentWeapon, null);
@@ -845,6 +850,7 @@ namespace HW
                 Vector2 input = new Vector2(GetAxisRaw(horizontalAxis), GetAxisRaw(verticalAxis)).normalized;
 
                 // Set the velocity we want or need to reach
+                
                 desiredVelocity = new Vector3(input.x, 0, input.y) * maxSpeed;
 
                 // 
@@ -861,12 +867,11 @@ namespace HW
 
                 // Lerp 
                 transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
+                
+                //// Compute acceleration/deceleration
+                //float speedChange = ((currentVelocity.sqrMagnitude < desiredVelocity.sqrMagnitude) ? acceleration : deceleration) * Time.fixedDeltaTime;
 
-
-                // Compute acceleration/deceleration
-                float speedChange = ((currentVelocity.sqrMagnitude < desiredVelocity.sqrMagnitude) ? acceleration : deceleration) * Time.fixedDeltaTime;
-
-                currentVelocity = Vector3.MoveTowards(currentVelocity, desiredVelocity, speedChange);
+                //currentVelocity = Vector3.MoveTowards(currentVelocity, desiredVelocity, speedChange);
 
                 // 
                 // Melee attack
@@ -900,6 +905,11 @@ namespace HW
             }
             else // Is aiming
             {
+
+                desiredVelocity = Vector3.zero;
+
+               
+
                 //
                 // Get target
                 //
@@ -982,6 +992,7 @@ namespace HW
 
             }
 
+           
         }
 
         void QteAction()

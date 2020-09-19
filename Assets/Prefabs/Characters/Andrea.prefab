@@ -675,7 +675,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5109928972214822707}
-  m_Material: {fileID: 13400000, guid: 76abd517099335640bc0a771b957b2e3, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.3
@@ -698,7 +698,7 @@ MonoBehaviour:
   maxRunningSpeed: 5
   acceleration: 10
   deceleration: 20
-  angularSpeed: 360
+  angularSpeed: 720
   chargeMeleeAttack: 1
   fireWeaponAccuracySystem: 1
 --- !u!54 &5109928972214822711
@@ -711,12 +711,12 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
+  m_AngularDrag: 1
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 80
-  m_CollisionDetection: 3
+  m_CollisionDetection: 1
 --- !u!95 &3265503767255228990
 Animator:
   serializedVersion: 3
