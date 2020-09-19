@@ -19,6 +19,7 @@ namespace HW
         [SerializeField]
         Transform target;
 
+        [SerializeField]
         float distance = 100;
         Vector3 eulerAngles;
 
