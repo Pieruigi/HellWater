@@ -23,7 +23,7 @@ namespace HW
             set { spawnPointId = value; }
         }
 
-        
+
         // Start is called before the first frame update
         void Start()
         {
@@ -42,6 +42,10 @@ namespace HW
 
         }
 
+        public static Spawner GetSpawner(Transform target)
+        {
+            return new List<Spawner>(GameObject.FindObjectsOfType<Spawner>()).Find(s => s.target == target);
+        }
         
     }
 

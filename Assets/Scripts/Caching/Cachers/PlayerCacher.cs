@@ -30,10 +30,21 @@ namespace HW.CachingSystem
             //transform.eulerAngles = data.Rotation;
 
             // Get the spawner
-            Spawner spawner = GetComponent<Spawner>();
+            Spawner spawner = Spawner.GetSpawner(transform);
             
-            // We only need to set the spawn point id, the spawner will take care to spawn the player
-            spawner.SpawnPointId = data.SpawnPointId;
+            // We only need to set the spawn point id, the spawner will take care to spawn the player.
+            if(PlayerController.NewSceneSpawnPointId >= 0) 
+            {
+                // No savegame loaded, instead we came from another level ( ex. passing through a loading door )
+                spawner.SpawnPointId = PlayerController.NewSceneSpawnPointId;
+                PlayerController.NewSceneSpawnPointId = -1; // Reset
+            }
+            else
+            {
+                // Savegame loaded ( continue game menu button )
+                spawner.SpawnPointId = data.SpawnPointId;
+            }
+            
             
             health.Init(data.Health);
 
@@ -74,7 +85,9 @@ namespace HW.CachingSystem
                 ammos.Add(weapon.NumberOfLoadedAmmo);
             }
 
-            PlayerData data = new PlayerData(GetComponent<Spawner>().SpawnPointId,
+            Spawner playerSpawner = Spawner.GetSpawner(transform);
+
+            PlayerData data = new PlayerData(playerSpawner.SpawnPointId,
                 health.CurrentHealth, mwCode, fwCode, ammos);
 
             return data.Format();

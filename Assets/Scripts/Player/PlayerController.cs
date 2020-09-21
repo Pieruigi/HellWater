@@ -28,6 +28,8 @@ namespace HW
 
         #endregion
 
+        public static int NewSceneSpawnPointId = -1;
+
         #region SERIALIZED FIELDS
         [SerializeField]
         float maxWalkingSpeed;
@@ -199,34 +201,7 @@ namespace HW
         void FixedUpdate()
         {
 
-            // Get starting and target speeds
-            //float currentSpeed = currentVelocity.magnitude;
-            //float desiredSpeed = desiredVelocity.magnitude;
-
-            
-
-            //// Compute acceleration/deceleration
-            //float speedChange = ((currentSpeed < desiredSpeed) ? acceleration : deceleration) * Time.fixedDeltaTime;
-
-            //currentVelocity = Vector3.MoveTowards(currentVelocity, desiredVelocity, speedChange);
-
             rb.MovePosition(rb.position + transform.forward * currentVelocity.magnitude * Time.fixedDeltaTime);
-
-            // Interpolate speed
-            //float speed = Mathf.MoveTowards(currentSpeed, desiredSpeed, speedChange);
-
-            // If the target velocity is zero we must keep the old direction to avoid the player to stop instantly
-            //Vector3 direction = desiredVelocity.normalized;
-            //if (desiredSpeed == 0)
-            //    direction = rb.velocity.normalized;
-
-            // Update rigidbody velocity
-            //rb.velocity = direction * speed;
-
-
-            // Update position
-            //transform.forward = desiredVelocity.normalized;
-            //rb.MovePosition(rb.position + transform.forward * desiredVelocity.magnitude * Time.fixedDeltaTime);
 
         }
         #endregion
@@ -774,20 +749,8 @@ namespace HW
         void RealtimeAction()
         {
 
-            //if (IsGrounded())
-            //{
-            //    if (rb.useGravity)
-            //        rb.useGravity = false;
-            //}
-            //else
-            //{
-            //    if (!rb.useGravity)
-            //        rb.useGravity = true;
-            //}
-
-            // Compute acceleration/deceleration
+            // Update velocity
             float speedChange = ((currentVelocity.sqrMagnitude < desiredVelocity.sqrMagnitude) ? acceleration : deceleration) * Time.fixedDeltaTime;
-
             currentVelocity = Vector3.MoveTowards(currentVelocity, desiredVelocity, speedChange);
 
             // You can't do anything else while you are doing one of these actions
@@ -849,9 +812,15 @@ namespace HW
                 // Get player movement input 
                 Vector2 input = new Vector2(GetAxisRaw(horizontalAxis), GetAxisRaw(verticalAxis)).normalized;
 
-                // Set the velocity we want or need to reach
+                desiredVelocity = PlayerCamera.Instance.GetRightOrientation() * input.x +
+                                  PlayerCamera.Instance.GetForwardOrientation() * input.y;
+
+                desiredVelocity *= maxSpeed;
+                //desiredVelocity = new Vector3(
+                //                              PlayerCamera.Instance.GetRightOrientation() * input.x, 
+                //                              0,
+                //                              PlayerCamera.Instance.WorldDirection.z * input.y) * maxSpeed;
                 
-                desiredVelocity = new Vector3(input.x, 0, input.y) * maxSpeed;
 
                 // 
                 // Look the direction you are heading

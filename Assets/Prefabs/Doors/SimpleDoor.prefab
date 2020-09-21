@@ -435,7 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69dd1cc459be37541bb99970f61564bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  code: 002
+  code: 
 --- !u!114 &768339382067448077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,22 +492,24 @@ MonoBehaviour:
   - name: Locked
     id: 0
     othersToSet: []
-    commonStateErrorId: -1
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
   - name: Unlocked
     id: 1
     othersToSet: []
-    commonStateErrorId: -1
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
   transitions:
   - tag: Unlock
     fromStateId: 0
     toStateId: 1
     othersToCheck: []
-    errorId: 0
+    errorCode: -1
   - tag: OpenAndClose
     fromStateId: 1
     toStateId: 1
     othersToCheck: []
-    errorId: -1
+    errorCode: -1
   currentStateName: Unlocked
   currentStateId: 1
 --- !u!82 &6615320985889956866

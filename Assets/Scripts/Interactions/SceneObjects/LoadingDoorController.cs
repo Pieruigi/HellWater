@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HW.CachingSystem;
 
 namespace HW
 {
@@ -16,7 +17,7 @@ namespace HW
 
         protected override void Start()
         {
-            playerSpawner = new List<Spawner>(GameObject.FindObjectsOfType<Spawner>()).Find(s => s.Target == PlayerController.Instance.transform);
+            playerSpawner = Spawner.GetSpawner(PlayerController.Instance.transform);
             base.Start();
         }
 
@@ -39,6 +40,8 @@ namespace HW
             yield return new WaitForSeconds(1);
 
             playerSpawner.SpawnPointId = spawnPointIndex;
+            
+            PlayerController.NewSceneSpawnPointId = spawnPointIndex;
             GameManager.Instance.LoadScene(sceneBuildingIndex);
         }
     }
