@@ -11,7 +11,11 @@ namespace HW
         {
             FiniteStateMachine fsm = GetComponent<FiniteStateMachine>();
             if (fsm)
+            {
                 fsm.OnFail += HandleOnFail;
+                fsm.OnStateChange += HandleOnStateChange;
+            }
+                
         }
 
         // Start is called before the first frame update
@@ -26,15 +30,30 @@ namespace HW
 
         }
 
-        void HandleOnFail(FiniteStateMachine fsm, int errorId)
+        void HandleOnFail(FiniteStateMachine fsm)
         {
+            if (fsm.LastExitCode < 0)
+                return;
+
             // Get the right message depending on the id and language
-            string message = MessageFactory.Instance.GetMessage(errorId);
+            string message = MessageFactory.Instance.GetMessage(fsm.LastExitCode);
 
             // Show message on screen
             MessageViewer.Instance.ShowMessage(message);
         }
 
+        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        {
+            if (fsm.LastExitCode < 0)
+                return;
+
+            // Get the right message depending on the id and language
+            string message = MessageFactory.Instance.GetMessage(fsm.LastExitCode);
+            Debug.Log("fsm.LastExitCode:" + fsm.LastExitCode);
+
+            // Show message on screen
+            MessageViewer.Instance.ShowMessage(message);
+        }
     }
 }
 

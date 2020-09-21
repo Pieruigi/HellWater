@@ -11,11 +11,12 @@ namespace HW
     public class FiniteStateMachine: MonoBehaviour
     {
         
+
         // Called on state change except when ForceState() is called with callEvent = false; int param is the old state
         public UnityAction<FiniteStateMachine, int> OnStateChange;
 
         // Called everytime a lookup fails ( normally when conditions are not satisfied ); returns the error id
-        public UnityAction<FiniteStateMachine, int> OnFail; 
+        public UnityAction<FiniteStateMachine> OnFail; 
 
         /**
          * Transitions take care about switching from one state to onother by checking some conditions.
@@ -73,10 +74,10 @@ namespace HW
 
             // The error that will be sent out when conditions are not satisfied
             [SerializeField]
-            int errorId = -1;
-            public int ErrorId
+            int errorCode = -1;
+            public int ErrorCode
             {
-                get { return errorId; }
+                get { return errorCode; }
             }
 
             // If true the machine can change state
@@ -84,7 +85,7 @@ namespace HW
             {
                 foreach (OtherToCheck other in othersToCheck)
                 {
-                    if (other.FiniteStateMachine.currentStateId != other.DesiredStateId)
+                    if (other.FiniteStateMachine.currentStateId != other.DesiredStateId) { }
                         return false;
                 }
                 return true;
@@ -146,10 +147,17 @@ namespace HW
             List<OtherToSet> othersToSet = new List<OtherToSet>();
 
             [SerializeField]
-            int commonStateErrorId = -1; // A common error you can use independent on the transition
-            public int CommonStateErrorId
+            int commonStateErrorCode = -1; // A common error you can use independent on the transition
+            public int CommonStateErrorCode
             {
-                get { return commonStateErrorId; }
+                get { return commonStateErrorCode; }
+            }
+
+            [SerializeField]
+            int commonStateSucceedCode = -1;
+            public int CommonStateSucceedCode
+            {
+                get { return commonStateSucceedCode; }
             }
 
             // Sets the other fsm
@@ -162,7 +170,12 @@ namespace HW
             }
         }
 
-        
+        int lastExitCode = -1;
+        public int LastExitCode
+        {
+            get { return lastExitCode; }
+        }
+
         // All the available states
         [SerializeField]
         List<State> states;
@@ -199,11 +212,15 @@ namespace HW
                 currentStateName = states[currentStateId].Name;
         }
 
+        
+
         public void ForceStateDisabled()
         {
             currentStateId = -1;
             currentStateName = disabledStateName;
         }
+
+
 
         /**
          * Try to move to the next state looking for the first checked transition in the current state.
@@ -220,14 +237,16 @@ namespace HW
             // If no transition return
             if (transition == null)
             {
-                OnFail?.Invoke(this, states[currentStateId].CommonStateErrorId);
+                lastExitCode = states[currentStateId].CommonStateErrorCode;
+                OnFail?.Invoke(this);
                 return false;
             }
                 
 
             if (!transition.Checked())
             {
-                OnFail?.Invoke(this, transition.ErrorId);
+                lastExitCode = transition.ErrorCode;
+                OnFail?.Invoke(this);
                 return false;
             }
 
@@ -255,11 +274,20 @@ namespace HW
 
             // If no transition has been found the return
             if (transition == null)
+            {
+                lastExitCode = states[currentStateId].CommonStateErrorCode;
+                OnFail?.Invoke(this);
                 return false;
+            }
+
 
             // If transition is not checked return
             if (!transition.Checked())
+            {
+                lastExitCode = transition.ErrorCode;
+                OnFail?.Invoke(this);
                 return false;
+            }
 
             // Change state
             ChangeState(transition);
@@ -291,15 +319,22 @@ namespace HW
             else
                 currentStateName = states[currentStateId].Name;
 
+            // Set exit code
+            if (currentStateId >= 0)
+                lastExitCode = states[currentStateId].CommonStateSucceedCode;
+            else
+                lastExitCode = -1;
+
             // Call event
             OnStateChange?.Invoke(this, oldStateId);
-
             
             if (currentStateId < 0)
                 return;
 
             // Set others
             states[currentStateId].SetOthers();
+
+            
         }
     }
 }
