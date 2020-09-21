@@ -10,6 +10,8 @@ namespace HW
 
     public enum DialogState { Completed, Ready }
 
+    public enum PickableState { Picked, Ready }
+
     public enum GroundType { Concrete, Grass, Dirt }
 
     // Tags

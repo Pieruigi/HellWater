@@ -16,24 +16,48 @@ namespace HW
         }
 
         System.DateTime lastClickTime;
-        
+
+        bool started = false;
 
         protected override bool PerformAction()
         {
             
            
             charge = Mathf.Max(0, charge - Time.deltaTime);
-            
-            Debug.Log("Charge:" + charge);
 
             if (PlayerController.Instance.GetActionButtonDown())
                 charge = Mathf.Min(1, charge + speed);
-                
+            
 
             if (charge == 1)
+            {
+                started = false;
+                OnActionStop?.Invoke(this);
                 return true;
+            }
+            else
+            {
+                if(charge > 0)
+                {
+                    if (!started)
+                    {
+                        started = true;
+                        OnActionStart?.Invoke(this);
+                    }
+                }
+                else
+                {
+                    if (started)
+                    {
+                        started = false;
+                        OnActionStop?.Invoke(this);
+                    }
+                }
+            }
 
             return false;
+            
+            
         }
 
         public override void EnableAction()
