@@ -80,6 +80,7 @@ namespace HW
         public void StartNewGame()
         {
             //SceneManager.LoadScene(startingSceneIndex);   
+            CacheManager.Instance.Delete();
             SceneLoader.LoadingSceneIndex = startingSceneIndex;
             SceneManager.LoadScene(loadingSceneIndex);
             loading = true;

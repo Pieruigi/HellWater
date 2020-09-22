@@ -40,8 +40,9 @@ namespace HW
             yield return new WaitForSeconds(1);
 
             playerSpawner.SpawnPointId = spawnPointIndex;
-            
-            PlayerController.NewSceneSpawnPointId = spawnPointIndex;
+
+            //PlayerController.NewSceneSpawnPointId = spawnPointIndex;
+            CacheManager.Instance.Update();
             GameManager.Instance.LoadScene(sceneBuildingIndex);
         }
     }

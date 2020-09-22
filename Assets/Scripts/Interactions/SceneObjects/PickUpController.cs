@@ -47,11 +47,12 @@ namespace HW
         IEnumerator PickUp()
         {
             // Hide
-            LeanTween.scale(target, Vector3.zero, time).setEaseInOutBounce();
+            //LeanTween.scale(target, Vector3.zero, time).setEaseInOutBounce();
+            GeneralUtility.ObjectPopOut(target);
 
             yield return new WaitForSeconds(time * 1.1f);
 
-            target.SetActive(false);
+            //target.SetActive(false);
         }
     }
 }
