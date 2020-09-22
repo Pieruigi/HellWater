@@ -36,6 +36,9 @@ namespace HW.CachingSystem
 
         protected override void Init(string cacheValue)
         {
+            if (cacheValue == null || "".Equals(cacheValue))
+                return;
+
             Debug.Log("Cache loaded:" + cacheValue);
             ObjectListData old = new ObjectListData();
             old.Parse(cacheValue);

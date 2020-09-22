@@ -35,9 +35,9 @@ namespace HW
             if (!actionEnable)
                 return;
 
-            if (PerformAction())
-                OnActionPerformed?.Invoke(this);
-            
+            //if (PerformAction())
+            //    OnActionPerformed?.Invoke(this);
+            PerformAction();
         }
 
         public virtual void EnableAction()
@@ -52,13 +52,21 @@ namespace HW
             OnActionDisable?.Invoke(this);
         }
 
-        protected virtual bool PerformAction()
+        protected virtual void PerformAction()
         {
             if (PlayerController.Instance.GetActionButtonDown())
-                return true;
+                OnActionPerformed?.Invoke(this);
 
-            return false;
+            
         }
+
+        //protected virtual bool PerformAction()
+        //{
+        //    if (PlayerController.Instance.GetActionButtonDown())
+        //        return true;
+
+        //    return false;
+        //}
     }
 
 }

@@ -8,8 +8,8 @@ namespace HW.CachingSystem
 {
     public class CacheManager
     {
-        public UnityAction OnSave;
-
+        public UnityAction OnCacheUpdate;
+        
         private string folder = Application.persistentDataPath + "/Saves/";
         private string file = "sav.txt";
 
@@ -82,9 +82,16 @@ namespace HW.CachingSystem
                 
         }
 
+        // Update cache without writing on disk, used to pass from a scene to another
+        public void Update()
+        {
+            OnCacheUpdate?.Invoke();
+        }
+
+        // Update cache and write on disk, used to save game
         public void Save()
         {
-            OnSave?.Invoke();
+            OnCacheUpdate?.Invoke();
 
             WriteCache();
         }
@@ -92,6 +99,14 @@ namespace HW.CachingSystem
         public void Load()
         {
             ReadCache();
+        }
+
+        public void Delete()
+        {
+            string path = Path.Combine(folder, file);
+            if (File.Exists(path))
+                File.Delete(path);
+                
         }
 
         private void ReadCache()

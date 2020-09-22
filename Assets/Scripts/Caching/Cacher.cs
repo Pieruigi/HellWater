@@ -17,7 +17,10 @@ namespace HW.CachingSystem
 
         protected virtual void Awake()
         {
-            CacheManager.Instance.OnSave += HandleOnSave;
+            if ("".Equals(code.Trim()))
+                return;
+
+            CacheManager.Instance.OnCacheUpdate += HandleOnCacheUpdate;
 
             // Init object
             string value;
@@ -30,11 +33,20 @@ namespace HW.CachingSystem
 
         }
 
-        void HandleOnSave()
+        void HandleOnCacheUpdate()
         {
+            
             string cacheValue = GetCacheValue();
             if(!"".Equals(cacheValue))
                 CacheManager.Instance.UpdateCacheValue(code, GetCacheValue());
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if ("".Equals(code.Trim()))
+                return;
+
+            CacheManager.Instance.OnCacheUpdate -= HandleOnCacheUpdate;
         }
     }
 

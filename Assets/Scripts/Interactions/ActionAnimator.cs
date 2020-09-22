@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HW
 {
-    public enum ActionType { None, PickUp, MakeTheBed, TurnHandle, PickUpFromGround, PutFuel }
+    public enum ActionType { None, PickUp, MakeTheBed, TurnHandle, PickUpFromGround, PutFuel, FillTeapot }
 
     // Manages character behaviour ( such as animations, object to hold, ecc ) when you perform some actions: for example
     // starts picking animation when you pick up something.
@@ -16,13 +16,22 @@ namespace HW
         ActionType actionType = ActionType.None;
 
         [SerializeField]
-        GameObject tool = null;
+        GameObject toolPrefab = null;
+
+        [SerializeField]
+        Transform toolParentNode = null;
+
+        [SerializeField]
+        Vector3 toolPosition;
+
+        [SerializeField]
+        Vector3 toolRotation;
 
         [SerializeField]
         Transform target; // If you want the player to stay in a given position
 
-        [SerializeField]
-        int state = -1; // The state in which we want this operation to be performed ( -1 means any state )
+        //[SerializeField]
+        //int state = -1; // The state in which we want this operation to be performed ( -1 means any state )
                
 
         Animator animator;
@@ -34,6 +43,7 @@ namespace HW
         string paramActionId = "ActionId";
         string paramDoAction = "DoAction";
         string paramActing = "Acting";
+        string paramActionPerformed = "ActionPerformed";
 
         bool move = false;
         float movingSpeed = 2f;
@@ -41,6 +51,8 @@ namespace HW
         Rigidbody rb;
 
         System.DateTime lastMove;
+
+        GameObject tool;
 
         private void Awake()
         {
@@ -85,13 +97,22 @@ namespace HW
         // Also called when holding and repeating
         void HandleOnActionStart(ActionController ctrl)
         {
-            if (state >= 0 && fsm.CurrentStateId != state)
-                return;
+            //if (state >= 0 && fsm.CurrentStateId != state)
+            //    return;
 
 
             PlayerController.Instance.SetDisabled(true);
 
-            if(actionType != ActionType.None)
+            // Create tool if needed
+            if (toolPrefab)
+            {
+                tool = GeneralUtility.ObjectPopIn(toolPrefab, toolParentNode, toolPosition, toolRotation, Vector3.one);
+            }
+
+            // Reset the param action performed to avoid keeping an old value
+            animator.SetBool(paramActionPerformed, false);
+
+            if (actionType != ActionType.None)
             {
                 // We don't use trigger but only action id
                 animator.SetInteger(paramActionId, (int)actionType);
@@ -111,12 +132,15 @@ namespace HW
         // Also called when holding and repeating
         void HandleOnActionStop(ActionController ctrl)
         {
-            if (state >= 0 && fsm.CurrentStateId != state)
-                return;
-
             
+            //if (state >= 0 && fsm.CurrentStateId != state)
+            //    return;
 
             PlayerController.Instance.SetDisabled(false);
+
+            // Remove tool if needed
+            if (tool)
+                GeneralUtility.ObjectPopOut(tool);
 
             // We don't use trigger but only action id
             if (actionType != ActionType.None)
@@ -133,10 +157,8 @@ namespace HW
         // Also used on simple action controller
         void HandleOnActionPerformed(ActionController ctrl)
         {
-            if (state >= 0 && fsm.CurrentStateId != state)
-                return;
-
-           
+            //if (state >= 0 && fsm.CurrentStateId != state)
+            //    return;
 
             // We only use this on simple action controller. For holding and repeating check actionStart and actionStop.
             if(actionController.GetType() == typeof(ActionController))
@@ -156,6 +178,18 @@ namespace HW
                 {
                     move = true;
                     lastMove = System.DateTime.UtcNow;
+                }
+            }
+            else
+            {
+                // Set disable, animation must send an ActionCompleted event in order to enable the player again
+                PlayerController.Instance.SetDisabled(true);
+
+                // Start animation
+                if (actionType != ActionType.None)
+                {
+                    animator.SetBool(paramActionPerformed, true);
+                    
                 }
             }
         }
