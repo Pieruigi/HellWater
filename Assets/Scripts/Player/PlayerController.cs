@@ -707,7 +707,7 @@ namespace HW
         {
 
             // Update velocity
-            float speedChange = ((currentVelocity.sqrMagnitude < desiredVelocity.sqrMagnitude) ? acceleration : deceleration) * Time.fixedDeltaTime;
+            float speedChange = ((currentVelocity.sqrMagnitude < desiredVelocity.sqrMagnitude) ? acceleration : deceleration) * Time.deltaTime;
             currentVelocity = Vector3.MoveTowards(currentVelocity, desiredVelocity, speedChange);
 
             // You can't do anything else while you are doing one of these actions
