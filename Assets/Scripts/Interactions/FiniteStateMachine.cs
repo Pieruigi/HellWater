@@ -206,10 +206,20 @@ namespace HW
                 states[i].id = i;
             }
 
+            
+
             if (currentStateId < 0)
                 currentStateName = disabledStateName;
             else
-                currentStateName = states[currentStateId].Name;
+            {
+                
+                if (states != null && states.Count > 0)
+                {
+                    currentStateName = states[currentStateId].Name;
+                }
+                    
+            }
+                
         }
 
         

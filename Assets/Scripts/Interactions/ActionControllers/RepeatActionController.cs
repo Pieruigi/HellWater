@@ -19,25 +19,25 @@ namespace HW
 
         bool started = false;
 
-        protected override bool PerformAction()
+        protected override void PerformAction()
         {
-            
-           
+
+
             charge = Mathf.Max(0, charge - Time.deltaTime);
 
             if (PlayerController.Instance.GetActionButtonDown())
                 charge = Mathf.Min(1, charge + speed);
-            
+
 
             if (charge == 1)
             {
                 started = false;
+                OnActionPerformed?.Invoke(this);
                 OnActionStop?.Invoke(this);
-                return true;
             }
             else
             {
-                if(charge > 0)
+                if (charge > 0)
                 {
                     if (!started)
                     {
@@ -55,10 +55,51 @@ namespace HW
                 }
             }
 
-            return false;
             
-            
+
+
         }
+
+        //protected override bool PerformAction()
+        //{
+
+
+        //    charge = Mathf.Max(0, charge - Time.deltaTime);
+
+        //    if (PlayerController.Instance.GetActionButtonDown())
+        //        charge = Mathf.Min(1, charge + speed);
+
+
+        //    if (charge == 1)
+        //    {
+        //        started = false;
+        //        OnActionStop?.Invoke(this);
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        if(charge > 0)
+        //        {
+        //            if (!started)
+        //            {
+        //                started = true;
+        //                OnActionStart?.Invoke(this);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (started)
+        //            {
+        //                started = false;
+        //                OnActionStop?.Invoke(this);
+        //            }
+        //        }
+        //    }
+
+        //    return false;
+
+
+        //}
 
         public override void EnableAction()
         {

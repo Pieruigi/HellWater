@@ -26,24 +26,12 @@ namespace HW.CachingSystem
             PlayerData data = new PlayerData();
             data.Parse(cacheValue);
 
-            //transform.position = data.Position;
-            //transform.eulerAngles = data.Rotation;
-
+        
             // Get the spawner
             Spawner spawner = Spawner.GetSpawner(transform);
             
-            // We only need to set the spawn point id, the spawner will take care to spawn the player.
-            if(PlayerController.NewSceneSpawnPointId >= 0) 
-            {
-                // No savegame loaded, instead we came from another level ( ex. passing through a loading door )
-                spawner.SpawnPointId = PlayerController.NewSceneSpawnPointId;
-                PlayerController.NewSceneSpawnPointId = -1; // Reset
-            }
-            else
-            {
-                // Savegame loaded ( continue game menu button )
-                spawner.SpawnPointId = data.SpawnPointId;
-            }
+            // Current spawn id
+            spawner.SpawnPointId = data.SpawnPointId;
             
             
             health.Init(data.Health);

@@ -58,6 +58,14 @@ namespace HW.UI
             lastTime = timer;
         }
 
+        public void ShowMessage(string message, float time)
+        {
+            Show(true);
+
+            textField.text = message;
+            lastTime = time;
+        }
+
         void Show(bool value)
         {
             labelImage.gameObject.SetActive(value);

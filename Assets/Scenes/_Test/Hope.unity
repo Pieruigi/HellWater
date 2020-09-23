@@ -1540,15 +1540,19 @@ MonoBehaviour:
   - name: Completed
     id: 0
     othersToSet: []
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
   - name: Ready
     id: 1
     othersToSet: []
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
   transitions:
   - tag: Complete
     fromStateId: 1
     toStateId: 0
     othersToCheck: []
-    errorId: 0
+    errorCode: -1
   currentStateName: Ready
   currentStateId: 1
 --- !u!4 &296382976
@@ -4411,15 +4415,19 @@ MonoBehaviour:
   - name: Completed
     id: 0
     othersToSet: []
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
   - name: Active
     id: 1
     othersToSet: []
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
   transitions:
   - tag: Complete
     fromStateId: 1
     toStateId: 0
     othersToCheck: []
-    errorId: -1
+    errorCode: -1
   currentStateName: Active
   currentStateId: 1
 --- !u!4 &969910451
@@ -7795,15 +7803,19 @@ MonoBehaviour:
   - name: Completed
     id: 0
     othersToSet: []
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
   - name: Ready
     id: 1
     othersToSet: []
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
   transitions:
   - tag: Complete
     fromStateId: 1
     toStateId: 0
     othersToCheck: []
-    errorId: 0
+    errorCode: -1
   currentStateName: Ready
   currentStateId: 1
 --- !u!4 &1798327501
@@ -9434,42 +9446,42 @@ PrefabInstance:
     - target: {fileID: 6824641063492837634, guid: 25a82d51653df8b46ab342948852d3a4,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6824641063492837635, guid: 25a82d51653df8b46ab342948852d3a4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 26.237469
+      value: 38.759377
       objectReference: {fileID: 0}
     - target: {fileID: 6824641063492837635, guid: 25a82d51653df8b46ab342948852d3a4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 82.10521
+      value: 34.392014
       objectReference: {fileID: 0}
     - target: {fileID: 6824641063492837635, guid: 25a82d51653df8b46ab342948852d3a4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -70.838554
+      value: -105.24222
       objectReference: {fileID: 0}
     - target: {fileID: 6824641063492837635, guid: 25a82d51653df8b46ab342948852d3a4,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.4547336
+      value: 0.17101008
       objectReference: {fileID: 0}
     - target: {fileID: 6824641063492837635, guid: 25a82d51653df8b46ab342948852d3a4,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.15402782
+      value: -0.17101008
       objectReference: {fileID: 0}
     - target: {fileID: 6824641063492837635, guid: 25a82d51653df8b46ab342948852d3a4,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.08018181
+      value: 0.030153692
       objectReference: {fileID: 0}
     - target: {fileID: 6824641063492837635, guid: 25a82d51653df8b46ab342948852d3a4,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.87353516
+      value: 0.9698463
       objectReference: {fileID: 0}
     - target: {fileID: 6824641063492837635, guid: 25a82d51653df8b46ab342948852d3a4,
         type: 3}

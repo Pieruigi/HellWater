@@ -16,6 +16,9 @@ namespace HW
         bool external;
 
         [SerializeField]
+        bool overrideRotX = false;
+
+        [SerializeField]
         Transform target;
 
         [SerializeField]
@@ -42,7 +45,14 @@ namespace HW
                 if (external)
                     eulerAngles.x = 20f;
                 else
-                    eulerAngles.x = 80f;
+                {
+                    if (!overrideRotX)
+                        eulerAngles.x = 80f;
+                    else
+                        eulerAngles.x = transform.eulerAngles.x;
+
+                }
+                    
 
                 xAngle = eulerAngles.x;
 
