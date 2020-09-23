@@ -195,7 +195,7 @@ Shader "HW_Shaders/ToonShaderWithOutline"
 
 		CGPROGRAM
 
-		#pragma surface surf ToonyColorsCustom  exclude_path:deferred exclude_path:prepass
+		#pragma surface surf ToonyColorsCustom fullforwardshadows exclude_path:deferred exclude_path:prepass
 		#pragma target 3.0
 
 		//================================================================
@@ -288,10 +288,9 @@ Shader "HW_Shaders/ToonShaderWithOutline"
 
 		void LightingToonyColorsCustom_GI(inout SurfaceOutputCustom s, UnityGIInput data, inout UnityGI gi)
 		{
-			half colorNoAtten = max(gi.light.color.r, max(gi.light.color.g, gi.light.color.b));
 			gi = UnityGlobalIllumination(data, 1.0, IN_NORMAL);
 
-			s.atten = max(gi.light.color.r, max(gi.light.color.g, gi.light.color.b)) / colorNoAtten;	//try to extract attenuation (shadowmap + shadowmask) for lighting function
+			s.atten = data.atten;	//transfer attenuation to lighting function
 			gi.light.color = _LightColor0.rgb;	//remove attenuation
 		}
 

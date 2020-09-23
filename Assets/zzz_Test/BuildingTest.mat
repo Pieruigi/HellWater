@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BuildingTest
-  m_Shader: {fileID: 4800000, guid: 8a4de13092603f940ade862f236eec14, type: 3}
+  m_Shader: {fileID: 4800000, guid: 7c5ee40cf6839434a8e79e006efb5aba, type: 3}
   m_ShaderKeywords: OUTLINES TCP2_DISABLE_WRAPPED_LIGHT TCP2_NONE _EMISSION
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
@@ -19,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AmbientCube:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -133,5 +137,12 @@ Material:
     - _RampThresholdRGB: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _RimColor: {r: 0.8, g: 0.8, b: 0.8, a: 0.6}
     - _SColor: {r: 0.195, g: 0.195, b: 0.195, a: 1}
+    - _SilhouetteColor: {r: 0, g: 0, b: 0, a: 0.5}
     - _SketchColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _TCP2_AMBIENT_BACK: {r: 0.6698113, g: 0.1990477, b: 0.1990477, a: 1}
+    - _TCP2_AMBIENT_BOTTOM: {r: 0.7264151, g: 0.15419191, b: 0.15419191, a: 1}
+    - _TCP2_AMBIENT_FRONT: {r: 0.8018868, g: 0.22316661, b: 0.22316661, a: 1}
+    - _TCP2_AMBIENT_LEFT: {r: 0.8867924, g: 0.12967247, b: 0.12967247, a: 1}
+    - _TCP2_AMBIENT_RIGHT: {r: 0.6226415, g: 0.249644, b: 0.249644, a: 1}
+    - _TCP2_AMBIENT_TOP: {r: 0.8396226, g: 0.04356533, b: 0.04356533, a: 1}

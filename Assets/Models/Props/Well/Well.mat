@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WallInterior
+  m_Name: Well
   m_Shader: {fileID: 4800000, guid: 3bd50edb21ca17c4aae35c31fa509303, type: 3}
   m_ShaderKeywords: TCP2_DISABLE_WRAPPED_LIGHT TCP2_NONE
   m_LightmapFlags: 4
@@ -19,10 +19,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _AmbientCube:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -44,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: a8e59fed2564868429074b1050aaa1a5, type: 3}
+        m_Texture: {fileID: 2800000, guid: 4f4287fe927fd3d4fbfd2cc7e1d6451a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -64,10 +60,6 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _STexture:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _ThresholdTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -93,17 +85,10 @@ Material:
     - _Parallax: 0.02
     - _RampSmooth: 0.1
     - _RampSmoothAdd: 0.75
-    - _RampSmoothDir: 0.5
-    - _RampSmoothOtherLights: 0.5
-    - _RampSmoothPoint: 0.5
-    - _RampSmoothSpot: 0.5
     - _RampThreshold: 0.5
     - _RimMax: 0.85
     - _RimMin: 0.6
     - _RimStrength: 0.5
-    - _SSDistortion: 0.2
-    - _SSPower: 3
-    - _SSScale: 1
     - _ShadowMultiplier: 1
     - _SmoothnessTextureChannel: 0
     - _SpecBlend: 1
@@ -119,14 +104,9 @@ Material:
     - _TCP2_STYLIZED_FRESNEL: 0
     - _TCP2_ZSMOOTH_ON: 0
     - _TexLod: 5
-    - _ThresholdScale: 4
-    - _ThresholdStrength: 1
     - _UVSec: 0
-    - _WrapFactor: 1
-    - _ZSmooth: -0.5
+    - _ZSmooth: 0.5
     - _ZWrite: 1
-    - __BeginGroup_OtherLights: 0
-    - __EndGroup: 0
     - __dummy__: 0
     - __outline_gui_dummy__: 0
     m_Colors:
@@ -134,16 +114,6 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HColor: {r: 0.785, g: 0.785, b: 0.785, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RampThresholdDirRGB: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _RampThresholdOtherLightsRGB: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _RampThresholdPointRGB: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _RampThresholdRGB: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _RampThresholdSpotRGB: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _RimColor: {r: 0.8, g: 0.8, b: 0.8, a: 0.6}
     - _SColor: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
-    - _TCP2_AMBIENT_BACK: {r: 0, g: 0, b: 0, a: 1}
-    - _TCP2_AMBIENT_BOTTOM: {r: 0, g: 0, b: 0, a: 1}
-    - _TCP2_AMBIENT_FRONT: {r: 0, g: 0, b: 0, a: 1}
-    - _TCP2_AMBIENT_LEFT: {r: 0, g: 0, b: 0, a: 1}
-    - _TCP2_AMBIENT_RIGHT: {r: 0, g: 0, b: 0, a: 1}
-    - _TCP2_AMBIENT_TOP: {r: 0, g: 0, b: 0, a: 1}
