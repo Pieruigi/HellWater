@@ -41,13 +41,13 @@ namespace HW.Editor
             Selection.activeObject = asset;
         }
 
-        [MenuItem("Assets/Create/HW/CSSlideText")]
-        public static void CreateText()
+        [MenuItem("Assets/Create/HW/Quest")]
+        public static void CreateQuestDetail()
         {
-            Text asset = ScriptableObject.CreateInstance<Text>();
+            QuestDetail asset = ScriptableObject.CreateInstance<QuestDetail>();
 
-            string name = "text.asset";
-            string folder = "Assets/Resources/CSSlideText/";
+            string name = "quest.asset";
+            string folder = "Assets/Resources/" + QuestDetail.ResourceFolder +"/";
 
             if (!System.IO.Directory.Exists(folder))
                 System.IO.Directory.CreateDirectory(folder);

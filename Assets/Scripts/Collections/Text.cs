@@ -8,7 +8,14 @@ namespace HW.Collections
     public class Text : ScriptableObject
     {
         [SerializeField]
-        [TextAreaAttribute(30, 50)]
+        string code;
+        public string Code
+        {
+            get { return code; }
+        }
+
+        [SerializeField]
+        [TextAreaAttribute(15, 25)]
         string content;
         public string Content
         {
@@ -26,6 +33,7 @@ namespace HW.Collections
         {
 
         }
+        
     }
 
 }
