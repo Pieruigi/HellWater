@@ -1,78 +1,49 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using HW.Collections;
 
 namespace HW.QuestSystem
 {
-   
-    public enum QuestType { Main, Optional }
-
-    public class Quest: MonoBehaviour
+    [System.Serializable]
+    public class Quest
     {
-        public static readonly int TaskCompletedStateId = 0;
-
-        [System.Serializable]
-        class Goal
-        {
-            [SerializeField]
-            List<Task> tasks;
-        }
-
-        [System.Serializable]
-        class Task
-        {
-            [SerializeField]
-            string description;
-
-            [SerializeField]
-            FiniteStateMachine fsm;
-
-            public bool IsCompleted()
-            {
-                return fsm.CurrentStateId == TaskCompletedStateId;
-            }
-        }
-
-        public static readonly int CompletedStateId = 0;
+        [SerializeField]
+        QuestDetail detail;
 
         [SerializeField]
-        QuestType type = QuestType.Main;
-        public QuestType Type
+        int state;
+        public int State
         {
-            get { return type; }
+            get { return state; }
+            set { state = value; }
         }
 
-        [SerializeField]
-        string description;
-
-        [SerializeField]
-        List<Goal> goals;
-
-        FiniteStateMachine fsm;
-
-        private void Awake()
+        public Quest(QuestDetail detail, int state)
         {
-            fsm = GetComponent<FiniteStateMachine>();
+            this.detail = detail;
+            this.state = state;
         }
 
-        private void Start()
+        public string GetShortDescription()
         {
-            
+            return detail.ShortDescription;
         }
 
-        // Set this as an active quest
-        public void Activate()
+        public string GetLongDescription()
         {
-            QuestManager.Instance.AddNewQuest(this);
+            return detail.LongDescription;
         }
 
-        public void Check()
+        public string GetCode()
         {
-            fsm.Lookup();
+            return detail.Code;
         }
 
-        
+        public bool IsOptional()
+        {
+            return detail.Optional;
+        }
     }
 
 }
