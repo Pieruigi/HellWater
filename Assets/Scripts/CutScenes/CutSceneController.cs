@@ -5,7 +5,7 @@ using UnityEngine.Playables;
 using HW.Interfaces;
 using UnityEngine.Events;
 
-namespace HW
+namespace HW.CutScene
 {
     public class CutSceneController : MonoBehaviour, ISkippable
     {

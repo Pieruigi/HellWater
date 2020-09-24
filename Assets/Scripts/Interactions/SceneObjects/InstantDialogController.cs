@@ -7,18 +7,18 @@ using HW.UI;
 
 namespace HW
 {
-    public class InstantDialogController : DialogController
+    public class InstantDialogController : MonoBehaviour
     {
         //[SerializeField]
         //List<string> dialogCodes; // Each id corresponds to a given fsm state
 
         FiniteStateMachine fsm;
 
-        protected override void Awake()
+        protected void Awake()
         {
             fsm = GetComponent<FiniteStateMachine>();
             fsm.OnStateChange += HandleOnStateChange;
-            base.Awake();
+           
         }
 
 
@@ -28,12 +28,12 @@ namespace HW
 
         }
 
-        public override void StopDialog()
-        {
-            base.StopDialog();
+        //public override void StopDialog()
+        //{
+        //    base.StopDialog();
 
-            PlayerController.Instance.SetDisabled(false);
-        }
+        //    PlayerController.Instance.SetDisabled(false);
+        //}
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
@@ -46,7 +46,7 @@ namespace HW
             //}
             
             // Start
-            LoopDialog();
+            //LoopDialog();
         }
 
 

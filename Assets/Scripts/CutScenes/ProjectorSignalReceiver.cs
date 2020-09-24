@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using HW.UI;
 
-namespace HW.Cinema
+namespace HW.CutScene
 {
-    public class ProjectorController : MonoBehaviour
+    public class ProjectorSignalReceiver : MonoBehaviour
     {
         //[SerializeField]
         GameObject playableObject;
@@ -17,9 +17,7 @@ namespace HW.Cinema
 
         private void Awake()
         {
-            playableObject = transform.parent.gameObject;
-            //playableObject.GetComponent<CutSceneController>().OnStart += HandleOnStart;
-            //playableObject.GetComponent<CutSceneController>().OnStop += HandleOnStop;
+        
         }
 
         // Start is called before the first frame update
@@ -41,15 +39,11 @@ namespace HW.Cinema
             currentId++;
         }
         
-        void HandleOnStart(CutSceneController playable)
-        {
-            currentId = 0;
-        }
-
-        void HandleOnStop(CutSceneController playable)
+        public void CloseProjector()
         {
             SlideProjector.Instance.Hide();
         }
+
     }
 
 }
