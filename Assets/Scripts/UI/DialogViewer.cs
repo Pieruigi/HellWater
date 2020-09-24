@@ -18,7 +18,7 @@ namespace HW.UI
         TMPro.TMP_Text speechText;
 
         string currentText = "";
-        float writeSpeed = 50f;
+        float writeSpeed = 80f;
         float timer = 0;
 
         float fadeSpeed = 1f;

@@ -20,6 +20,8 @@ namespace HW
 
         DateTime lastInteractionTime;
 
+        bool disabled = false;
+
         private void Awake()
         {
             fsm = GetComponent<FiniteStateMachine>();
@@ -38,6 +40,11 @@ namespace HW
 
         }
 
+        public void ForceDisabled(bool value)
+        {
+            disabled = value;
+        }
+
         public void Interact()
         {
             Debug.Log("Interact...");
@@ -52,6 +59,9 @@ namespace HW
 
         public bool IsAvailable()
         {
+            if (disabled)
+                return false;
+
             // Cooldown wait
             if ((DateTime.UtcNow - lastInteractionTime).TotalSeconds < Constants.InteractionCooldownTime)
                 return false;

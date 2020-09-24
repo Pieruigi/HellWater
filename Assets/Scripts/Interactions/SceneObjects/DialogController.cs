@@ -76,7 +76,7 @@ namespace HW
             DialogViewer.Instance.Hide();
         }
 
-        protected void LoopDialog()
+        public void LoopDialog()
         {
             loopDialogCoroutine = StartCoroutine(CoroutineStartDialog());
         }

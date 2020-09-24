@@ -23,12 +23,14 @@ namespace HW
 
         float currAngle = 0;
 
+        InteractionController ctrl;
         
         protected override void Awake()
         {
             base.Awake();
             time = 1f / speed;
-         
+
+            ctrl = GetComponent<InteractionController>();
         }
 
         protected override void Open()
@@ -47,6 +49,9 @@ namespace HW
             currAngle = angle;
 
             LeanTween.rotateAroundLocal(sceneObject, Vector3.up, angle, time).setEaseOutElastic();
+
+            if (ctrl)
+                ctrl.ForceDisabled(true);
         }
 
         protected override void Close()
@@ -56,6 +61,9 @@ namespace HW
             currAngle = angle;
 
             LeanTween.rotateAroundLocal(sceneObject, Vector3.up, angle, time).setEaseOutElastic();
+
+            if (ctrl)
+                ctrl.ForceDisabled(false);
         }
 
     
