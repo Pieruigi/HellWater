@@ -41,22 +41,47 @@ namespace HW
             image.color = c;
         }
 
-        public void FadeIn(UnityAction callback = null)
+        public void FadeIn()
+        {
+            //StartCoroutine(FadeInCoroutine(speed));
+            FadeIn(speed);
+        }
+
+        public void FadeIn(float speed)
+        {
+            StartCoroutine(FadeInCoroutine(speed));
+        }
+
+        public void FadeIn(UnityAction callback)
+        {
+            FadeIn(speed, callback);
+            //StartCoroutine(FadeInCoroutine(speed, callback));
+        }
+
+
+        public void FadeIn(float speed, UnityAction callback)
         {
             StartCoroutine(FadeInCoroutine(speed, callback));
         }
 
-        public void FadeIn(float speed, UnityAction callback = null)
+        public void FadeOut()
         {
-            StartCoroutine(FadeInCoroutine(speed, callback));
+            //StartCoroutine(FadeOutCoroutine(speed));
+            FadeOut(speed);
         }
 
-        public void FadeOut(UnityAction callback = null)
+        public void FadeOut(float speed)
         {
-            StartCoroutine(FadeOutCoroutine(speed, callback));
+            StartCoroutine(FadeOutCoroutine(speed));
         }
 
-        public void FadeOut(float speed, UnityAction callback = null)
+        public void FadeOut(UnityAction callback)
+        {
+            //StartCoroutine(FadeOutCoroutine(speed, callback));
+            FadeOut(speed, callback);
+        }
+
+        public void FadeOut(float speed, UnityAction callback)
         {
             StartCoroutine(FadeOutCoroutine(speed, callback));
         }
