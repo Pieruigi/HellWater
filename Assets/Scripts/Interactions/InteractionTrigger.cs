@@ -103,7 +103,7 @@ namespace HW
             {
                 inside = false;
                 
-                if(actionController.ActionEnable)
+                if(actionController && actionController.ActionEnable)
                     StopActing();
             }
         }

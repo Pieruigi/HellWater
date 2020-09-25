@@ -47,15 +47,23 @@ namespace HW
 
         FiniteStateMachine fsm;
 
+        Animator cameraFaderAnimator;
+
         private void Awake()
         {
             fsm = GetComponent<FiniteStateMachine>();
             fsm.OnStateChange += HandleOnStateChange;
+            
+
+
         }
 
         // Start is called before the first frame update
         void Start()
         {
+            // Get the camera fader animator
+            cameraFaderAnimator = CameraFader.Instance.GetComponent<Animator>();
+
             // Init
             CheckObjects();
             CheckParticles();
@@ -72,6 +80,11 @@ namespace HW
         {
             // Stop player
             PlayerController.Instance.SetDisabled(true);
+
+            // Since the fader is also used in timelines it has been provided with an animator that must be disabled
+            // in order to make manual fade work
+            if (cameraFaderAnimator)
+                cameraFaderAnimator.enabled = false;
 
             // Fade out
             yield return CameraFader.Instance.FadeOutCoroutine(fadeSpeed);
@@ -91,6 +104,10 @@ namespace HW
 
             // Fade in
             yield return CameraFader.Instance.FadeInCoroutine(fadeSpeed);
+
+            // Enable the animator if needed
+            if (cameraFaderAnimator)
+                cameraFaderAnimator.enabled = true;
 
             // Enable player again
             PlayerController.Instance.SetDisabled(false);
