@@ -114,6 +114,8 @@ namespace HW
 
         public IEnumerator FadeOutCoroutine(float speed, UnityAction callback = null)
         {
+        
+
             Color c = Color.black;
             c.a = 1;
             float time = 1f / speed;
