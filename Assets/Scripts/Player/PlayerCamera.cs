@@ -47,7 +47,7 @@ namespace HW
                 else
                 {
                     if (!overrideRotX)
-                        eulerAngles.x = 80f;
+                        eulerAngles.x = 60f;
                     else
                         eulerAngles.x = transform.eulerAngles.x;
 

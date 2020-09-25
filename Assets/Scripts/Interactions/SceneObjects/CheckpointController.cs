@@ -7,7 +7,10 @@ namespace HW
 {
     public class CheckpointController : MonoBehaviour
     {
-       
+
+        [SerializeField]
+        int stateId = 0;
+
         [SerializeField]
         int spawnPointId = -1;
 
@@ -22,14 +25,21 @@ namespace HW
        
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
-            if(oldState >= 0 && fsm.CurrentStateId < 0)
+            if(fsm.CurrentStateId == stateId && oldState != fsm.CurrentStateId)
             {
-                // Set the spawn point
-                Spawner.GetSpawner(PlayerController.Instance.transform).SpawnPointId = spawnPointId;
-
-                // Save
-                CacheManager.Instance.Save();
+                StartCoroutine(Save());
             }
+        }
+
+        IEnumerator Save()
+        {
+            yield return new WaitForEndOfFrame();
+
+            // Set the spawn point
+            Spawner.GetSpawner(PlayerController.Instance.transform).SpawnPointId = spawnPointId;
+
+            // Save
+            CacheManager.Instance.Save();
         }
     }
 
