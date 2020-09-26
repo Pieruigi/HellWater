@@ -130,8 +130,10 @@ namespace HW
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
-            if(fsm.CurrentStateId == desiredStateId)
+            if(fsm.CurrentStateId == desiredStateId || oldState == desiredStateId)
                 StartCoroutine(CoroutineBreak());
+            
+                
         }
 
 

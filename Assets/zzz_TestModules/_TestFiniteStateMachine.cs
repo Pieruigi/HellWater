@@ -12,10 +12,21 @@ public class _TestFiniteStateMachine : MonoBehaviour
     [SerializeField]
     FiniteStateMachine fsm;
 
+    [SerializeField]
+    int fromStateId;
+
+    [SerializeField]
+    int toStateId;
+
+    [SerializeField]
+    bool callEvent;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        fsm.ForceState(fromStateId, true);    
     }
 
     // Update is called once per frame
@@ -27,12 +38,9 @@ public class _TestFiniteStateMachine : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            fsm.Lookup("Open");
+            fsm.ForceState(toStateId, callEvent);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            fsm.Lookup("Lock");
-        }
+        
         
     }
 }

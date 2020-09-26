@@ -78,7 +78,7 @@ namespace HW
                     }
                     else
                     {
-                        if(actionController.ActionEnable)
+                        if(actionController && actionController.ActionEnable)
                             StopActing();
                     }    
                 }

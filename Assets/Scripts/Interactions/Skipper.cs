@@ -48,7 +48,7 @@ namespace HW
                 {
                     buttonIsDown = true;
                     timer = skipInSecs;
-
+                    Debug.Log("Skipping true");
                     OnSkipping?.Invoke(this, true);
                 }
             }
@@ -58,7 +58,7 @@ namespace HW
                 {
                     buttonIsDown = false;
                     timer = 0;
-
+                    Debug.Log("Skipping false");
                     OnSkipping?.Invoke(this, false);
                 }
             }

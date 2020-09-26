@@ -32,6 +32,7 @@ namespace HW.CutScene
 
         void Start()
         {
+            // If is in ready state and play on enter is flagged then the timeline starts
             if (playOnEnter && fsm.CurrentStateId == (int)CutSceneState.Ready)
                 fsm.Lookup();
 
@@ -61,15 +62,17 @@ namespace HW.CutScene
 
         public void Exit()
         {
+            skipEnabled = false;
             fsm.Lookup();
         }
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
-            if (oldState == (int)CutSceneState.Ready && fsm.CurrentStateId == (int)CutSceneState.Playing)
+            if (oldState != fsm.CurrentStateId && fsm.CurrentStateId == (int)CutSceneState.Playing)
             {
                 Play();
             }
+
         }
 
     }
