@@ -15,6 +15,8 @@ namespace HW
 
         Spawner playerSpawner;
 
+        
+
         protected override void Start()
         {
             playerSpawner = Spawner.GetSpawner(PlayerController.Instance.transform);
@@ -34,6 +36,11 @@ namespace HW
         IEnumerator OpenCoroutine()
         {
             PlayerController.Instance.SetDisabled(true);
+
+            Animator camAnim = CameraFader.Instance.GetComponent<Animator>();
+            if (camAnim)
+                camAnim.enabled = false;
+
 
             yield return CameraFader.Instance.FadeOutCoroutine(5);
 

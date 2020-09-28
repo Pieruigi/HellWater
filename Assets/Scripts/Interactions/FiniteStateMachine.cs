@@ -242,7 +242,7 @@ namespace HW
                 return false;
 
             // Get the first checked transition
-            Transition transition = transitions.Find(t => t.FromStateId == currentStateId && t.Checked());
+            Transition transition = transitions.Find(t => t.FromStateId == currentStateId);
 
             // If no transition return
             if (transition == null)
