@@ -32,8 +32,8 @@ namespace HW
             if (charge == 1)
             {
                 started = false;
-                OnActionPerformed?.Invoke(this);
                 OnActionStop?.Invoke(this);
+                OnActionPerformed?.Invoke(this);
             }
             else
             {

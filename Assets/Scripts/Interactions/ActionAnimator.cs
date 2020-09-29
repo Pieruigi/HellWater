@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HW
 {
-    public enum ActionType { None, PickUp, MakeTheBed, TurnHandle, PickUpFromGround, PutFuel, FillTeapot }
+    public enum ActionType { None, PickUp, MakeTheBed, TurnHandle, PickUpFromGround, PutFuel, FillTeapot, UseHammer }
 
     // Manages character behaviour ( such as animations, object to hold, ecc ) when you perform some actions: for example
     // starts picking animation when you pick up something.
@@ -16,10 +16,16 @@ namespace HW
         ActionType actionType = ActionType.None;
 
         [SerializeField]
-        GameObject toolPrefab = null;
+        bool disablePlayerOnActionPerformed = false;
 
         [SerializeField]
-        Transform toolParentNode = null;
+        GameObject toolPrefab = null;
+
+
+       
+        [SerializeField]
+        //Transform toolParentNode = null;
+        HumanoidNodeName playerNodeName = HumanoidNodeName.None;
 
         [SerializeField]
         Vector3 toolPosition;
@@ -54,6 +60,8 @@ namespace HW
 
         GameObject tool;
 
+        Transform playerNode;
+
         private void Awake()
         {
             actionController = GetComponentInParent<ActionController>();
@@ -71,6 +79,8 @@ namespace HW
             // Get player animator 
             animator = PlayerController.Instance.GetComponent<Animator>();
             rb = PlayerController.Instance.GetComponent<Rigidbody>();
+
+            playerNode = PlayerController.Instance.GetComponent<HumanoidNodeCollection>().GetNode(playerNodeName);
             
         }
 
@@ -81,12 +91,12 @@ namespace HW
                 return;
 
             Vector3 newPos = target.position;
-            Transform player = PlayerController.Instance.transform;
-            newPos.y = player.position.y;
+            //Transform player = PlayerController.Instance.transform;
+            newPos.y = PlayerController.Instance.transform.position.y;
             
             rb.position = Vector3.MoveTowards(rb.position, newPos, Time.fixedDeltaTime * movingSpeed);
             //rb.MovePosition(target.position);
-            player.forward = Vector3.MoveTowards(player.forward, target.forward, angularSpeed * Time.deltaTime);
+            PlayerController.Instance.transform.forward = Vector3.MoveTowards(PlayerController.Instance.transform.forward, target.forward, angularSpeed * Time.deltaTime);
 
             if ((System.DateTime.UtcNow - lastMove).TotalSeconds > 0.5f)
                 move = false;
@@ -100,13 +110,12 @@ namespace HW
             //if (state >= 0 && fsm.CurrentStateId != state)
             //    return;
 
-
             PlayerController.Instance.SetDisabled(true);
 
             // Create tool if needed
             if (toolPrefab)
             {
-                tool = GeneralUtility.ObjectPopIn(toolPrefab, toolParentNode, toolPosition, toolRotation, Vector3.one);
+                tool = GeneralUtility.ObjectPopIn(toolPrefab, playerNode, toolPosition, toolRotation, Vector3.one);
             }
 
             // Reset the param action performed to avoid keeping an old value
@@ -132,7 +141,7 @@ namespace HW
         // Also called when holding and repeating
         void HandleOnActionStop(ActionController ctrl)
         {
-            
+
             //if (state >= 0 && fsm.CurrentStateId != state)
             //    return;
 
@@ -164,7 +173,8 @@ namespace HW
             if(actionController.GetType() == typeof(ActionController))
             {
                 // Set disable, animation must send an ActionCompleted event in order to enable the player again
-                PlayerController.Instance.SetDisabled(true);
+                if (disablePlayerOnActionPerformed)
+                    PlayerController.Instance.SetDisabled(true);
 
                 // Start animation
                 if (actionType != ActionType.None)
@@ -183,7 +193,8 @@ namespace HW
             else
             {
                 // Set disable, animation must send an ActionCompleted event in order to enable the player again
-                PlayerController.Instance.SetDisabled(true);
+                if(disablePlayerOnActionPerformed)
+                    PlayerController.Instance.SetDisabled(true);
 
                 // Start animation
                 if (actionType != ActionType.None)

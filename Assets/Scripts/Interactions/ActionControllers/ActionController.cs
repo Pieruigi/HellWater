@@ -60,13 +60,6 @@ namespace HW
             
         }
 
-        //protected virtual bool PerformAction()
-        //{
-        //    if (PlayerController.Instance.GetActionButtonDown())
-        //        return true;
-
-        //    return false;
-        //}
     }
 
 }

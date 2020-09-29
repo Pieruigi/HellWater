@@ -62,51 +62,14 @@ namespace HW
 
             if (charge == 1)
             {
-                OnActionPerformed?.Invoke(this);
-                OnActionStop?.Invoke(this);
                 
+                OnActionStop?.Invoke(this);
+                OnActionPerformed?.Invoke(this);
             }
 
 
         }
 
-        //protected override bool PerformAction()
-        //{
-        //    if (!charging)
-        //    {
-        //        if (PlayerController.Instance.GetActionButtonDown())
-        //        {
-        //            charging = true;
-        //            OnActionStart?.Invoke(this);
-        //        }
-
-        //    }
-        //    else
-        //    {
-        //        if (PlayerController.Instance.GetActionButtonUp())
-        //        {
-        //            charging = false;
-        //            OnActionStop?.Invoke(this);
-        //        }
-
-
-
-        //    }
-
-        //    if (charging)
-        //        charge = Mathf.Min(1, charge + speed * Time.deltaTime);
-        //    else
-        //        charge = Mathf.Max(0, charge - 2f * Time.deltaTime);
-
-        //    if (charge == 1)
-        //    {
-        //        OnActionStop?.Invoke(this);
-        //        return true;
-        //    }
-
-
-        //    return false;
-        //}
     }
 
 }
