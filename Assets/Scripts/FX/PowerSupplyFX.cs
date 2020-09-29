@@ -21,6 +21,12 @@ namespace HW
         [SerializeField]
         ActionController actionController;
 
+        [SerializeField]
+        ActionController tankActionController;
+
+        [SerializeField]
+        AudioSource tankAudioSource;
+
         int playOnStateId = 0;
 
         private void Awake()
@@ -28,6 +34,10 @@ namespace HW
             fsm.OnStateChange += HandleOnStateChange;
             actionController.OnActionStart += HandleOnActionStart;
             actionController.OnActionStop += HandleOnActionStop;
+
+            tankActionController.OnActionStart += HandleOnActionStart;
+            tankActionController.OnActionStop += HandleOnActionStop;
+
         }
 
         // Start is called before the first frame update
@@ -48,10 +58,11 @@ namespace HW
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
-            if(fsm.CurrentStateId == playOnStateId)
+            if (fsm.CurrentStateId == playOnStateId)
             {
                 StartFX();
             }
+           
         }
 
         void StartFX()
@@ -65,12 +76,19 @@ namespace HW
 
         void HandleOnActionStart(ActionController ctrl)
         {
-            startingAudioSource.Play();
+            if (ctrl == actionController)
+                startingAudioSource.Play();
+            else
+                tankAudioSource.PlayDelayed(0.5f);
+
         }
 
         void HandleOnActionStop(ActionController ctrl)
         {
-            startingAudioSource.Stop();
+            if (ctrl == actionController)
+                startingAudioSource.Stop();
+            else
+                tankAudioSource.Stop();
         }
 
     }

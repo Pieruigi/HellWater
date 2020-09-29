@@ -7,6 +7,8 @@ using HW.Collections;
 
 namespace HW
 {
+    
+
     public class PlayerController : MonoBehaviour, IHitable
     {
         #region ACTIONS
@@ -54,7 +56,6 @@ namespace HW
             get { return fireWeaponAccuracySystem; }
         }
         #endregion
-
 
 
         #region LOCOMOTION FIELDS
@@ -237,6 +238,7 @@ namespace HW
         #endregion
 
         #region PUBLIC
+        
         public bool GetActionButtonDown()
         {
             return GetButtonDown(actionAxis);
