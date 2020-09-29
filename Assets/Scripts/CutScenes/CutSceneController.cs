@@ -36,6 +36,10 @@ namespace HW.CutScene
             if (playOnEnter && fsm.CurrentStateId == (int)CutSceneState.Ready)
                 fsm.Lookup();
 
+            // If is already in playing state then simply play it
+            if (fsm.CurrentStateId == (int)CutSceneState.Playing)
+                Play();
+
         }
 
         public bool CanBeSkipped()
