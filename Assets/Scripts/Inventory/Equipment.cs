@@ -112,6 +112,10 @@ namespace HW
                 throw new System.Exception("AddWeapon() can't be called with param of type " + item.Type + ".");
 
             weapons.Add(item);
+
+            // The first two weapons must also be equipped
+            if(weapons.Count < 3)
+                PlayerController.Instance.EquipWeapon(item);
         }
 
         private void AddAmmonitions(Item item, int amount)
