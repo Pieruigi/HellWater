@@ -11,6 +11,9 @@ namespace HW
         Item item;
 
         [SerializeField]
+        int count = 1;
+
+        [SerializeField]
         GameObject target;
 
         FiniteStateMachine fsm;
@@ -59,8 +62,9 @@ namespace HW
             //target.SetActive(false);
             if (item)
             {
-                Equipment.Instance.Add(item); // We really need some kind of dipatcher
-                PlayerController.Instance.EquipWeapon(item);
+                //Equipment.Instance.Add(item); // We really need some kind of dipatcher
+                //PlayerController.Instance.EquipWeapon(item);
+                ItemDispatcher.Instance.Dispatch(item, count);
             }
                 
         }
