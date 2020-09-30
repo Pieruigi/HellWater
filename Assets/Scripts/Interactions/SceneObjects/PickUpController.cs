@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HW.Collections;
 
 namespace HW
 {
     public class PickUpController : MonoBehaviour
     {
+        [SerializeField]
+        Item item;
+
         [SerializeField]
         GameObject target;
 
@@ -53,6 +57,12 @@ namespace HW
             yield return new WaitForSeconds(time * 1.1f);
 
             //target.SetActive(false);
+            if (item)
+            {
+                Equipment.Instance.Add(item); // We really need some kind of dipatcher
+                PlayerController.Instance.EquipWeapon(item);
+            }
+                
         }
     }
 }
