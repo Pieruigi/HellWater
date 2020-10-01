@@ -222,7 +222,7 @@ PrefabInstance:
         type: 3}
       propertyPath: fsm
       value: 
-      objectReference: {fileID: 639564447625180847}
+      objectReference: {fileID: 1508507322}
     - target: {fileID: 6666270541346899262, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
       propertyPath: fromStateId
@@ -231,7 +231,7 @@ PrefabInstance:
     - target: {fileID: 6666270541346899262, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
       propertyPath: toStateId
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6666270541346899262, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
@@ -5322,6 +5322,7 @@ GameObject:
   - component: {fileID: 1508507327}
   - component: {fileID: 1508507326}
   - component: {fileID: 1508507328}
+  - component: {fileID: 1508507325}
   m_Layer: 0
   m_Name: HavingBreakfast
   m_TagString: Untagged
@@ -5388,7 +5389,7 @@ MonoBehaviour:
     othersToSet:
     - fsm: {fileID: 1376829427}
       newStateId: 0
-      callEvent: 0
+      callEvent: 1
     - fsm: {fileID: 1908560454}
       newStateId: 1
       callEvent: 0
@@ -5447,6 +5448,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b45fbbec97e79af41a000f2950602c8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1508507325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508507318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b4f30d14bbc6c7488d85dd3add601dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogCode: 003
+  dialogDelay: 0
+  useFade: 1
+  fadeInDelay: 1
+  onEnterPlayerState: 3
+  playOnEnter: 1
+  onExitPlayerState: 1
+  stopOnExit: 1
 --- !u!95 &1508507326
 Animator:
   serializedVersion: 3
@@ -5519,6 +5540,8 @@ PlayableDirector:
     value: {fileID: 8537584690317495683}
   - key: {fileID: 5069542736411283845, guid: dc8cdde91f0dec74497dbdfe965eb8bd, type: 2}
     value: {fileID: 1877522630}
+  - key: {fileID: 3097990813525293610, guid: dc8cdde91f0dec74497dbdfe965eb8bd, type: 2}
+    value: {fileID: 1376829420}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &1508507328
@@ -5667,7 +5690,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   spawnPoints:
-  - {fileID: 1626870473}
+  - {fileID: 2008460194}
   - {fileID: 1803954541}
   - {fileID: 1257040534}
   - {fileID: 782137452}
@@ -6945,7 +6968,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008460193}
   m_LocalRotation: {x: -0, y: 0.9133201, z: -0, w: 0.40724236}
-  m_LocalPosition: {x: 7.006, y: 0.38, z: 5.305}
+  m_LocalPosition: {x: -3.179, y: 0.38, z: 2.032}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 866819480}

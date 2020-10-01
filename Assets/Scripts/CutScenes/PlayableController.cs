@@ -150,7 +150,10 @@ namespace HW.CutScene
             else
             {
                 if (fsm.CurrentStateId == (int)CutSceneState.Playing && oldState == (int)CutSceneState.Ready)
+                {
                     Play();
+                }
+               
             }
         }
 
