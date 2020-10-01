@@ -82,9 +82,19 @@ namespace HW.CutScene
             if(!"".Equals(dialogCode.Trim()))
                 dialog = Dialog.GetDialog(dialogCode, GameManager.Instance.Language);
 
-            // If auto play the check state and eventually play it
-            if (fsm.CurrentStateId == (int)CutSceneState.Ready && playOnEnter)
-                fsm.Lookup();
+
+            // If is already in playing state then simply play it
+            if (fsm.CurrentStateId == (int)CutSceneState.Playing)
+            {
+                Play();
+            }
+            else
+            {
+                // If auto play the check state and eventually play it
+                if (fsm.CurrentStateId == (int)CutSceneState.Ready && playOnEnter)
+                    fsm.Lookup();
+            }
+            
         }
 
         // Update is called once per frame
@@ -145,15 +155,14 @@ namespace HW.CutScene
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
-            if (fsm.CurrentStateId == (int)CutSceneState.Ready && playOnEnter)
-                fsm.Lookup();
+            if (oldState != fsm.CurrentStateId && fsm.CurrentStateId == (int)CutSceneState.Playing)
+            {
+                Play();
+            }
             else
             {
-                if (fsm.CurrentStateId == (int)CutSceneState.Playing && oldState == (int)CutSceneState.Ready)
-                {
-                    Play();
-                }
-               
+                if (oldState == (int)CutSceneState.Playing && fsm.CurrentStateId == (int)CutSceneState.Played)
+                    Exit();
             }
         }
 
@@ -235,6 +244,9 @@ namespace HW.CutScene
                 // Start fade out
                 yield return CameraFader.Instance.FadeOutCoroutine();
 
+                // We can skip after fade out
+                canSkip = true;
+
                 CheckPlayerVisibility(onEnterPlayerState); 
 
                 // Some delay?
@@ -249,6 +261,9 @@ namespace HW.CutScene
             }
             else
             {
+                // We can skip
+                canSkip = true;
+
                 CheckPlayerVisibility(onEnterPlayerState);
 
                 if (director)
@@ -259,7 +274,7 @@ namespace HW.CutScene
                 yield return new WaitForSeconds(dialogDelay);
 
             playing = true;
-            canSkip = true;
+            
 
             if(dialog)
                 ShowNextSpeech();

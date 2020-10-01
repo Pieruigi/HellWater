@@ -114,7 +114,7 @@ namespace HW
 
         public IEnumerator FadeOutCoroutine(float speed, UnityAction callback = null)
         {
-        
+            Debug.Log("FadeOut");
 
             Color c = Color.black;
             c.a = 1;
@@ -127,6 +127,7 @@ namespace HW
 
         public IEnumerator FadeOutCoroutine(UnityAction callback = null)
         {
+
             yield return FadeOutCoroutine(speed, callback);
         }
 
