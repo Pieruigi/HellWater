@@ -27,6 +27,9 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
+            if (target == null)
+                target = PlayerController.Instance.transform;
+
             // Ask the level manager for the spawn point in the world
             Transform sp = spawnPoints[spawnPointId];
             Debug.Log("SpawnPoint:" + sp);

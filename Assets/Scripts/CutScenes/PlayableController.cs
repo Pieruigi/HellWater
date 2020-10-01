@@ -9,12 +9,22 @@ using System;
 
 namespace HW.CutScene
 {
+    
+
     // Use this class to manage timelines and dialogs.
     // Timeline is set by looking for a playable director in the gameobject; dialog must be set up using its code.
     // You can choose to have no dialog or no timeline ( you should have at least one of these ).
     // You can also choose to use fade or to let the timeline to manage it.
     public class PlayableController : MonoBehaviour, ISkippable
     {
+        /**
+       * None: no action on player
+       * Enabled: is enabled
+       * OnlyDisabled: player is visible but you can't control it
+       * Hidde: player is not visible 
+       * */
+        enum PlayerState { None, Enabled, OnlyDisabled, Hidden }
+
         [SerializeField]
         [Tooltip("Leave empty if you want no dialog at all.")]
         string dialogCode; // The dialog you want to show
@@ -29,8 +39,16 @@ namespace HW.CutScene
         float fadeInDelay = 1f;
 
         [SerializeField]
+        PlayerState onEnterPlayerState = PlayerState.None;
+
+        [SerializeField]
         bool playOnEnter = false;
 
+        [SerializeField]
+        PlayerState onExitPlayerState = PlayerState.None;
+
+        [SerializeField]
+        bool stopOnExit = false; // You should set true on loop, otherwise you should leave false
 
         // You can use an external timeline ( for example if you want a npc to stay in the same position and animation )
         // or even a custom timeline ( which starts fading out )
@@ -97,20 +115,23 @@ namespace HW.CutScene
             StartCoroutine(CoroutinePlay());
         }
 
-        void Exit()
+
+        public void Exit()
         {
             canSkip = false;
+
+            // In case we skip 
+            if (director)
+            {
+                if (director.time < director.duration)
+                    director.time = director.duration;
+            }
 
             StartCoroutine(CoroutineExit());
 
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
-        {
-            if ((fsm.CurrentStateId == (int)CutSceneState.Ready && playOnEnter) ||
-               (fsm.CurrentStateId == (int)CutSceneState.Playing))
-                Play();
-        }
+      
 
         public void Skip()
         {
@@ -120,6 +141,17 @@ namespace HW.CutScene
         public bool CanBeSkipped()
         {
             return canSkip;
+        }
+
+        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        {
+            if (fsm.CurrentStateId == (int)CutSceneState.Ready && playOnEnter)
+                fsm.Lookup();
+            else
+            {
+                if (fsm.CurrentStateId == (int)CutSceneState.Playing && oldState == (int)CutSceneState.Ready)
+                    Play();
+            }
         }
 
         IEnumerator CoroutineExit()
@@ -135,8 +167,22 @@ namespace HW.CutScene
                 // Fade out
                 yield return CameraFader.Instance.FadeOutCoroutine();
 
+                CheckPlayerVisibility(onExitPlayerState);
+
                 // Stop director while in black screen
-                director?.Stop();
+                if (director)
+                {
+                    if(stopOnExit)
+                        director.Stop();
+                    else
+                    {
+                        if (director.time < director.duration)
+                            director.time = director.duration;
+                    }
+                    
+
+                }
+                    
                 
                 // Have some delay ?
                 if (fadeInDelay > 0)
@@ -151,9 +197,22 @@ namespace HW.CutScene
             }
             else // No fade, just stop the director
             {
-                director?.Stop();
+                CheckPlayerVisibility(onExitPlayerState);
+                if (director)
+                {
+                    if (stopOnExit)
+                        director.Stop();
+                    else
+                    {
+                        if (director.time < director.duration)
+                            director.time = director.duration;
+                    }
+                }
+                
+                
             }
-            
+
+            CheckPlayerController(onExitPlayerState);
 
             // Set finite state machine
             fsm.Lookup();
@@ -161,6 +220,8 @@ namespace HW.CutScene
 
         IEnumerator CoroutinePlay()
         {
+            CheckPlayerController(onEnterPlayerState);
+
             // When using a custom timeline we fading in and out
             if (useFade)
             {
@@ -171,18 +232,24 @@ namespace HW.CutScene
                 // Start fade out
                 yield return CameraFader.Instance.FadeOutCoroutine();
 
+                CheckPlayerVisibility(onEnterPlayerState); 
+
                 // Some delay?
                 if (fadeInDelay > 0)
                     yield return new WaitForSeconds(fadeInDelay);
                 
                 // Start director if needed
-                director?.Play();
+                if(director)
+                    director.Play();
                 
                 yield return CameraFader.Instance.FadeInCoroutine();
             }
             else
             {
-                director?.Play();
+                CheckPlayerVisibility(onEnterPlayerState);
+
+                if (director)
+                    director.Play();
             }
 
             if (dialogDelay > 0)
@@ -202,6 +269,42 @@ namespace HW.CutScene
             DialogViewer.Instance.ShowSpeech(speech.Content, speech.Avatar);
             lastSpeech = DateTime.UtcNow;
             currentSpeechId++;
+        }
+
+        void CheckPlayerVisibility(PlayerState playerState)
+        {
+
+            switch (playerState)
+            {
+                case PlayerState.Enabled:
+                    PlayerController.Instance.gameObject.SetActive(true);
+                    break;
+
+                case PlayerState.OnlyDisabled:
+                    PlayerController.Instance.gameObject.SetActive(true);
+                    break;
+                case PlayerState.Hidden:
+                    PlayerController.Instance.gameObject.SetActive(false);
+                    break;
+            }
+        }
+
+
+        void CheckPlayerController(PlayerState playerState)
+        {
+            switch (playerState)
+            {
+                case PlayerState.Enabled:
+                    PlayerController.Instance.SetDisabled(false);
+                    break;
+
+                case PlayerState.OnlyDisabled:
+                    PlayerController.Instance.SetDisabled(true);
+                    break;
+                case PlayerState.Hidden:
+                    PlayerController.Instance.SetDisabled(true);
+                    break;
+            }
         }
     }
 
