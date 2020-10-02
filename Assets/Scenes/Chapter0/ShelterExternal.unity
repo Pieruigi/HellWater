@@ -10602,7 +10602,6 @@ GameObject:
   - component: {fileID: 182108387}
   - component: {fileID: 182108390}
   - component: {fileID: 182108389}
-  - component: {fileID: 182108388}
   m_Layer: 0
   m_Name: FakeRobertStand-3
   m_TagString: Untagged
@@ -10624,32 +10623,6 @@ Transform:
   m_Father: {fileID: 193818234}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &182108388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 182108386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 375893422}
-    desiredState: 0
-  - fsm: {fileID: 1983510159}
-    desiredState: 0
-  - fsm: {fileID: 205710453}
-    desiredState: 0
-  - fsm: {fileID: 1485775533}
-    desiredState: 0
-  - fsm: {fileID: 1543288519}
-    desiredState: 0
-  requiredState: -1
-  newState: 2
-  callOnStateChangeEvent: 0
 --- !u!114 &182108389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10692,8 +10665,8 @@ MonoBehaviour:
     commonStateErrorCode: -1
     commonStateSucceedCode: -1
   transitions: []
-  currentStateName: Disabled
-  currentStateId: -1
+  currentStateName: Ready
+  currentStateId: 2
 --- !u!1 &183026153
 GameObject:
   m_ObjectHideFlags: 0
@@ -15877,7 +15850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateId: 0
-  spawnPointId: 1
+  spawnPointId: 2
 --- !u!114 &286048241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47062,6 +47035,7 @@ Transform:
   m_Children:
   - {fileID: 1626870473}
   - {fileID: 275178731}
+  - {fileID: 1514150944}
   - {fileID: 1272132920}
   m_Father: {fileID: 1664192628}
   m_RootOrder: 0
@@ -67731,7 +67705,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 866819480}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1001 &1272253304
 PrefabInstance:
@@ -80336,6 +80310,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1512581084}
   m_Mesh: {fileID: -7791019400133791631, guid: eaae4fe3cb396be4088e01cc5f53d1e1, type: 3}
+--- !u!1 &1514150943
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1514150944}
+  m_Layer: 0
+  m_Name: PowerSupply
+  m_TagString: Untagged
+  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1514150944
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514150943}
+  m_LocalRotation: {x: 0, y: 0.9471823, z: 0, w: 0.32069573}
+  m_LocalPosition: {x: 38.22, y: 0.04747067, z: 46.03}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 866819480}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 142.59, z: 0}
 --- !u!1001 &1514313804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83540,6 +83544,7 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 1626870473}
   - {fileID: 275178731}
+  - {fileID: 1514150944}
 --- !u!4 &1568279189
 Transform:
   m_ObjectHideFlags: 0
@@ -96864,6 +96869,7 @@ GameObject:
   - component: {fileID: 1823182146}
   - component: {fileID: 1823182145}
   - component: {fileID: 1823182143}
+  - component: {fileID: 1823182144}
   m_Layer: 0
   m_Name: RobertStand-2
   m_TagString: Untagged
@@ -96905,6 +96911,32 @@ MonoBehaviour:
   playOnEnter: 0
   onExitPlayerState: 0
   stopOnExit: 0
+--- !u!114 &1823182144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823182141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  others:
+  - fsm: {fileID: 375893422}
+    desiredState: 0
+  - fsm: {fileID: 1983510159}
+    desiredState: 0
+  - fsm: {fileID: 205710453}
+    desiredState: 0
+  - fsm: {fileID: 1485775533}
+    desiredState: 0
+  - fsm: {fileID: 1543288519}
+    desiredState: 0
+  requiredState: 1
+  newState: 0
+  callOnStateChangeEvent: 1
 --- !u!320 &1823182145
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -103299,9 +103331,6 @@ MonoBehaviour:
     - fsm: {fileID: 286048239}
       newStateId: 1
       callEvent: 0
-    - fsm: {fileID: 2005281331}
-      newStateId: -1
-      callEvent: 0
     commonStateErrorCode: -1
     commonStateSucceedCode: -1
   - name: Empty
@@ -105729,7 +105758,10 @@ MonoBehaviour:
     commonStateSucceedCode: -1
   - name: Ready
     id: 2
-    othersToSet: []
+    othersToSet:
+    - fsm: {fileID: 182108390}
+      newStateId: 1
+      callEvent: 1
     commonStateErrorCode: -1
     commonStateSucceedCode: -1
   transitions: []
@@ -105760,7 +105792,7 @@ MonoBehaviour:
     desiredState: 0
   requiredState: -1
   newState: 2
-  callOnStateChangeEvent: 0
+  callOnStateChangeEvent: 1
 --- !u!1001 &1957526725
 PrefabInstance:
   m_ObjectHideFlags: 0

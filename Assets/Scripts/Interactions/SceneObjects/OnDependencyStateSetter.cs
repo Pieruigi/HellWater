@@ -80,7 +80,7 @@ namespace HW
                     return;
 
             // All checked, set new state
-            fsm.ForceState(newState, callOnStateChangeEvent);
+            fsm.ForceState(newState, callOnStateChangeEvent, true);
 
         }
     }

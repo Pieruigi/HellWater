@@ -165,7 +165,7 @@ namespace HW
             {
                 foreach(OtherToSet other in othersToSet)
                 {
-                    other.FiniteStateMachine.ForceState(other.NewStateId, other.CallEvent);
+                    other.FiniteStateMachine.ForceState(other.NewStateId, other.CallEvent, true);
                 }
             }
         }
@@ -308,14 +308,21 @@ namespace HW
             return true;
         }
 
-        // Forse the state machine to a new state without taking into account any condition
-        public void ForceState(int stateId, bool callEvent)
+        // Forse the state machine to a new state without taking into account any condition.
+        // You can call on state change event by setting the callEvent paratm true.
+        // You can choose whether or not set others fsm ( if the are referencies ); in this way you can set fsm in cascade;
+        // normally you should setOthers false during initialization ( reading from cache ) and set true during
+        // common gameplay actions.
+        public void ForceState(int stateId, bool callEvent, bool setOthers)
         {
             int oldState = currentStateId;
             currentStateId = stateId;
 
             if (callEvent)
                 OnStateChange?.Invoke(this, oldState);
+
+            if(setOthers && currentStateId >= 0 && currentStateId < states.Count)
+                states[currentStateId].SetOthers();
         }
 
         private void ChangeState(Transition transition)

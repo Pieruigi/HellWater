@@ -27,7 +27,7 @@ namespace HW.CachingSystem
         {
             FiniteStateMachineData data = new FiniteStateMachineData();
             data.Parse(cacheValue);
-            fsm.ForceState(data.StateId, false);
+            fsm.ForceState(data.StateId, false, false);
         }
     }
 

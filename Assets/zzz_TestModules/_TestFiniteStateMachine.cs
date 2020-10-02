@@ -26,7 +26,7 @@ public class _TestFiniteStateMachine : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        fsm.ForceState(fromStateId, true);    
+        fsm.ForceState(fromStateId, true, false);    
     }
 
     // Update is called once per frame
@@ -38,7 +38,7 @@ public class _TestFiniteStateMachine : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            fsm.ForceState(toStateId, callEvent);
+            fsm.ForceState(toStateId, callEvent, false);
         }
         
         
