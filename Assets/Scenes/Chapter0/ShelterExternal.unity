@@ -11825,14 +11825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 1289929215}
-    desiredState: 0
-  - fsm: {fileID: 1802353344}
-    desiredState: 0
-  requiredState: -1
-  newState: 1
-  callOnStateChangeEvent: 0
+  targets: []
 --- !u!1001 &206090396
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20204,14 +20197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 1289929215}
-    desiredState: 0
-  - fsm: {fileID: 1802353344}
-    desiredState: 0
-  requiredState: -1
-  newState: 1
-  callOnStateChangeEvent: 0
+  targets: []
 --- !u!1 &376113526
 GameObject:
   m_ObjectHideFlags: 0
@@ -20563,6 +20549,106 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 381966818}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &382514307
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 382514308}
+  - component: {fileID: 382514310}
+  - component: {fileID: 382514309}
+  m_Layer: 0
+  m_Name: FenceFixedStateChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &382514308
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382514307}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 512707765}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &382514309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382514307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targets:
+  - {fileID: 375893422}
+  - {fileID: 1983510159}
+  - {fileID: 205710453}
+  - {fileID: 1485775533}
+  - {fileID: 1543288519}
+--- !u!114 &382514310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382514307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d0132db7448104db3a429b47dd7ae1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  states:
+  - name: Checked
+    id: 0
+    othersToSet:
+    - fsm: {fileID: 182108390}
+      newStateId: 1
+      callEvent: 0
+    - fsm: {fileID: 1955467746}
+      newStateId: 2
+      callEvent: 0
+    - fsm: {fileID: 1823182148}
+      newStateId: 0
+      callEvent: 1
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
+  - name: Checking
+    id: 1
+    othersToSet: []
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
+  transitions:
+  - tag: Check
+    fromStateId: 1
+    toStateId: 0
+    othersToCheck:
+    - fsm: {fileID: 375893422}
+      desiredStateId: 0
+    - fsm: {fileID: 1983510159}
+      desiredStateId: 0
+    - fsm: {fileID: 205710453}
+      desiredStateId: 0
+    - fsm: {fileID: 1485775533}
+      desiredStateId: 0
+    - fsm: {fileID: 1543288519}
+      desiredStateId: 0
+    errorCode: -1
+  currentStateName: Checking
+  currentStateId: 1
 --- !u!1001 &382725203
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21697,14 +21783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 1289929215}
-    desiredState: 0
-  - fsm: {fileID: 1802353344}
-    desiredState: 0
-  requiredState: 0
-  newState: -1
-  callOnStateChangeEvent: 0
+  targets: []
 --- !u!114 &399696457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27896,6 +27975,8 @@ Transform:
   - {fileID: 205710447}
   - {fileID: 1485775527}
   - {fileID: 1543288513}
+  - {fileID: 744589734}
+  - {fileID: 382514308}
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -28549,14 +28630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 1289929215}
-    desiredState: 0
-  - fsm: {fileID: 1802353344}
-    desiredState: 0
-  requiredState: 0
-  newState: -1
-  callOnStateChangeEvent: 0
+  targets: []
 --- !u!114 &524019485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38050,14 +38124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 1289929215}
-    desiredState: 0
-  - fsm: {fileID: 1802353344}
-    desiredState: 0
-  requiredState: 0
-  newState: -1
-  callOnStateChangeEvent: 0
+  targets: []
 --- !u!114 &690073450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40381,6 +40448,118 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 744339946}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &744589733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 744589734}
+  - component: {fileID: 744589736}
+  - component: {fileID: 744589735}
+  m_Layer: 0
+  m_Name: FenceStateChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &744589734
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744589733}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 512707765}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &744589735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744589733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targets:
+  - {fileID: 1289929215}
+  - {fileID: 1802353344}
+--- !u!114 &744589736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744589733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d0132db7448104db3a429b47dd7ae1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  states:
+  - name: Checked
+    id: 0
+    othersToSet:
+    - fsm: {fileID: 375893422}
+      newStateId: 1
+      callEvent: 0
+    - fsm: {fileID: 1983510159}
+      newStateId: 1
+      callEvent: 0
+    - fsm: {fileID: 205710453}
+      newStateId: 1
+      callEvent: 0
+    - fsm: {fileID: 1485775533}
+      newStateId: 1
+      callEvent: 0
+    - fsm: {fileID: 1543288519}
+      newStateId: 1
+      callEvent: 0
+    - fsm: {fileID: 690073448}
+      newStateId: -1
+      callEvent: 0
+    - fsm: {fileID: 833575806}
+      newStateId: -1
+      callEvent: 0
+    - fsm: {fileID: 524019487}
+      newStateId: -1
+      callEvent: 0
+    - fsm: {fileID: 399696459}
+      newStateId: -1
+      callEvent: 0
+    - fsm: {fileID: 1227717858}
+      newStateId: -1
+      callEvent: 0
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
+  - name: Checking
+    id: 1
+    othersToSet: []
+    commonStateErrorCode: -1
+    commonStateSucceedCode: -1
+  transitions:
+  - tag: Check
+    fromStateId: 1
+    toStateId: 0
+    othersToCheck:
+    - fsm: {fileID: 1289929215}
+      desiredStateId: 0
+    - fsm: {fileID: 1802353344}
+      desiredStateId: 0
+    errorCode: -1
+  currentStateName: Checking
+  currentStateId: 1
 --- !u!1 &745194634
 GameObject:
   m_ObjectHideFlags: 0
@@ -45032,14 +45211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 1289929215}
-    desiredState: 0
-  - fsm: {fileID: 1802353344}
-    desiredState: 0
-  requiredState: 0
-  newState: -1
-  callOnStateChangeEvent: 0
+  targets: []
 --- !u!114 &833575804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65595,14 +65767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 1289929215}
-    desiredState: 0
-  - fsm: {fileID: 1802353344}
-    desiredState: 0
-  requiredState: 0
-  newState: -1
-  callOnStateChangeEvent: 0
+  targets: []
 --- !u!114 &1227717856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78839,14 +79004,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 1289929215}
-    desiredState: 0
-  - fsm: {fileID: 1802353344}
-    desiredState: 0
-  requiredState: -1
-  newState: 1
-  callOnStateChangeEvent: 0
+  targets: []
 --- !u!1 &1487314463
 GameObject:
   m_ObjectHideFlags: 0
@@ -81992,14 +82150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 1289929215}
-    desiredState: 0
-  - fsm: {fileID: 1802353344}
-    desiredState: 0
-  requiredState: -1
-  newState: 1
-  callOnStateChangeEvent: 0
+  targets: []
 --- !u!1001 &1544180054
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -90711,7 +90862,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1713754432}
-  - component: {fileID: 1713754433}
   m_Layer: 0
   m_Name: WoodenBoards
   m_TagString: Untagged
@@ -90741,19 +90891,6 @@ Transform:
   m_Father: {fileID: 1802353351}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!65 &1713754433
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1713754431}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3.1540005, y: 2.0717957, z: 0.2611874}
-  m_Center: {x: -0.005202248, y: 1.0145602, z: 0.0052034147}
 --- !u!1 &1715412917
 GameObject:
   m_ObjectHideFlags: 0
@@ -96910,7 +97047,7 @@ MonoBehaviour:
   onEnterPlayerState: 0
   playOnEnter: 0
   onExitPlayerState: 0
-  stopOnExit: 0
+  stopOnExit: 1
 --- !u!114 &1823182144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96923,20 +97060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 375893422}
-    desiredState: 0
-  - fsm: {fileID: 1983510159}
-    desiredState: 0
-  - fsm: {fileID: 205710453}
-    desiredState: 0
-  - fsm: {fileID: 1485775533}
-    desiredState: 0
-  - fsm: {fileID: 1543288519}
-    desiredState: 0
-  requiredState: 1
-  newState: 0
-  callOnStateChangeEvent: 1
+  targets: []
 --- !u!320 &1823182145
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -105779,20 +105903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 375893422}
-    desiredState: 0
-  - fsm: {fileID: 1983510159}
-    desiredState: 0
-  - fsm: {fileID: 205710453}
-    desiredState: 0
-  - fsm: {fileID: 1485775533}
-    desiredState: 0
-  - fsm: {fileID: 1543288519}
-    desiredState: 0
-  requiredState: -1
-  newState: 2
-  callOnStateChangeEvent: 1
+  targets: []
 --- !u!1001 &1957526725
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -106979,14 +107090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d49e1072d00634ca2d968ce714b4c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  others:
-  - fsm: {fileID: 1289929215}
-    desiredState: 0
-  - fsm: {fileID: 1802353344}
-    desiredState: 0
-  requiredState: -1
-  newState: 1
-  callOnStateChangeEvent: 0
+  targets: []
 --- !u!1001 &1985435516
 PrefabInstance:
   m_ObjectHideFlags: 0

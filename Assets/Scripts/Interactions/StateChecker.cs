@@ -7,38 +7,20 @@ namespace HW
     // This class is useful when you want a finite state machine to depend on other finite state machines.
     // Use: fill the fsm list and set in the correspoding state you want to check for this finite state machine 
     // conditions in order to check the other machines.
-    public class OnDependencyStateSetter : MonoBehaviour
+    public class StateChecker : MonoBehaviour
     {
-        [System.Serializable]
-        private class FsmData
-        {
-            [SerializeField]
-            public FiniteStateMachine fsm;
-
-            [SerializeField]
-            public int desiredState;
-        }
-
+      
         [SerializeField]
-        List<FsmData> others;
-
-        [SerializeField]
-        int requiredState = -1; // The state you must stay in order to perform checking
-
-        [SerializeField]
-        int newState;
-
-        [SerializeField]
-        bool callOnStateChangeEvent;
-
+        List<FiniteStateMachine> targets;
+       
         FiniteStateMachine fsm;
 
         private void Awake()
         {
             // Set handles to check others 
-            foreach(FsmData data in others)
+            foreach(FiniteStateMachine fsm in targets)
             {
-                data.fsm.OnStateChange += HandleOnStateChange;
+                fsm.OnStateChange += HandleOnStateChange;
             }
 
             // Get this finite state machine
@@ -48,9 +30,7 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
-            // Check on start.
-            // We are not afraid to override cached state because checking only work in a given state.
-            Check();
+         
                 
         }
 
@@ -71,16 +51,8 @@ namespace HW
         // Returns true if every fsm has the desired state, otherwise false
         void Check()
         {
-            // This only works in a specific state
-            if (fsm.CurrentStateId != requiredState)
-                return;
 
-            foreach (FsmData data in others)
-                if (data.fsm.CurrentStateId != data.desiredState)
-                    return;
-
-            // All checked, set new state
-            fsm.ForceState(newState, callOnStateChangeEvent, true);
+            fsm.Lookup();
 
         }
     }
