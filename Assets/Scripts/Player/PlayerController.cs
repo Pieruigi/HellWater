@@ -455,12 +455,16 @@ namespace HW
                 return;
 
             // Check button
-            if (GetButtonDown(reloadAxis))
+            if(currentWeapon == fireWeapon)
             {
+                if (GetButtonDown(reloadAxis))
+                {
 
-                Debug.Log("Reload");
-                TryReload();
+                    Debug.Log("Reload");
+                    TryReload();
+                }
             }
+            
 
         }
 
