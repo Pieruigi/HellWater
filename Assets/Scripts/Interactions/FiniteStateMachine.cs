@@ -23,7 +23,7 @@ namespace HW
          * A condition is satisfied when the finite state machine to which refers is in a given state.
          * */
         [System.Serializable]
-        private class Transition
+        public class Transition
         {
             // Class to manage conditions
             [System.Serializable]
@@ -230,8 +230,7 @@ namespace HW
             currentStateName = disabledStateName;
         }
 
-
-
+        
         /**
          * Try to move to the next state looking for the first checked transition in the current state.
          * */
@@ -321,7 +320,7 @@ namespace HW
             if (callEvent)
                 OnStateChange?.Invoke(this, oldState);
 
-            if(setOthers && currentStateId >= 0 && currentStateId < states.Count)
+            if(setOthers && currentStateId >= 0 && currentStateId<states.Count)
                 states[currentStateId].SetOthers();
         }
 

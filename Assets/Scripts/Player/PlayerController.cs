@@ -805,7 +805,7 @@ namespace HW
                         desiredVelocity = Vector3.zero;
 
                         // Get all the targets inside the weapon range which are not hidden by any obstacle
-                        List<Transform> targets = GetAvailableTargets(fireWeapon.Range * 2f);
+                        List<Transform> targets = GetAvailableTargets(meleeWeapon.Range * 2f);
 
                         // Set the target or null
                         currentTarget = GetClosestTarget(targets);
