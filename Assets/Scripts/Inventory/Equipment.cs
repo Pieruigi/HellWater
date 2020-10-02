@@ -115,7 +115,13 @@ namespace HW
 
             // The first two weapons must also be equipped
             if(weapons.Count < 3)
+            {
                 PlayerController.Instance.EquipWeapon(item);
+                PlayerController.Instance.HolsterWeapon();
+            }
+                
+
+            
         }
 
         private void AddAmmonitions(Item item, int amount)

@@ -64,7 +64,7 @@ namespace HW
             {
                 //Equipment.Instance.Add(item); // We really need some kind of dipatcher
                 //PlayerController.Instance.EquipWeapon(item);
-                ItemDispatcher.Instance.Dispatch(item, count);
+                ItemDispatcher.Dispatch(item, count);
             }
                 
         }

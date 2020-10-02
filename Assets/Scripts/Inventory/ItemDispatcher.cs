@@ -5,23 +5,10 @@ using HW.Collections;
 
 namespace HW
 {
-    public class ItemDispatcher : MonoBehaviour
+    public class ItemDispatcher
     {
-        public static ItemDispatcher Instance { get; private set; }
-
-        private void Awake()
-        {
-            if (!Instance)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
-
-        public void Dispatch(Item item, int count = 1)
+        
+        public static void Dispatch(Item item, int count = 1)
         {
             switch (item.Type)
             {
