@@ -8,6 +8,7 @@ namespace HW
 {
     public class GameManager : MonoBehaviour
     {
+
         int mainSceneIndex = 0;
         int loadingSceneIndex = 1;
         int startingSceneIndex = 2;
