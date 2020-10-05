@@ -23,7 +23,25 @@ namespace HW.Collections
         }
 
         [SerializeField]
+        string _name;
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        [SerializeField]
         string description;
+        public string Description
+        {
+            get { return description; }
+        }
+
+        [SerializeField]
+        Sprite icon;
+        public Sprite Icon
+        {
+            get { return icon; }
+        }
 
         // Start is called before the first frame update
         void Start()

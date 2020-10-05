@@ -30,6 +30,10 @@ namespace HW
 
         [SerializeField]
         Item ammonition;
+        public Item Ammonition
+        {
+            get { return ammonition; }
+        }
 
         //int leftAmmo = 0;
 
@@ -128,25 +132,15 @@ namespace HW
             int count = maxMagazineAmmo - currentMagazineAmmo;
 
             int leftAmmo = Equipment.Instance.GetNumberOfAmmonitions(ammonition);
-            
-            //if(leftAmmo >= count)
-            //{
-            //    //leftAmmo -= count;
-            //    //Equipment.Instance.DecreaseAmmo(ammonition, count);
-            //}
-            //else
-            //{
-            //    count = leftAmmo;
-            //    //leftAmmo = 0;
-            //    //Equipment.Instance.DecreaseAmmo(ammonition, count);
-            //}
-
+           
             if(leftAmmo < count)
                 count = leftAmmo;
 
             Equipment.Instance.RemoveAmmonitions(ammonition, count);
 
             currentMagazineAmmo += count;
+
+            OnReload?.Invoke();
 
             return true;
         }
