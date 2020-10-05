@@ -30,6 +30,12 @@ namespace HW.CutScene
         string dialogCode; // The dialog you want to show
 
         [SerializeField]
+        int dialogStartIndex = 0;
+
+        [SerializeField]
+        int dialogSpeechCount = 0;
+
+        [SerializeField]
         float dialogDelay = 0;
 
         [SerializeField]
@@ -71,6 +77,11 @@ namespace HW.CutScene
             // Timeline
             director = GetComponent<PlayableDirector>();
 
+            // Init dialog
+            if (!"".Equals(dialogCode.Trim()))
+            {
+                currentSpeechId = dialogStartIndex;
+            }
         }
 
         void Start()
@@ -109,10 +120,22 @@ namespace HW.CutScene
                     // Go to next speech or exit on action button pressed
                     if (PlayerController.Instance.GetActionButtonDown())
                     {
-                        if(currentSpeechId < dialog.GetNumberOfSpeeches())
+                        int maxId = dialogStartIndex + dialogSpeechCount;
+                        if (dialogSpeechCount == 0)
+                            maxId = dialog.GetNumberOfSpeeches() - dialogStartIndex;
+
+                        if(currentSpeechId < maxId)
+                        {
+                            Debug.Log("Show next:" + currentSpeechId);
                             ShowNextSpeech(); // Next 
+                        }
                         else
-                            Exit(); // Exit ( no more speeches )
+                        {
+                            Debug.Log("Exit");
+                            //Exit(); // Exit ( no more speeches )
+                            fsm.Lookup();
+                        }
+                            
                         
                     }
                 }
@@ -145,7 +168,8 @@ namespace HW.CutScene
 
         public void Skip()
         {
-            Exit();
+            //Exit();
+            fsm.Lookup();
         }
 
         public bool CanBeSkipped()
@@ -226,8 +250,8 @@ namespace HW.CutScene
 
             CheckPlayerController(onExitPlayerState);
 
-            // Set finite state machine
-            fsm.Lookup();
+            //// Set finite state machine
+            //fsm.Lookup();
         }
 
         IEnumerator CoroutinePlay()
@@ -283,6 +307,7 @@ namespace HW.CutScene
 
         void ShowNextSpeech()
         {
+
             Dialog.Speech speech = dialog.GetSpeech(currentSpeechId);
             DialogViewer.Instance.ShowSpeech(speech.Content, speech.Avatar);
             lastSpeech = DateTime.UtcNow;

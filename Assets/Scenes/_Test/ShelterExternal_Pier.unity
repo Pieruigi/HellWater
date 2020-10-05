@@ -133,6 +133,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6666270541346899261, guid: 53ff6b74914fd6d44a3e948687f0cbee,
+        type: 3}
+      propertyPath: currentStateId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6666270541346899262, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
       propertyPath: m_Enabled
@@ -272,9 +277,43 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 53309364}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b7457be3c1237e448643997754313f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &53309368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53309364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b4f30d14bbc6c7488d85dd3add601dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogCode: 002
+  dialogStartIndex: 0
+  dialogSpeechCount: 0
+  dialogDelay: 0
+  useFade: 0
+  fadeInDelay: 1
+  onEnterPlayerState: 0
+  playOnEnter: 1
+  onExitPlayerState: 0
+  stopOnExit: 0
+--- !u!114 &53309376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53309364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b45fbbec97e79af41a000f2950602c8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &60516681 stripped
@@ -1535,6 +1574,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1291438827, guid: b4c59c3dd4462254888b47c3e0202e8f, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1291438827, guid: b4c59c3dd4462254888b47c3e0202e8f, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 9129620693396536194, guid: b4c59c3dd4462254888b47c3e0202e8f,
         type: 3}
       propertyPath: m_Name

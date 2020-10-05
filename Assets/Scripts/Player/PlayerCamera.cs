@@ -19,13 +19,19 @@ namespace HW
         bool overrideRotX = false;
 
         [SerializeField]
+        float yAngle = -20f;
+
+        [SerializeField]
         Transform target;
 
         [SerializeField]
         float distance = 100;
 
+        //[SerializeField]
         Vector3 eulerAngles;
-        float yAngle = -20f;
+        
+       
+        //Vector3 eulerDefault;
         float xAngle;
 
         GameObject player;
@@ -40,30 +46,7 @@ namespace HW
             {
                 Instance = this;
 
-                eulerAngles = new Vector3(0, yAngle, 0f);
-
-                if (external)
-                    eulerAngles.x = 20f;
-                else
-                {
-                    if (!overrideRotX)
-                        eulerAngles.x = 60f;
-                    else
-                        eulerAngles.x = transform.eulerAngles.x;
-
-                }
-                    
-
-                xAngle = eulerAngles.x;
-
-                //worldDirection = new Vector3(1f, 0f, 1f);
-
-                ComputeOrientationAngle();
-                //ComputeWorldDirection();
-
-
-                transform.eulerAngles = eulerAngles;
-
+                Init();
                 
             }
             else
@@ -86,8 +69,16 @@ namespace HW
             // Follow the player
             transform.position = target.position - transform.forward * distance;
 
+            if (!Application.isPlaying)
+            {
+                Init();
+                //transform.eulerAngles = eulerAngles;
+            }
             
+
         }
+
+      
 
         public Vector3 GetForwardOrientation()
         {
@@ -153,6 +144,33 @@ namespace HW
             }
         }
 
+
+        void Init()
+        {
+            eulerAngles = new Vector3(0, yAngle, 0f);
+
+            if (external)
+                eulerAngles.x = 20f;
+            else
+            {
+                if (!overrideRotX)
+                    eulerAngles.x = 60f;
+                else
+                    eulerAngles.x = transform.eulerAngles.x;
+
+            }
+
+
+            xAngle = eulerAngles.x;
+
+            //worldDirection = new Vector3(1f, 0f, 1f);
+
+            ComputeOrientationAngle();
+            //ComputeWorldDirection();
+
+
+            transform.eulerAngles = eulerAngles;
+        }
         
     }
 

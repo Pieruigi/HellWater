@@ -13,10 +13,15 @@ namespace HW.UI
         Image weaponImage;
 
         [SerializeField]
-        TMPro.TMP_Text ammoCount;
+        TMPro.TMP_Text ammoFireWeaponCount;
+
+        [SerializeField]
+        TMPro.TMP_Text ammoMeleeWeaponInfinite;
 
         Weapon currentWeapon = null;
-        string ammoTextFormat = "{0}/{1}";
+        string ammoFireWeaponTextFormat = "{0}/{1}";
+        //string infiniteChar = "∞";
+
 
         private void Awake()
         {
@@ -62,8 +67,12 @@ namespace HW.UI
                 (currentWeapon as FireWeapon).OnShoot += HandleOnShoot;
                 (currentWeapon as FireWeapon).OnReload += HandleOnReload;
 
-                ammoCount.enabled = true;
+                ammoFireWeaponCount.enabled = true;
                 CountAmmo();
+            }
+            else
+            {
+                ammoMeleeWeaponInfinite.enabled = true;
             }
            
         }
@@ -86,7 +95,7 @@ namespace HW.UI
         void CountAmmo()
         {
             int totalAmmo = Equipment.Instance.GetNumberOfAmmonitions((currentWeapon as FireWeapon).Ammonition);
-            ammoCount.text = string.Format(ammoTextFormat, (currentWeapon as FireWeapon).NumberOfLoadedAmmo, totalAmmo);
+            ammoFireWeaponCount.text = string.Format(ammoFireWeaponTextFormat, (currentWeapon as FireWeapon).NumberOfLoadedAmmo, totalAmmo);
         }
 
        void ResetAll()
@@ -102,7 +111,8 @@ namespace HW.UI
 
             currentWeapon = null;
             weaponImage.enabled = false;
-            ammoCount.enabled = false;
+            ammoFireWeaponCount.enabled = false;
+            ammoMeleeWeaponInfinite.enabled = false;
         }
     }
 
