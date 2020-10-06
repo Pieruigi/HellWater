@@ -230,7 +230,7 @@ namespace HW
 
             if (IsDead())
             {
-                GetComponent<Collider>().enabled = false;
+                //GetComponent<Collider>().enabled = false;
                 OnDead?.Invoke();
             }
 

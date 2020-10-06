@@ -78,6 +78,8 @@ namespace HW
 
         void HandleOnReload()
         {
+            if (IsPlaying(reloadClip))
+                return;
             PlayClip(reloadClip, reloadVolume);
         }
 
@@ -96,6 +98,14 @@ namespace HW
             audioSource.clip = clip;
             audioSource.volume = volume;
             audioSource.Play();
+        }
+
+        bool IsPlaying(AudioClip clip)
+        {
+            if(audioSource.clip == null || audioSource.clip != clip || !audioSource.isPlaying)
+                return false;
+
+            return true;
         }
     }
 

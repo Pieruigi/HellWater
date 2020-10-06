@@ -28,6 +28,11 @@ namespace HW
         //public const string GroundDirt = "Dirt";
     }
 
+    public class Layers
+    {
+        public static readonly string SightOccluder = "SightOccluder";
+        public static readonly string Ground = "Ground";
+    }
 
     public class Constants
     {
@@ -50,8 +55,8 @@ namespace HW
         public static readonly float OrthographicAngle = 60f;
 
         // Layers
-        public static readonly string LayerSightOccluder = "SightOccluder";
-        public static readonly string LayerGround = "Ground";
+        //public static readonly string LayerSightOccluder = "SightOccluder";
+        //public static readonly string LayerGround = "Ground";
 
         // Cache codes
         public static readonly string CacheCodeSceneIndex = "lvl";

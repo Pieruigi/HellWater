@@ -32,7 +32,7 @@ namespace HW
         float shotHearingRange = 8f; // Enemy can hear you if you shoot within this distance ( zero or negative to disable )
         float sqrShotHearingRange;
 
-
+        [Header("Behaviours")]
         [SerializeField]
         MonoBehaviour idleBehaviour;
 
@@ -46,12 +46,17 @@ namespace HW
             get { return speedClass;}
         }
 
+        [Header("Features")]
         [SerializeField]
         bool canNotBePushed = false;
         public bool CanNotBePushed
         {
             get { return canNotBePushed; }
         }
+
+        [SerializeField]
+        float eyesVerticalOffset = 1.75f;
+        
 
         #region FIGHTING
         // The target this enemy is looking for ( can be both the player and any NPC )
@@ -89,7 +94,7 @@ namespace HW
         //GameObject player;
         bool active = false;
         float sightAngle = 30f;
-        
+
 
 
         void Awake()
@@ -106,6 +111,8 @@ namespace HW
            
 
             health = GetComponent<Health>();
+
+            
         }
 
 
@@ -166,7 +173,7 @@ namespace HW
                         }
                         else // Out of the fighting range
                         {
-                            
+
                             // Move to target
                             if(!IsOccluded(PlayerController.Instance.transform))
                                 MoveTo(target.position);
@@ -176,12 +183,21 @@ namespace HW
                     break;
 
                 case State.Alerted:
-                    //if (CheckForEngagement())
-                    //    Engage();
-                    //break;
+                    if (CheckForEngagement())
+                    {
+                        StopCoroutine(DoAlert());
+                        movingAlerted = false;
+                        Engage();
+                    }
+
+                    break;
                 case State.Idle:
                     if (CheckForEngagement())
+                    {
+                        // Engage
                         Engage();
+                    }
+                        
                     break;
 
                 case State.Dead:
@@ -275,6 +291,7 @@ namespace HW
 
         public void MoveTo(Vector3 destination)
         {
+            Debug.Log("Setting destination:" + destination);
             agent.SetDestination(destination);
             hasDestination = true;
         }
@@ -458,6 +475,8 @@ namespace HW
             if ((System.DateTime.UtcNow - lastEngagementCheckTime).TotalSeconds < engagementCheckTimer)
                 return false;
 
+         
+
             // Lets check
             lastEngagementCheckTime = System.DateTime.UtcNow;
 
@@ -465,23 +484,32 @@ namespace HW
             if (state != State.Engaged)
                 return true;
 
+           
+
             // Can't be eangaged by dead enemies
             if (IsDead())
                 return true;
+
+            
 
             // If player is dead disengage
             if (PlayerController.Instance.IsDead())
                 return true;
 
+
+
             // Check the last time the enemy saw you
-            if(IsInFieldView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
+            if (IsInFieldView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
             {
                 lastPlayerOnSight = System.DateTime.UtcNow;
             }
             else
             {
                 if ((System.DateTime.UtcNow - lastPlayerOnSight).TotalSeconds > playerLostMaxTime)
+                {
                     return true;
+                }
+
             }
 
             return false;
@@ -509,20 +537,36 @@ namespace HW
 
         bool IsOccluded(Transform target)
         {
+            // Direction from ai to target ( ex. player )                        
             Vector3 toTarget = target.position - transform.position;
 
-            //int layer = LayerMask.GetMask("SightOccluder");
+            // Avoid ground ( charaters have pivot on feet )
+            int layer = ~LayerMask.GetMask(Layers.Ground);
+
+            // Distance between ai and target
             float distance = toTarget.magnitude;
-            RaycastHit hit;
-            Ray ray = new Ray(transform.position, toTarget.normalized);
-            if (Physics.Raycast(ray, out hit, distance/*, layer*/))
+
+
+            RaycastHit hitInfo;
+            Ray ray = new Ray(transform.position + Vector3.up * eyesVerticalOffset, toTarget.normalized);
+            
+            // Avoid to hit itself
+            GetComponent<Collider>().enabled = false;
+
+            // Cast ray
+            bool hit = Physics.Raycast(ray, out hitInfo, distance, layer);
+
+            // Enable collision back
+            GetComponent<Collider>().enabled = true;
+            
+            // Something has been hit
+            if (hit)
             {
-                if (hit.transform != target)
+                if (hitInfo.transform != target)
                     return true;
             }
 
             return false;
-
         }
 
         // Engages you if you hit something with your melee weapon within a given range ( not engaged if you miss the target )

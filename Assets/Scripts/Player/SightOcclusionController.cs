@@ -49,7 +49,7 @@ namespace HW
             Ray ray = new Ray(transform.position + Vector3.up*coll.height*0.5f, dir.normalized);
 
             // Get mask
-            int mask = LayerMask.GetMask(Constants.LayerSightOccluder);
+            int mask = LayerMask.GetMask(Layers.SightOccluder);
             float radius = 0.275f;
             hits = Physics.SphereCastAll(ray, radius, dir.magnitude, mask);
 
