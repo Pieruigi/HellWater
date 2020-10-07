@@ -33,7 +33,8 @@ namespace HW
             // Init the object depending on the finite state machine
             if (fsm.CurrentStateId == (int)PickableState.Picked)
             {
-                target.SetActive(false);
+                if(target)
+                    target.SetActive(false);
             }
         }
 
@@ -54,10 +55,12 @@ namespace HW
         IEnumerator PickUp()
         {
             // Hide
-            //LeanTween.scale(target, Vector3.zero, time).setEaseInOutBounce();
-            GeneralUtility.ObjectPopOut(target);
-
-            yield return new WaitForSeconds(time * 1.1f);
+            if (target)
+            {
+                GeneralUtility.ObjectPopOut(target);
+                yield return new WaitForSeconds(time * 1.1f);
+            }
+                
 
             //target.SetActive(false);
             if (item)
