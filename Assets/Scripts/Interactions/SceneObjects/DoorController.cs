@@ -47,6 +47,7 @@ namespace HW
             //interactionController.OnStateChange += HandleOnStateChange;
             fsm = GetComponent<FiniteStateMachine>();
             fsm.OnStateChange += HandleOnStateChange;
+            fsm.OnFail += HandleOnFail;
 
             //time = 1f / speed;
          
@@ -62,6 +63,12 @@ namespace HW
         protected virtual void Update()
         {
 
+        }
+
+        void HandleOnFail(FiniteStateMachine fsm)
+        {
+            if(fsm.CurrentStateId == (int)DoorState.Locked)
+                OnStillLocked?.Invoke(this);
         }
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
@@ -102,42 +109,8 @@ namespace HW
 
         }
 
-        //void HandleOnStateChange(int oldState, int newState)
-        //{
-        //    // You are trying to open a locked door
-        //    if (oldState == newState && newState == (int)DoorState.Locked)
-        //    {
-        //        OnStillLocked?.Invoke(this);
-        //        return;
-        //    }
-
-        //    // You unlocked the door
-        //    if(oldState == (int)DoorState.Locked && newState == (int)DoorState.Locked)
-        //    {
-        //        OnUnlock?.Invoke(this);
-        //        return;
-        //    }
-
-        //    // You can open it
-        //    if(newState == (int)DoorState.Unlocked)
-        //    {
-
-        //        if (!opened)
-        //        {
-        //            opened = true;
-        //            Open();
-        //            OnOpen?.Invoke(this);
-        //        }
-        //        else
-        //        {
-        //            opened = false;
-        //            Close();
-        //            OnClose?.Invoke(this);
-        //        }
-
-        //    }
-
-        //}
+      
+       
 
 
     }
