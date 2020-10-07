@@ -22,24 +22,19 @@ namespace HW.UI
         string ammoFireWeaponTextFormat = "{0}/{1}";
         //string infiniteChar = "∞";
 
-
         private void Awake()
         {
             ResetAll();
         }
 
-        // Start is called before the first frame update
-        void Start()
+       
+
+        public void Init()
         {
             PlayerController.Instance.OnSetCurrentWeapon += HandleOnWeaponSet;
             PlayerController.Instance.OnResetCurrentWeapon += HandleOnWeaponReset;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
 
         void HandleOnWeaponSet(Weapon weapon)
         {
