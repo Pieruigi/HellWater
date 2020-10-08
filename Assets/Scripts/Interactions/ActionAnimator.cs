@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HW
 {
-    public enum ActionType { None, PickUp, MakeTheBed, TurnHandle, PickUpFromGround, PutFuel, FillTeapot, UseHammer }
+    public enum ActionType { None, PickUp, MakeTheBed, TurnHandle, PickUpFromGround, PutFuel, FillTeapot, UseHammer, Search }
 
     // Manages character behaviour ( such as animations, object to hold, ecc ) when you perform some actions: for example
     // starts picking animation when you pick up something.
