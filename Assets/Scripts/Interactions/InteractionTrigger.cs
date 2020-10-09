@@ -53,7 +53,13 @@ namespace HW
                     if (!twoWay)
                     {
                         if (Vector3.Dot(transform.forward, PlayerController.Instance.transform.forward) > 0)
-                            canInteract = true;
+                        {
+                            // Player must stay behind the trigger 
+                            Vector3 dir = transform.position - PlayerController.Instance.transform.position;
+                            if(Vector3.Dot(dir, transform.forward) > 0)
+                                canInteract = true;
+                        }
+                            
                     }
                     else // Just look at the center 
                     {

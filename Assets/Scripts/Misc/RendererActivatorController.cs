@@ -10,6 +10,8 @@ namespace HW
         [SerializeField]
         List<RendererActivator> objects;
 
+        bool fadeEnabled = false;
+
         private void Awake()
         {
             Deactivate();  
@@ -18,13 +20,14 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
-
+            
         }
 
         // Update is called once per frame
         void Update()
         {
-
+            if(!fadeEnabled)
+                fadeEnabled = true;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -45,18 +48,41 @@ namespace HW
 
         void Activate()
         {
-            foreach (RendererActivator o in objects)
-            {
-                o.Activate(true);
-            }
+            StartCoroutine(CoroutineActivate());
         }
 
         void Deactivate()
         {
+            StartCoroutine(CoroutineDeactivate());
+        }
+
+        IEnumerator CoroutineActivate()
+        {
+            bool fade = fadeEnabled;
+            if(fade)
+                yield return CameraFader.Instance.FadeOutCoroutine();
+
+            foreach (RendererActivator o in objects)
+            {
+                o.Activate(true);
+            }
+            if (fade)
+                yield return CameraFader.Instance.FadeInCoroutine();
+        }
+
+        IEnumerator CoroutineDeactivate()
+        {
+            bool fade = fadeEnabled;
+
+            if(fade)
+                yield return CameraFader.Instance.FadeOutCoroutine();
             foreach (RendererActivator o in objects)
             {
                 o.Activate(false);
             }
+
+            if(fade)
+                yield return CameraFader.Instance.FadeInCoroutine();
         }
 
     }

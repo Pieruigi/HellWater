@@ -15,6 +15,8 @@ namespace HW
 
         //float time = 0.5f;
 
+        Animator animator;
+
         static CameraFader instance;
         public static CameraFader Instance
         {
@@ -26,7 +28,7 @@ namespace HW
             if(instance == null)
             {
                 instance = this;
-                
+                animator = GetComponent<Animator>();   
             }
             else
             {
@@ -98,12 +100,19 @@ namespace HW
 
         public IEnumerator FadeInCoroutine(float speed, UnityAction callback = null)
         {
+            if (animator)
+                animator.enabled = false;
+
             Color c = Color.black;
             c.a = 0;
             float time = 1f / speed;
             LeanTween.color((RectTransform)image.transform, c, time);
 
             yield return new WaitForSeconds(time);
+
+            if (animator)
+                animator.enabled = true;
+
             callback?.Invoke();
         }
 
@@ -116,12 +125,18 @@ namespace HW
         {
             Debug.Log("FadeOut");
 
+            if (animator)
+                animator.enabled = false;
+
             Color c = Color.black;
             c.a = 1;
             float time = 1f / speed;
             LeanTween.color((RectTransform)image.transform, c, time);
 
             yield return new WaitForSeconds(time);
+
+            if (animator)
+                animator.enabled = true;
             callback?.Invoke();
         }
 
