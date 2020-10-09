@@ -39,6 +39,9 @@ namespace HW.CutScene
         float dialogDelay = 0;
 
         [SerializeField]
+        float directorDelay = 0;
+
+        [SerializeField]
         bool useFade = false;
 
         [SerializeField]
@@ -278,8 +281,7 @@ namespace HW.CutScene
                     yield return new WaitForSeconds(fadeInDelay);
                 
                 // Start director if needed
-                if(director)
-                    director.Play();
+                StartCoroutine(PlayDirector());
                 
                 yield return CameraFader.Instance.FadeInCoroutine();
             }
@@ -290,8 +292,7 @@ namespace HW.CutScene
 
                 CheckPlayerVisibility(onEnterPlayerState);
 
-                if (director)
-                    director.Play();
+                StartCoroutine(PlayDirector());
             }
 
             if (dialogDelay > 0)
@@ -303,6 +304,17 @@ namespace HW.CutScene
             if(dialog)
                 ShowNextSpeech();
                 
+        }
+
+        IEnumerator PlayDirector()
+        {
+            if (!director)
+                yield break;
+
+            if (directorDelay > 0)
+                yield return new WaitForSeconds(directorDelay);
+
+            director.Play();
         }
 
         void ShowNextSpeech()
