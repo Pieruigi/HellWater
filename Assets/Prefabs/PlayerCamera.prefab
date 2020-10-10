@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6824641063492837635}
   - component: {fileID: 6824641063492837632}
   - component: {fileID: 792145852486144304}
-  - component: {fileID: 6824641063492837634}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: MainCamera
@@ -91,20 +90,6 @@ MonoBehaviour:
   cameraOrientation: 0
   external: 0
   overrideRotX: 1
+  yAngle: -20
   target: {fileID: 0}
   distance: 50
---- !u!114 &6824641063492837634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6824641063492837638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdcd06815c47d30489f70df42db56a48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  frustumSettings:
-    baseSettings: {fileID: 11400000, guid: b7328c63c6fa1b04c885dff0ab0a3687, type: 2}
-    qualitySettings: {fileID: 0}
