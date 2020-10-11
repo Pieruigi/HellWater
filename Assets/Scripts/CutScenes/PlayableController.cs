@@ -157,22 +157,24 @@ namespace HW.CutScene
             canSkip = false;
 
             // In case we skip 
-            if (director)
-            {
-                if (director.time < director.duration)
-                    director.time = director.duration;
-            }
+            //if (director)
+            //{
+            //    if (director.time < director.duration)
+            //        director.time = director.duration;
+            //}
 
             StartCoroutine(CoroutineExit());
 
         }
 
-      
-
         public void Skip()
         {
-            //Exit();
-            fsm.Lookup();
+            if (director)
+            {
+                if (director.time < director.duration)
+                    director.time = director.duration;
+            }
+            //fsm.Lookup();
         }
 
         public bool CanBeSkipped()
@@ -253,8 +255,8 @@ namespace HW.CutScene
 
             CheckPlayerController(onExitPlayerState);
 
-            //// Set finite state machine
-            //fsm.Lookup();
+            
+            fsm.ForceState((int)CutSceneState.Played, false, true);
         }
 
         IEnumerator CoroutinePlay()
