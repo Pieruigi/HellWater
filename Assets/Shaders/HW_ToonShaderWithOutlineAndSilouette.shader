@@ -21,7 +21,7 @@ Shader "HW_Shaders/ToonShaderWithOutlineAndSilouette"
 		//TOONY COLORS RAMP
 		[TCP2Header(RAMP SETTINGS)]
 
-		_RampThresholdRGB ("Ramp Threshold (RGB)", Color) = (0.5,0.5,0.5,1)
+		_RampThreshold ("Ramp Threshold", Range(0,1)) = 0.5
 		_RampSmooth ("Ramp Smoothing", Range(0.001,1)) = 0.1
 	[TCP2Separator]
 
@@ -255,7 +255,7 @@ Shader "HW_Shaders/ToonShaderWithOutlineAndSilouette"
 
 		CGPROGRAM
 
-		#pragma surface surf ToonyColorsCustom  exclude_path:deferred exclude_path:prepass
+		#pragma surface surf ToonyColorsCustom fullforwardshadows addshadow exclude_path:deferred exclude_path:prepass
 		#pragma target 3.0
 
 		//================================================================
@@ -283,7 +283,7 @@ Shader "HW_Shaders/ToonShaderWithOutlineAndSilouette"
 		fixed4 _SColor;
 		fixed _HighlightMultiplier;
 		fixed _ShadowMultiplier;
-		float4 _RampThresholdRGB;
+		half _RampThreshold;
 		half _RampSmooth;
 
 		// Instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -323,8 +323,8 @@ Shader "HW_Shaders/ToonShaderWithOutlineAndSilouette"
 			fixed ndl = max(0, dot(IN_NORMAL, lightDir));
 			#define NDL ndl
 
-			#define		RAMP_THRESHOLD	(1-_RampThresholdRGB.rgb)
-			#define		RAMP_SMOOTH		_RampSmooth.xxx
+			#define		RAMP_THRESHOLD	_RampThreshold
+			#define		RAMP_SMOOTH		_RampSmooth
 
 			fixed3 ramp = smoothstep(RAMP_THRESHOLD - RAMP_SMOOTH*0.5, RAMP_THRESHOLD + RAMP_SMOOTH*0.5, NDL);
 		#if !(POINT) && !(SPOT)

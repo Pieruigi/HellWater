@@ -1,7 +1,7 @@
 ﻿// Toony Colors Pro+Mobile 2
 // (c) 2014-2020 Jean Moreno
 
-Shader "HW_Shaders/ToonShaderWithOutline"
+Shader "HW_Shaders/ToonShaderWithOutlineAndDissolveMap"
 {
 	Properties
 	{
@@ -28,6 +28,12 @@ Shader "HW_Shaders/ToonShaderWithOutline"
 	[TCP2HeaderHelp(EMISSION, Emission)]
 		[NoScaleOffset] _EmissionMap ("Emission (RGB)", 2D) = "black" {}
 		[HDR] _EmissionColor ("Emission Color", Color) = (1,1,1,1.0)
+	[TCP2Separator]
+
+	[TCP2HeaderHelp(DISSOLVE)]
+		[NoScaleOffset]
+		_DissolveMap ("Dissolve Map", 2D) = "white" {}
+		_DissolveValue ("Dissolve Value", Range(0,1)) = 0.5
 	[TCP2Separator]
 
 	[TCP2HeaderHelp(OUTLINE, Outline)]
@@ -191,7 +197,7 @@ Shader "HW_Shaders/ToonShaderWithOutline"
 		// OUTLINE INCLUDE END
 		//================================================================
 
-		Tags { "RenderType"="Opaque" }
+		Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
 
 		CGPROGRAM
 
@@ -204,6 +210,8 @@ Shader "HW_Shaders/ToonShaderWithOutline"
 		fixed4 _Color;
 		sampler2D _MainTex;
 		sampler2D _STexture;
+		sampler2D _DissolveMap;
+		half _DissolveValue;
 		half4 _EmissionColor;
 		sampler2D _EmissionMap;
 
@@ -312,6 +320,12 @@ Shader "HW_Shaders/ToonShaderWithOutline"
 			mainTex *= vertexColors;
 			o.Albedo = mainTex.rgb * _Color.rgb;
 			o.Alpha = mainTex.a * _Color.a;
+
+			//Dissolve
+			fixed4 dslv = tex2D(_DissolveMap, IN.UV_MAINTEX.xy);
+			#define DSLV dslv.r
+			float dissValue = _DissolveValue;
+			o.Alpha *= DSLV - dissValue;
 
 			//Emission
 			half3 emissiveColor = half3(1,1,1);
