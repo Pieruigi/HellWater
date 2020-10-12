@@ -21,7 +21,7 @@ namespace HW
 
         public void Activate(bool value)
         {
-            Debug.Log("Activate lights:" + value);
+
             SetVisible(value);
         }
 

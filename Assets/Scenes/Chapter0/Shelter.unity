@@ -221,13 +221,13 @@ PrefabInstance:
     - target: {fileID: 6666270541346899262, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6666270541346899262, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
       propertyPath: fsm
       value: 
-      objectReference: {fileID: 1508507322}
+      objectReference: {fileID: 2047891185}
     - target: {fileID: 6666270541346899262, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
       propertyPath: fromStateId
@@ -256,7 +256,7 @@ PrefabInstance:
     - target: {fileID: 6666270541521683904, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6666270541521683909, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
@@ -1384,12 +1384,14 @@ MonoBehaviour:
   dialogSpeechCount: 0
   dialogDelay: 0
   directorDelay: 0
-  onEnterPlayerState: 0
   playOnEnter: 0
+  onEnterPlayerState: 0
   onExitPlayerState: 0
   hasExitSignal: 0
   keepDialogOnExit: 0
   keepPlayingOnExit: 0
+  onExitFadeOut: 0
+  onExitFadeOutSpeed: 0
 --- !u!320 &812339174
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -1668,7 +1670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &831648875
 Transform:
   m_ObjectHideFlags: 0
@@ -4052,12 +4054,14 @@ MonoBehaviour:
   dialogSpeechCount: 0
   dialogDelay: 0
   directorDelay: 0
-  onEnterPlayerState: 0
   playOnEnter: 1
+  onEnterPlayerState: 0
   onExitPlayerState: 0
   hasExitSignal: 0
   keepDialogOnExit: 0
   keepPlayingOnExit: 0
+  onExitFadeOut: 0
+  onExitFadeOutSpeed: 0
 --- !u!320 &1145988932
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -6508,12 +6512,14 @@ MonoBehaviour:
   dialogSpeechCount: 0
   dialogDelay: 0
   directorDelay: 0
-  onEnterPlayerState: 0
   playOnEnter: 0
+  onEnterPlayerState: 0
   onExitPlayerState: 0
   hasExitSignal: 0
   keepDialogOnExit: 0
   keepPlayingOnExit: 0
+  onExitFadeOut: 0
+  onExitFadeOutSpeed: 0
 --- !u!320 &1376829425
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -6892,12 +6898,14 @@ MonoBehaviour:
   dialogSpeechCount: 0
   dialogDelay: 2
   directorDelay: 0
-  onEnterPlayerState: 0
   playOnEnter: 0
-  onExitPlayerState: 0
+  onEnterPlayerState: 2
+  onExitPlayerState: 1
   hasExitSignal: 1
   keepDialogOnExit: 0
   keepPlayingOnExit: 0
+  onExitFadeOut: 1
+  onExitFadeOutSpeed: 0.5
 --- !u!95 &1508507326
 Animator:
   serializedVersion: 3
@@ -6928,7 +6936,7 @@ PlayableDirector:
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: dc8cdde91f0dec74497dbdfe965eb8bd, type: 2}
   m_InitialState: 0
-  m_WrapMode: 0
+  m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
@@ -6972,6 +6980,8 @@ PlayableDirector:
     value: {fileID: 1877522630}
   - key: {fileID: 3097990813525293610, guid: dc8cdde91f0dec74497dbdfe965eb8bd, type: 2}
     value: {fileID: 1376829420}
+  - key: {fileID: -5213733030272915980, guid: dc8cdde91f0dec74497dbdfe965eb8bd, type: 2}
+    value: {fileID: 2125466024}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &1508507328
@@ -8376,6 +8386,7 @@ GameObject:
   - component: {fileID: 2047891184}
   - component: {fileID: 2047891189}
   - component: {fileID: 2047891190}
+  - component: {fileID: 2047891188}
   m_Layer: 0
   m_Name: LisaWakeUpEnter
   m_TagString: Untagged
@@ -8471,7 +8482,7 @@ PlayableDirector:
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: eb56e9733e5ae084fb24a73d66ec0532, type: 2}
   m_InitialState: 0
-  m_WrapMode: 0
+  m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
@@ -8498,12 +8509,26 @@ MonoBehaviour:
   dialogSpeechCount: 2
   dialogDelay: 3
   directorDelay: 0
-  onEnterPlayerState: 0
   playOnEnter: 0
+  onEnterPlayerState: 0
   onExitPlayerState: 0
   hasExitSignal: 0
   keepDialogOnExit: 1
   keepPlayingOnExit: 0
+  onExitFadeOut: 0
+  onExitFadeOutSpeed: 0
+--- !u!114 &2047891188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047891182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b45fbbec97e79af41a000f2950602c8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2047891189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8833,12 +8858,14 @@ MonoBehaviour:
   dialogSpeechCount: 0
   dialogDelay: 0
   directorDelay: 0
-  onEnterPlayerState: 0
   playOnEnter: 0
+  onEnterPlayerState: 0
   onExitPlayerState: 1
   hasExitSignal: 1
   keepDialogOnExit: 0
   keepPlayingOnExit: 0
+  onExitFadeOut: 1
+  onExitFadeOutSpeed: 0.5
 --- !u!114 &2092188491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8976,7 +9003,7 @@ PlayableDirector:
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 91eab4c64edeb364e85dba241a9d9bdd, type: 2}
   m_InitialState: 0
-  m_WrapMode: 0
+  m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
@@ -9072,12 +9099,14 @@ MonoBehaviour:
   dialogSpeechCount: 0
   dialogDelay: 0
   directorDelay: 0
-  onEnterPlayerState: 0
   playOnEnter: 0
+  onEnterPlayerState: 0
   onExitPlayerState: 0
   hasExitSignal: 0
   keepDialogOnExit: 0
   keepPlayingOnExit: 0
+  onExitFadeOut: 0
+  onExitFadeOutSpeed: 0
 --- !u!114 &2099317542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9278,12 +9307,14 @@ MonoBehaviour:
   dialogSpeechCount: 0
   dialogDelay: 0
   directorDelay: 0
-  onEnterPlayerState: 0
   playOnEnter: 0
+  onEnterPlayerState: 0
   onExitPlayerState: 0
   hasExitSignal: 1
   keepDialogOnExit: 0
   keepPlayingOnExit: 0
+  onExitFadeOut: 0
+  onExitFadeOutSpeed: 0
 --- !u!320 &2105640302
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -12812,12 +12843,14 @@ MonoBehaviour:
   dialogSpeechCount: 0
   dialogDelay: 0
   directorDelay: 0
-  onEnterPlayerState: 0
   playOnEnter: 1
+  onEnterPlayerState: 0
   onExitPlayerState: 0
   hasExitSignal: 1
   keepDialogOnExit: 0
   keepPlayingOnExit: 0
+  onExitFadeOut: 0
+  onExitFadeOutSpeed: 0
 --- !u!1 &2343931745070753655
 GameObject:
   m_ObjectHideFlags: 0
@@ -13031,12 +13064,14 @@ MonoBehaviour:
   dialogSpeechCount: 0
   dialogDelay: 1
   directorDelay: 0
-  onEnterPlayerState: 2
   playOnEnter: 0
+  onEnterPlayerState: 2
   onExitPlayerState: 1
   hasExitSignal: 0
   keepDialogOnExit: 0
   keepPlayingOnExit: 0
+  onExitFadeOut: 0
+  onExitFadeOutSpeed: 0
 --- !u!114 &2358280280128612904
 MonoBehaviour:
   m_ObjectHideFlags: 0

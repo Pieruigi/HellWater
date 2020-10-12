@@ -21,7 +21,7 @@ Shader "HW_Shaders/ToonShaderTransparent"
 		//TOONY COLORS RAMP
 		[TCP2Header(RAMP SETTINGS)]
 
-		_RampThresholdRGB ("Ramp Threshold (RGB)", Color) = (0.5,0.5,0.5,1)
+		_RampThreshold ("Ramp Threshold", Range(0,1)) = 0.5
 		_RampSmooth ("Ramp Smoothing", Range(0.001,1)) = 0.1
 	[TCP2Separator]
 
@@ -51,15 +51,12 @@ Shader "HW_Shaders/ToonShaderTransparent"
 
 		//This property will be ignored and will draw the custom normals GUI instead
 		[TCP2OutlineNormalsGUI] __outline_gui_dummy__ ("_unused_", Float) = 0
-		//Blending
-		[TCP2Header(OUTLINE BLENDING)]
-		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlendOutline ("Blending Source", Float) = 5
-		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlendOutline ("Blending Dest", Float) = 10
 	[TCP2Separator]
 
 	[TCP2HeaderHelp(TRANSPARENCY)]
-		//Alpha Testing
-		_Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
+		//Blending
+		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlendTCP2 ("Blending Source", Float) = 5
+		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlendTCP2 ("Blending Dest", Float) = 10
 	[TCP2Separator]
 
 
@@ -83,9 +80,7 @@ Shader "HW_Shaders/ToonShaderTransparent"
 	#if TCP2_OUTLINE_TEXTURED
 			float3 texcoord : TEXCOORD0;
 	#endif
-		#if TCP2_COLORS_AS_NORMALS
 			float4 color : COLOR;
-		#endif
 	#if TCP2_UV2_AS_NORMALS
 			float2 uv2 : TEXCOORD1;
 	#endif
@@ -116,7 +111,7 @@ Shader "HW_Shaders/ToonShaderTransparent"
 		float _TexLod;
 	#endif
 
-		#define OUTLINE_WIDTH 0.0
+		#define OUTLINE_WIDTH (_Outline * v.color.a)
 
 		v2f TCP2_Outline_Vert(a2v v)
 		{
@@ -129,15 +124,6 @@ Shader "HW_Shaders/ToonShaderTransparent"
 			UNITY_SETUP_INSTANCE_ID(v);
 	#endif
 
-
-			float3 objSpaceLight = mul(unity_WorldToObject, _WorldSpaceLightPos0).xyz;
-	#ifdef TCP2_OUTLINE_CONST_SIZE
-			//Camera-independent outline size
-			float dist = distance(_WorldSpaceCameraPos, mul(unity_ObjectToWorld, v.vertex));
-			v.vertex.xyz += objSpaceLight.xyz * 0.01 * _Outline * dist;
-	#else
-			v.vertex.xyz += objSpaceLight.xyz * 0.01 * _Outline;
-	#endif
 
 	#if TCP2_ZSMOOTH_ON
 			float4 pos = float4(UnityObjectToViewPos(v.vertex), 1.0);
@@ -171,7 +157,13 @@ Shader "HW_Shaders/ToonShaderTransparent"
 			normal.z = -_ZSmooth;
 	#endif
 
-			#define SIZE	0.0
+	#ifdef TCP2_OUTLINE_CONST_SIZE
+			//Camera-independent outline size
+			float dist = distance(_WorldSpaceCameraPos, mul(unity_ObjectToWorld, v.vertex));
+			#define SIZE	dist
+	#else
+			#define SIZE	1.0
+	#endif
 
 	#if TCP2_ZSMOOTH_ON
 			o.pos = mul(UNITY_MATRIX_P, pos + float4(normalize(normal),0) * OUTLINE_WIDTH * 0.01 * SIZE);
@@ -203,11 +195,12 @@ Shader "HW_Shaders/ToonShaderTransparent"
 		// OUTLINE INCLUDE END
 		//================================================================
 
-		Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
+		Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
+		Blend [_SrcBlendTCP2] [_DstBlendTCP2]
 
 		CGPROGRAM
 
-		#pragma surface surf ToonyColorsCustom  exclude_path:deferred exclude_path:prepass
+		#pragma surface surf ToonyColorsCustom fullforwardshadows keepalpha exclude_path:deferred exclude_path:prepass
 		#pragma target 3.0
 
 		//================================================================
@@ -218,7 +211,6 @@ Shader "HW_Shaders/ToonShaderTransparent"
 		sampler2D _STexture;
 		half4 _EmissionColor;
 		sampler2D _EmissionMap;
-		fixed _Cutoff;
 
 		#define UV_MAINTEX uv_MainTex
 
@@ -236,7 +228,7 @@ Shader "HW_Shaders/ToonShaderTransparent"
 		fixed4 _SColor;
 		fixed _HighlightMultiplier;
 		fixed _ShadowMultiplier;
-		float4 _RampThresholdRGB;
+		half _RampThreshold;
 		half _RampSmooth;
 
 		// Instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -276,8 +268,8 @@ Shader "HW_Shaders/ToonShaderTransparent"
 			fixed ndl = max(0, dot(IN_NORMAL, lightDir));
 			#define NDL ndl
 
-			#define		RAMP_THRESHOLD	(1-_RampThresholdRGB.rgb)
-			#define		RAMP_SMOOTH		_RampSmooth.xxx
+			#define		RAMP_THRESHOLD	_RampThreshold
+			#define		RAMP_SMOOTH		_RampSmooth
 
 			fixed3 ramp = smoothstep(RAMP_THRESHOLD - RAMP_SMOOTH*0.5, RAMP_THRESHOLD + RAMP_SMOOTH*0.5, NDL);
 		#if !(POINT) && !(SPOT)
@@ -296,15 +288,19 @@ Shader "HW_Shaders/ToonShaderTransparent"
 			c.rgb += s.Albedo * gi.indirect.diffuse;
 		#endif
 
+		#if defined(UNITY_PASS_FORWARDADD)
+			//multiply RGB with alpha for additive lights for proper transparency behavior
+			c.rgb *= c.a;
+		#endif
+
 			return c;
 		}
 
 		void LightingToonyColorsCustom_GI(inout SurfaceOutputCustom s, UnityGIInput data, inout UnityGI gi)
 		{
-			half colorNoAtten = max(gi.light.color.r, max(gi.light.color.g, gi.light.color.b));
 			gi = UnityGlobalIllumination(data, 1.0, IN_NORMAL);
 
-			s.atten = max(gi.light.color.r, max(gi.light.color.g, gi.light.color.b)) / colorNoAtten;	//try to extract attenuation (shadowmap + shadowmask) for lighting function
+			s.atten = data.atten;	//transfer attenuation to lighting function
 			gi.light.color = _LightColor0.rgb;	//remove attenuation
 		}
 
@@ -326,9 +322,6 @@ Shader "HW_Shaders/ToonShaderTransparent"
 			mainTex *= vertexColors;
 			o.Albedo = mainTex.rgb * _Color.rgb;
 			o.Alpha = mainTex.a * _Color.a;
-	
-			//Cutout (Alpha Testing)
-			clip (o.Alpha - _Cutoff);
 
 			//Emission
 			half3 emissiveColor = half3(1,1,1);
@@ -346,8 +339,7 @@ Shader "HW_Shaders/ToonShaderTransparent"
 			Cull Front
 			Offset [_Offset1],[_Offset2]
 
-			Tags { "LightMode"="ForwardBase" "Queue"="Transparent" "IgnoreProjectors"="True" "RenderType"="Transparent" }
-			Blend [_SrcBlendOutline] [_DstBlendOutline]
+			Tags { "LightMode"="ForwardBase" "IgnoreProjectors"="True" }
 
 			CGPROGRAM
 
@@ -362,6 +354,64 @@ Shader "HW_Shaders/ToonShaderTransparent"
 
 
 			#pragma target 3.0
+
+			ENDCG
+		}
+
+		//Shadow Caster (for shadows and depth texture)
+		Pass
+		{
+			Name "ShadowCaster"
+			Tags { "LightMode" = "ShadowCaster" }
+
+			CGPROGRAM
+
+			#include "UnityCG.cginc"
+			#pragma vertex vertShadowCaster
+			#pragma fragment fragShadowCaster
+			#pragma multi_compile_shadowcaster
+			#pragma multi_compile_instancing
+
+
+			half4		_Color;
+			half		_Cutoff;
+			sampler2D	_MainTex;
+			float4		_MainTex_ST;
+			sampler3D	_DitherMaskLOD;
+
+			struct VertexInput
+			{
+				float4 vertex	: POSITION;
+				float3 normal	: NORMAL;
+				float2 uv0		: TEXCOORD0;
+		#if UNITY_VERSION >= 550
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+		#endif
+			};
+
+			struct VertexOutputShadowCaster
+			{
+				V2F_SHADOW_CASTER_NOPOS
+				float2 tex : TEXCOORD1;
+			};
+
+			void vertShadowCaster(VertexInput v, out VertexOutputShadowCaster o, out float4 opos : SV_POSITION)
+			{
+				
+				TRANSFER_SHADOW_CASTER_NOPOS(o,opos)
+				o.tex = TRANSFORM_TEX(v.uv0, _MainTex);
+			}
+
+			half4 fragShadowCaster(VertexOutputShadowCaster i, UNITY_VPOS_TYPE vpos : VPOS) : SV_Target
+			{
+				half alpha = tex2D(_MainTex, i.tex).a * _Color.a;
+				// Use dither mask for alpha blended shadows, based on pixel position xy
+				// and alpha level. Our dither texture is 4x4x16.
+				half alphaRef = tex3D(_DitherMaskLOD, float3(vpos.xy*0.25,alpha*0.9375)).a;
+				clip (alphaRef - 0.01);
+
+				SHADOW_CASTER_FRAGMENT(i)
+			}
 
 			ENDCG
 		}

@@ -31,7 +31,7 @@ namespace HW.UI
         void Start()
         {
             ActionController[] controllers = GameObject.FindObjectsOfType<ActionController>();
-            Debug.Log("Controllers.Length:" + controllers.Length);
+
             foreach(ActionController controller in controllers)
             {
                 controller.OnActionEnable += HandleOnActionEnable;

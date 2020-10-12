@@ -240,8 +240,6 @@ namespace HW
             if (currentStateId < 0)
                 return false;
 
-            Debug.Log("Lookup " + transform.name);
-
             // Get the first checked transition
             Transition transition = transitions.Find(t => t.FromStateId == currentStateId);
 
@@ -252,8 +250,6 @@ namespace HW
                 OnFail?.Invoke(this);
                 return false;
             }
-
-            Debug.Log("Got transition " + transform.name + " - tag:" + transition.Tag);
 
             if (!transition.Checked())
             {

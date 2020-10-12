@@ -51,10 +51,21 @@ namespace HW.Collections
 
         [SerializeField]
         List<Speech> speeches;
+
+        //int speechCount = -1; // To cache the number of speeches
         
         public int GetNumberOfSpeeches()
         {
-            return speeches.Count;
+            int speechCount = -1;
+
+            if (!useSpeechIndex)
+                speechCount = speeches.Count;
+            else
+                speechCount = speeches.FindAll(s => s.Index >= 0).Count;
+                //Debug.Log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSpeechCount.Set:" + speechCount);
+            
+
+            return speechCount; 
         }
 
         public Speech GetSpeech(int id)

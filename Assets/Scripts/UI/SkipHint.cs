@@ -26,7 +26,7 @@ namespace HW.UI
         {
             // Get all skippers in the scene
             Skipper[] skippers = GameObject.FindObjectsOfType<Skipper>();
-            Debug.Log("Skippers.Count:" + skippers.Length);
+
             // Set handles
             foreach(Skipper skipper in skippers)
             {

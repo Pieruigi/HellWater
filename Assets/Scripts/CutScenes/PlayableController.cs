@@ -49,10 +49,10 @@ namespace HW.CutScene
         //float fadeInDelay = 1f;
 
         [SerializeField]
-        PlayerState onEnterPlayerState = PlayerState.None;
+        bool playOnEnter = false;
 
         [SerializeField]
-        bool playOnEnter = false;
+        PlayerState onEnterPlayerState = PlayerState.None;
 
         [SerializeField]
         PlayerState onExitPlayerState = PlayerState.None;
@@ -69,6 +69,12 @@ namespace HW.CutScene
         [SerializeField]
         bool keepPlayingOnExit = false;
 
+        [SerializeField]
+        bool onExitFadeOut = false; // Set true if you want to fade out on exit
+
+        [SerializeField]
+        float onExitFadeOutSpeed = 0;
+
         // You can use an external timeline ( for example if you want a npc to stay in the same position and animation )
         // or even a custom timeline ( which starts fading out )
         PlayableDirector director; // The timeline you are using... if you are using one
@@ -76,6 +82,7 @@ namespace HW.CutScene
         FiniteStateMachine fsm;
 
         Dialog dialog;
+        bool dialogPlaying = false;
 
         bool playing = false; // True if is playing
         int currentSpeechId = 0; 
@@ -124,8 +131,7 @@ namespace HW.CutScene
                     // Look for the 'Close' marker     
                     if (typeof(SignalEmitter).Equals(marker.GetType()))
                     {
-                        Debug.Log(name + " - marker:" + ((SignalEmitter)markers[i]).asset.name + " time:"+markers[i].time);
-
+                      
                         if ("close".Equals(((SignalEmitter)markers[i]).asset.name.ToLower()))
                         {
                             found = true;
@@ -183,7 +189,7 @@ namespace HW.CutScene
         void Update()
         {
             // Inside loop
-            if (playing && dialog)
+            if (playing && dialogPlaying)
             {
                 // Wait a moment
                 if((DateTime.UtcNow - lastSpeech).TotalSeconds > 0.5f)
@@ -193,9 +199,9 @@ namespace HW.CutScene
                     {
                         int maxId = dialogStartIndex + dialogSpeechCount;
                         if (dialogSpeechCount == 0)
-                            maxId = dialog.GetNumberOfSpeeches() - dialogStartIndex;
+                            maxId = dialog.GetNumberOfSpeeches();
 
-                        if(currentSpeechId < maxId)
+                        if (currentSpeechId < maxId)
                         {
                             Debug.Log("Show next:" + currentSpeechId);
                             ShowNextSpeech(); // Next 
@@ -203,6 +209,7 @@ namespace HW.CutScene
                         else
                         {
                             Debug.Log("Exit");
+                            //dialogPlaying = false;
                             Skip(); // Exit ( no more speeches )
                             //fsm.Lookup();
                         }
@@ -240,13 +247,37 @@ namespace HW.CutScene
             canSkip = false;
             loopDisabled = true;
 
+            // If there is no exit signal then playable should be in loop and exit is called by some other object
+            if(!hasExitSignal)
+                director.Stop();
+
             StartCoroutine(CoroutineExit());
         }
 
         public void Skip()
         {
+            StartCoroutine(CoroutineSkip());
+        }
+
+        IEnumerator CoroutineSkip()
+        {
             canSkip = false;
             loopDisabled = true;
+
+            if (!keepDialogOnExit && dialogPlaying)
+            {
+                dialogPlaying = false;
+                DialogViewer.Instance.Hide();
+            }
+                
+
+            if (onExitFadeOut)
+            {
+                CameraFader.Instance.TryDisableAnimator();
+                yield return CameraFader.Instance.FadeOutCoroutine(onExitFadeOutSpeed);
+                yield return new WaitForSeconds(0.5f);
+                CameraFader.Instance.TryEnableAnimator();
+            }
 
             if (director) // Timeline is playing
             {
@@ -310,11 +341,14 @@ namespace HW.CutScene
             playing = false;
 
             // Hide viewer
-            if(!keepDialogOnExit)
+            if (!keepDialogOnExit && dialogPlaying)
+            {
+                dialogPlaying = false;
                 DialogViewer.Instance.Hide();
+            }
 
-          
-          
+
+
             CheckPlayerVisibility(onExitPlayerState);
             CheckPlayerController(onExitPlayerState);
 
@@ -342,8 +376,12 @@ namespace HW.CutScene
                 yield return new WaitForSeconds(dialogDelay);
 
 
-            if(dialog)
+            if (dialog)
+            {
+                dialogPlaying = true;
                 ShowNextSpeech();
+            }
+                
                 
         }
 
