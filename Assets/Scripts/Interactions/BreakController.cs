@@ -83,8 +83,9 @@ namespace HW
 
             // Since the fader is also used in timelines it has been provided with an animator that must be disabled
             // in order to make manual fade work
-            if (cameraFaderAnimator)
-                cameraFaderAnimator.enabled = false;
+            CameraFader.Instance.TryDisableAnimator();
+            //if (cameraFaderAnimator)
+            //    cameraFaderAnimator.enabled = false;
 
             // Fade out
             yield return CameraFader.Instance.FadeOutCoroutine(fadeSpeed);
@@ -106,8 +107,9 @@ namespace HW
             yield return CameraFader.Instance.FadeInCoroutine(fadeSpeed);
 
             // Enable the animator if needed
-            if (cameraFaderAnimator)
-                cameraFaderAnimator.enabled = true;
+            CameraFader.Instance.TryEnableAnimator();
+            //if (cameraFaderAnimator)
+            //    cameraFaderAnimator.enabled = true;
 
             // Enable player again
             PlayerController.Instance.SetDisabled(false);

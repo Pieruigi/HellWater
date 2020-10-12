@@ -16,7 +16,7 @@ namespace HW
         //float time = 0.5f;
 
         Animator animator;
-        bool animatorForceDisabled = false;
+       
 
         static CameraFader instance;
         public static CameraFader Instance
@@ -37,12 +37,18 @@ namespace HW
             }
         }
 
-        public void ForceAnimatorDisabled(bool value)
-        {
-            animatorForceDisabled = value;
 
-            if (animatorForceDisabled)
+
+        public void TryDisableAnimator()
+        {
+            if (animator)
                 animator.enabled = false;
+        }
+
+        public void TryEnableAnimator()
+        {
+            if (animator)
+                animator.enabled = true;
         }
 
         public void ForceBlackScreen()
@@ -109,8 +115,8 @@ namespace HW
 
         public IEnumerator FadeInCoroutine(float speed, UnityAction callback = null)
         {
-            if (animator)
-                animator.enabled = false;
+            //if (animator)
+            //    animator.enabled = false;
 
             Color c = Color.black;
             c.a = 0;
@@ -119,8 +125,8 @@ namespace HW
 
             yield return new WaitForSeconds(time);
 
-            if (animator && !animatorForceDisabled)
-                animator.enabled = true;
+            //if (animator && !animatorForceDisabled)
+            //    animator.enabled = true;
 
             callback?.Invoke();
         }
@@ -134,8 +140,8 @@ namespace HW
         {
             Debug.Log("FadeOut");
 
-            if (animator)
-                animator.enabled = false;
+            //if (animator)
+            //    animator.enabled = false;
 
             Color c = Color.black;
             c.a = 1;
@@ -144,8 +150,8 @@ namespace HW
 
             yield return new WaitForSeconds(time);
 
-            if (animator && !animatorForceDisabled)
-                animator.enabled = true;
+            //if (animator)
+            //    animator.enabled = true;
             callback?.Invoke();
         }
 

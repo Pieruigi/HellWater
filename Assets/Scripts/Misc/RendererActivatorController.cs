@@ -48,42 +48,59 @@ namespace HW
 
         void Activate()
         {
-            StartCoroutine(CoroutineActivate());
+            StartCoroutine(CoroutineActivate(true));
         }
 
         void Deactivate()
         {
-            StartCoroutine(CoroutineDeactivate());
+            StartCoroutine(CoroutineActivate(false));
         }
 
-        IEnumerator CoroutineActivate()
+        IEnumerator CoroutineActivate(bool value)
         {
             bool fade = fadeEnabled;
-            if(fade)
-                yield return CameraFader.Instance.FadeOutCoroutine();
-
-            foreach (RendererActivator o in objects)
-            {
-                o.Activate(true);
-            }
             if (fade)
-                yield return CameraFader.Instance.FadeInCoroutine();
-        }
-
-        IEnumerator CoroutineDeactivate()
-        {
-            bool fade = fadeEnabled;
-
-            if(fade)
+            {
+                CameraFader.Instance.TryDisableAnimator();
                 yield return CameraFader.Instance.FadeOutCoroutine();
+            }
+                
+
             foreach (RendererActivator o in objects)
             {
-                o.Activate(false);
+                o.Activate(value);
             }
 
-            if(fade)
+            if (fade)
+            {
+                CameraFader.Instance.TryEnableAnimator();
                 yield return CameraFader.Instance.FadeInCoroutine();
+            }
+                
         }
+
+        //IEnumerator CoroutineDeactivate()
+        //{
+        //    bool fade = fadeEnabled;
+
+        //    if (fade)
+        //    {
+        //        CameraFader.Instance.TryDisableAnimator(); 
+        //        yield return CameraFader.Instance.FadeOutCoroutine();
+        //    }
+                
+        //    foreach (RendererActivator o in objects)
+        //    {
+        //        o.Activate(false);
+        //    }
+
+        //    if (fade)
+        //    {
+        //        CameraFader.Instance.TryEnableAnimator();
+        //        yield return CameraFader.Instance.FadeInCoroutine();
+        //    }
+                
+        //}
 
     }
 
