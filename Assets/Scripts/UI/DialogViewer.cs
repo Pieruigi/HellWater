@@ -125,23 +125,24 @@ namespace HW.UI
 
         void SetVisible(bool visible)
         {
-            Color c = Color.white;
+            panel.SetActive(visible);
+            //Color c = Color.white;
            
 
-            if (visible) 
-            {
-                // Set transparent
-                c.a = 0;
-                fadeDir = 1;
-                panel.SetActive(visible);
-            }
-            else
-            {
-                fadeDir = -1;
-            }
+            //if (visible) 
+            //{
+            //    // Set transparent
+            //    c.a = 0;
+            //    fadeDir = 1;
+            //    panel.SetActive(visible);
+            //}
+            //else
+            //{
+            //    fadeDir = -1;
+            //}
 
-            bgImage.color = c;
-            avatarImage.color = c;
+            //bgImage.color = c;
+            //avatarImage.color = c;
         }
 
         bool IsVisible()

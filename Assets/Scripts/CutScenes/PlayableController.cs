@@ -6,6 +6,7 @@ using HW.UI;
 using HW.Interfaces;
 using UnityEngine.Playables;
 using System;
+using UnityEngine.Timeline;
 
 namespace HW.CutScene
 {
@@ -41,11 +42,11 @@ namespace HW.CutScene
         [SerializeField]
         float directorDelay = 0;
 
-        [SerializeField]
-        bool useFade = false;
+        //[SerializeField]
+        //bool useFade = false;
 
-        [SerializeField]
-        float fadeInDelay = 1f;
+        //[SerializeField]
+        //float fadeInDelay = 1f;
 
         [SerializeField]
         PlayerState onEnterPlayerState = PlayerState.None;
@@ -57,7 +58,16 @@ namespace HW.CutScene
         PlayerState onExitPlayerState = PlayerState.None;
 
         [SerializeField]
-        bool stopOnExit = false; // You should set true on loop, otherwise you should leave false
+        bool hasExitSignal = false; // You should set true on loop, otherwise you should leave false
+
+        //[SerializeField]
+        double exitTime = -1f;
+
+        [SerializeField]
+        bool keepDialogOnExit = false; // Do you want the dialog window to stay visible on exit ?
+
+        [SerializeField]
+        bool keepPlayingOnExit = false;
 
         // You can use an external timeline ( for example if you want a npc to stay in the same position and animation )
         // or even a custom timeline ( which starts fading out )
@@ -72,6 +82,11 @@ namespace HW.CutScene
         DateTime lastSpeech;
         bool canSkip = false;
         Animator fadeAnimator; // Animator on fade controller avoid us to fade from this script, so we disable it
+
+        #region LOOP
+        double loopInitialTime;
+        bool loopDisabled = false;
+        #endregion
         protected void Awake()
         {
             fsm = GetComponent<FiniteStateMachine>();
@@ -85,6 +100,59 @@ namespace HW.CutScene
             {
                 currentSpeechId = dialogStartIndex;
             }
+
+            //
+            // Check exit signal
+            //
+
+            if (hasExitSignal)
+            {
+                // Get timeline
+                TimelineAsset timeline = (TimelineAsset)director.playableAsset;
+
+                // Get the track bound to this object which always must be the first ( index 0 is reserved )
+                TrackAsset track = new List<TrackAsset>(timeline.GetRootTracks())[1];
+
+                // Get the marker list
+                List<IMarker> markers = new List<IMarker>(track.GetMarkers());
+              
+                bool found = false;
+                for(int i=0; i<markers.Count && !found; i++)
+                {
+                    IMarker marker = markers[i];
+                    
+                    // Look for the 'Close' marker     
+                    if (typeof(SignalEmitter).Equals(marker.GetType()))
+                    {
+                        Debug.Log(name + " - marker:" + ((SignalEmitter)markers[i]).asset.name + " time:"+markers[i].time);
+
+                        if ("close".Equals(((SignalEmitter)markers[i]).asset.name.ToLower()))
+                        {
+                            found = true;
+                            exitTime = markers[i].time;
+                        }
+                    }
+                }
+
+
+
+            }
+
+
+
+
+
+            //SignalReceiver sr = GetComponent<SignalReceiver>();
+
+            //if (sr)
+            //{
+            //    List<SignalAsset> signals = new List<SignalAsset>(sr.GetRegisteredSignals());
+
+            //    //Debug.Log(name + " - Signalname.Time:" + ((SignalEmitter)signals[0]).time);
+
+            //    sr.GetReaction(signals[0]).Invoke();
+            //}
+
         }
 
         void Start()
@@ -135,8 +203,8 @@ namespace HW.CutScene
                         else
                         {
                             Debug.Log("Exit");
-                            //Exit(); // Exit ( no more speeches )
-                            fsm.Lookup();
+                            Skip(); // Exit ( no more speeches )
+                            //fsm.Lookup();
                         }
                             
                         
@@ -145,9 +213,24 @@ namespace HW.CutScene
             }
         }
 
+        // Call this signal from timeline to set the current time as loop starting time
+        public void InitLoop()
+        {
+            loopInitialTime = director.time;
+        }
+
+        // Call this function
+        public void Loop()
+        {
+           
+            if (!loopDisabled)
+                director.time = loopInitialTime;
+        }
+
         void Play()
         {
             canSkip = false;
+            loopDisabled = false;
             StartCoroutine(CoroutinePlay());
         }
 
@@ -155,32 +238,55 @@ namespace HW.CutScene
         public void Exit()
         {
             canSkip = false;
-
-            // In case we skip 
-            //if (director)
-            //{
-            //    if (director.time < director.duration)
-            //        director.time = director.duration;
-            //}
+            loopDisabled = true;
 
             StartCoroutine(CoroutineExit());
-
         }
 
         public void Skip()
         {
-            if (director)
+            canSkip = false;
+            loopDisabled = true;
+
+            if (director) // Timeline is playing
             {
-                if (director.time < director.duration)
-                    director.time = director.duration;
+                if (!keepPlayingOnExit) // We don't want the timeline to keep playing 
+                {
+                    if (hasExitSignal) // We have an exit signal, so we put the timeline there
+                    {
+                        director.time = exitTime;
+                    }
+                    else // No exit signal, just stop the timeline
+                    {
+                        director.Stop();
+                    }
+                }
             }
-            //fsm.Lookup();
+
+            // Exit 
+            StartCoroutine(CoroutineExit());
         }
 
         public bool CanBeSkipped()
         {
             return canSkip;
         }
+
+        //private bool HasExitSignal()
+        //{
+        //    SignalReceiver sr = GetComponent<SignalReceiver>();
+        //    if (!sr)
+        //        return false;
+
+        //    List<SignalAsset> signals = new List<SignalAsset>(sr.GetRegisteredSignals());
+        //    foreach (SignalAsset signal in signals)
+        //    {
+        //        if ("exit".Equals(signal.name.ToLower()))
+        //            return true;
+        //    }
+
+        //    return false;
+        //}
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
@@ -197,63 +303,22 @@ namespace HW.CutScene
 
         IEnumerator CoroutineExit()
         {
+            if (!playing)
+                yield break;
+
             // No longer playing
             playing = false;
 
             // Hide viewer
-            DialogViewer.Instance.Hide();
+            if(!keepDialogOnExit)
+                DialogViewer.Instance.Hide();
 
-            if (useFade) // Using fade
-            {
-                // Fade out
-                yield return CameraFader.Instance.FadeOutCoroutine();
-
-                CheckPlayerVisibility(onExitPlayerState);
-
-                // Stop director while in black screen
-                if (director)
-                {
-                    if(stopOnExit)
-                        director.Stop();
-                    else
-                    {
-                        if (director.time < director.duration)
-                            director.time = director.duration;
-                    }
-                    
-
-                }
-                    
-                
-                // Have some delay ?
-                if (fadeInDelay > 0)
-                    yield return new WaitForSeconds(fadeInDelay);
-                
-                // Fade in
-                yield return CameraFader.Instance.FadeInCoroutine();
-                
-                // Enable the fade animator 
-                if (fadeAnimator)
-                    fadeAnimator.enabled = true;
-            }
-            else // No fade, just stop the director
-            {
-                CheckPlayerVisibility(onExitPlayerState);
-                if (director)
-                {
-                    if (stopOnExit)
-                        director.Stop();
-                    else
-                    {
-                        if (director.time < director.duration)
-                            director.time = director.duration;
-                    }
-                }
-                
-                
-            }
-
+          
+          
+            CheckPlayerVisibility(onExitPlayerState);
             CheckPlayerController(onExitPlayerState);
+
+           // yield return new WaitForEndOfFrame();
 
             
             fsm.ForceState((int)CutSceneState.Played, false, true);
@@ -261,47 +326,21 @@ namespace HW.CutScene
 
         IEnumerator CoroutinePlay()
         {
+            if (playing)
+                yield break;
+            
+            // We can skip
+            canSkip = true;
+            playing = true;
+
+            CheckPlayerVisibility(onEnterPlayerState);
             CheckPlayerController(onEnterPlayerState);
 
-            // When using a custom timeline we fading in and out
-            if (useFade)
-            {
-                // Animator avoid manual fade to be executed
-                if (fadeAnimator)
-                    fadeAnimator.enabled = false;
-
-                // Start fade out
-                yield return CameraFader.Instance.FadeOutCoroutine();
-
-                // We can skip after fade out
-                canSkip = true;
-
-                CheckPlayerVisibility(onEnterPlayerState); 
-
-                // Some delay?
-                if (fadeInDelay > 0)
-                    yield return new WaitForSeconds(fadeInDelay);
-                
-                // Start director if needed
-                StartCoroutine(PlayDirector());
-                
-                yield return CameraFader.Instance.FadeInCoroutine();
-            }
-            else
-            {
-                // We can skip
-                canSkip = true;
-
-                CheckPlayerVisibility(onEnterPlayerState);
-
-                StartCoroutine(PlayDirector());
-            }
+            StartCoroutine(PlayDirector());
 
             if (dialogDelay > 0)
                 yield return new WaitForSeconds(dialogDelay);
 
-            playing = true;
-            
 
             if(dialog)
                 ShowNextSpeech();
