@@ -321,7 +321,7 @@ namespace HW.CutScene
            // yield return new WaitForEndOfFrame();
 
             
-            fsm.ForceState((int)CutSceneState.Played, false, true);
+            fsm.ForceState((int)CutSceneState.Played, true, true);
         }
 
         IEnumerator CoroutinePlay()
