@@ -16,6 +16,7 @@ namespace HW
         //float time = 0.5f;
 
         Animator animator;
+        bool animatorForceDisabled = false;
 
         static CameraFader instance;
         public static CameraFader Instance
@@ -34,6 +35,14 @@ namespace HW
             {
                 Destroy(gameObject);
             }
+        }
+
+        public void ForceAnimatorDisabled(bool value)
+        {
+            animatorForceDisabled = value;
+
+            if (animatorForceDisabled)
+                animator.enabled = false;
         }
 
         public void ForceBlackScreen()
@@ -110,7 +119,7 @@ namespace HW
 
             yield return new WaitForSeconds(time);
 
-            if (animator)
+            if (animator && !animatorForceDisabled)
                 animator.enabled = true;
 
             callback?.Invoke();
@@ -135,7 +144,7 @@ namespace HW
 
             yield return new WaitForSeconds(time);
 
-            if (animator)
+            if (animator && !animatorForceDisabled)
                 animator.enabled = true;
             callback?.Invoke();
         }

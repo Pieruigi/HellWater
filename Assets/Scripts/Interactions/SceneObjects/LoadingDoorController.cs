@@ -37,9 +37,10 @@ namespace HW
         {
             PlayerController.Instance.SetDisabled(true);
 
-            Animator camAnim = CameraFader.Instance.GetComponent<Animator>();
-            if (camAnim)
-                camAnim.enabled = false;
+            CameraFader.Instance.ForceAnimatorDisabled(true);
+            //Animator camAnim = CameraFader.Instance.GetComponent<Animator>();
+            //if (camAnim)
+            //    camAnim.enabled = false;
 
 
             yield return CameraFader.Instance.FadeOutCoroutine(5);
