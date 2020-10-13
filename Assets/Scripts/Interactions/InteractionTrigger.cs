@@ -64,7 +64,7 @@ namespace HW
                     else // Just look at the center 
                     {
                         Vector3 dir = transform.position - PlayerController.Instance.transform.position;
-                        if (Vector3.Dot(dir, PlayerController.Instance.transform.forward) > 0)
+                        if (Vector3.Dot(dir, PlayerController.Instance.transform.forward) >= 0)
                             canInteract = true;
                     }
 

@@ -15,7 +15,6 @@ namespace HW
     public enum GroundType { Concrete, Grass, Dirt }
 
 
-
     // Tags
     public class Tags
     {

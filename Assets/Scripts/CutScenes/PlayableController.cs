@@ -70,10 +70,10 @@ namespace HW.CutScene
         bool keepPlayingOnExit = false;
 
         [SerializeField]
-        bool onExitFadeOut = false; // Set true if you want to fade out on exit
+        bool onSkipOrDialogCompletedFadeOut = false; // Set true if you want to fade out on exit
 
         [SerializeField]
-        float onExitFadeOutSpeed = 0;
+        float onSkipOrDialogCompletedFadeOutSpeed = 0;
 
         // You can use an external timeline ( for example if you want a npc to stay in the same position and animation )
         // or even a custom timeline ( which starts fading out )
@@ -145,20 +145,6 @@ namespace HW.CutScene
             }
 
 
-
-
-
-            //SignalReceiver sr = GetComponent<SignalReceiver>();
-
-            //if (sr)
-            //{
-            //    List<SignalAsset> signals = new List<SignalAsset>(sr.GetRegisteredSignals());
-
-            //    //Debug.Log(name + " - Signalname.Time:" + ((SignalEmitter)signals[0]).time);
-
-            //    sr.GetReaction(signals[0]).Invoke();
-            //}
-
         }
 
         void Start()
@@ -209,12 +195,8 @@ namespace HW.CutScene
                         else
                         {
                             Debug.Log("Exit");
-                            //dialogPlaying = false;
                             Skip(); // Exit ( no more speeches )
-                            //fsm.Lookup();
                         }
-                            
-                        
                     }
                 }
             }
@@ -241,19 +223,23 @@ namespace HW.CutScene
             StartCoroutine(CoroutinePlay());
         }
 
-
+        // Called by signal 
         public void Exit()
         {
+            if (!playing)
+                return;
+
             canSkip = false;
             loopDisabled = true;
 
             // If there is no exit signal then playable should be in loop and exit is called by some other object
-            if(!hasExitSignal)
-                director.Stop();
+            //if(!hasExitSignal)
+            //    director.Stop();
 
             StartCoroutine(CoroutineExit());
         }
 
+        // Called on skip or when dialog is completed
         public void Skip()
         {
             StartCoroutine(CoroutineSkip());
@@ -261,6 +247,9 @@ namespace HW.CutScene
 
         IEnumerator CoroutineSkip()
         {
+            if (!playing || !canSkip)
+                yield break;
+
             canSkip = false;
             loopDisabled = true;
 
@@ -271,10 +260,10 @@ namespace HW.CutScene
             }
                 
 
-            if (onExitFadeOut)
+            if (onSkipOrDialogCompletedFadeOut)
             {
                 CameraFader.Instance.TryDisableAnimator();
-                yield return CameraFader.Instance.FadeOutCoroutine(onExitFadeOutSpeed);
+                yield return CameraFader.Instance.FadeOutCoroutine(onSkipOrDialogCompletedFadeOutSpeed);
                 yield return new WaitForSeconds(0.5f);
                 CameraFader.Instance.TryEnableAnimator();
             }
@@ -303,22 +292,7 @@ namespace HW.CutScene
             return canSkip;
         }
 
-        //private bool HasExitSignal()
-        //{
-        //    SignalReceiver sr = GetComponent<SignalReceiver>();
-        //    if (!sr)
-        //        return false;
-
-        //    List<SignalAsset> signals = new List<SignalAsset>(sr.GetRegisteredSignals());
-        //    foreach (SignalAsset signal in signals)
-        //    {
-        //        if ("exit".Equals(signal.name.ToLower()))
-        //            return true;
-        //    }
-
-        //    return false;
-        //}
-
+       
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
             if (oldState != fsm.CurrentStateId && fsm.CurrentStateId == (int)CutSceneState.Playing)
@@ -328,7 +302,11 @@ namespace HW.CutScene
             else
             {
                 if (oldState == (int)CutSceneState.Playing && fsm.CurrentStateId == (int)CutSceneState.Played)
+                {
+                    director.Stop();
                     Exit();
+                }
+                    
             }
         }
 
@@ -347,15 +325,13 @@ namespace HW.CutScene
                 DialogViewer.Instance.Hide();
             }
 
-
-
             CheckPlayerVisibility(onExitPlayerState);
             CheckPlayerController(onExitPlayerState);
 
            // yield return new WaitForEndOfFrame();
 
             
-            fsm.ForceState((int)CutSceneState.Played, true, true);
+            fsm.ForceState((int)CutSceneState.Played, false, true);
         }
 
         IEnumerator CoroutinePlay()

@@ -35,11 +35,15 @@ namespace HW
                 Instance = this;
                 source1.volume = 0;
                 source2.volume = 0;
+
+                DontDestroyOnLoad(this.gameObject);
             }
             else
             {
                 Destroy(gameObject);
             }
+
+            
         }
 
         // Start is called before the first frame update
@@ -69,7 +73,7 @@ namespace HW
             }
         }
 
-        // We send the clip to play 
+        // Sets the clip to play 
         public void SwitchAmbientSource(AudioClip clip, float volume, float fade = 1)
         {
             fadeTime = fade;
