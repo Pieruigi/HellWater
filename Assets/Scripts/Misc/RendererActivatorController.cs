@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HW.Interfaces;
 
 namespace HW
 {
@@ -9,6 +10,9 @@ namespace HW
        
         [SerializeField]
         List<RendererActivator> objects;
+
+        [SerializeField]
+        List<GameObject> activables;
 
         bool fadeEnabled = false;
 
@@ -69,6 +73,11 @@ namespace HW
             foreach (RendererActivator o in objects)
             {
                 o.Activate(value);
+            }
+
+            foreach(GameObject o in activables)
+            {
+                o.GetComponent<IActivable>().Activate(value);
             }
 
             if (fade)

@@ -33,12 +33,14 @@ namespace HW
             {
                 MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
                 foreach (MeshRenderer rend in renderers)
-                    rend.enabled = value;
+                        rend.enabled = value;
+                    
             }
             else
             {
                 GetComponent<MeshRenderer>().enabled = value;
             }
+
         }
     }
 
