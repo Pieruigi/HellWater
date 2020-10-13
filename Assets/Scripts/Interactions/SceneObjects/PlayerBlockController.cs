@@ -20,7 +20,7 @@ namespace HW
         private void Awake()
         {
             fsm = GetComponent<FiniteStateMachine>();
-            fsm.OnStateChange = HandleOnStateChange;
+            fsm.OnFail += HandleOnFail;
         }
 
         // Start is called before the first frame update
@@ -35,12 +35,10 @@ namespace HW
 
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnFail(FiniteStateMachine fsm)
         {
-            Debug.Log("AAAAAAAAAAAAAAAAAAA");
-
-            if(fsm.CurrentStateId == 0)// You can't walk through
-                StartCoroutine(CoroutineBlock());
+            // Can't walk through
+            StartCoroutine(CoroutineBlock());
             
         }
 
@@ -62,7 +60,7 @@ namespace HW
             PlayerController.Instance.transform.rotation = target.rotation;
 
             // Fade in
-            yield return CameraFader.Instance.FadeInCoroutine(fadeSpeed);
+            yield return CameraFader.Instance.FadeInCoroutine(fadeSpeed*2f);
             CameraFader.Instance.TryEnableAnimator();
 
             // Enable player controller

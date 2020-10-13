@@ -13,13 +13,13 @@ namespace HW
         [SerializeField]
         int spawnPointIndex; // Where the player must show up in the new scene
 
-        Spawner playerSpawner;
+        //Spawner playerSpawner;
 
         
 
         protected override void Start()
         {
-            playerSpawner = Spawner.GetSpawner(PlayerController.Instance.transform);
+            //playerSpawner = Spawner.GetSpawner(PlayerController.Instance.transform);
             base.Start();
         }
 
@@ -30,25 +30,26 @@ namespace HW
 
         protected override void Open()
         {
-            StartCoroutine(OpenCoroutine());
+            //StartCoroutine(OpenCoroutine());
+            GeneralUtility.LoadScene(this, sceneBuildingIndex, spawnPointIndex);
         }
 
-        IEnumerator OpenCoroutine()
-        {
-            PlayerController.Instance.SetDisabled(true);
+        //IEnumerator OpenCoroutine()
+        //{
+        //    PlayerController.Instance.SetDisabled(true);
 
-            CameraFader.Instance.TryDisableAnimator();
+        //    CameraFader.Instance.TryDisableAnimator();
           
-            yield return CameraFader.Instance.FadeOutCoroutine(5);
+        //    yield return CameraFader.Instance.FadeOutCoroutine(5);
 
-            yield return new WaitForSeconds(1);
+        //    yield return new WaitForSeconds(1);
 
-            playerSpawner.SpawnPointId = spawnPointIndex;
+        //    playerSpawner.SpawnPointId = spawnPointIndex;
 
-            //PlayerController.NewSceneSpawnPointId = spawnPointIndex;
-            CacheManager.Instance.Update();
-            GameManager.Instance.LoadScene(sceneBuildingIndex);
-        }
+        //    //PlayerController.NewSceneSpawnPointId = spawnPointIndex;
+        //    CacheManager.Instance.Update();
+        //    GameManager.Instance.LoadScene(sceneBuildingIndex);
+        //}
     }
 
 }

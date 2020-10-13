@@ -28,6 +28,28 @@ namespace HW
             GameObject.Destroy(obj, 1.1f);
 
         }
+
+        public static void LoadScene(MonoBehaviour caller, int sceneBuildIndex, int spawnPointIndex)
+        {
+            caller.StartCoroutine(CoroutineLoadScene(sceneBuildIndex, spawnPointIndex));
+        }
+
+
+        static IEnumerator CoroutineLoadScene(int sceneBuildIndex, int spawnPointIndex)
+        {
+            PlayerController.Instance.SetDisabled(true);
+
+            CameraFader.Instance.TryDisableAnimator();
+
+            yield return CameraFader.Instance.FadeOutCoroutine(5);
+
+            yield return new WaitForSeconds(0.1f);
+
+            Spawner.GetSpawner(PlayerController.Instance.transform).SpawnPointId = spawnPointIndex;
+
+            HW.CachingSystem.CacheManager.Instance.Update();
+            GameManager.Instance.LoadScene(sceneBuildIndex);
+        }
     }
 
 }

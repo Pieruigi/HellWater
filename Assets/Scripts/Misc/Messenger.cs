@@ -12,6 +12,7 @@ namespace HW
             FiniteStateMachine fsm = GetComponent<FiniteStateMachine>();
             if (fsm)
             {
+               // Debug.Log(name + " - Messengerrrrrrrrrrrrrrrrrrrrrrrrrr");
                 fsm.OnFail += HandleOnFail;
                 fsm.OnStateChange += HandleOnStateChange;
             }
@@ -32,6 +33,7 @@ namespace HW
 
         void HandleOnFail(FiniteStateMachine fsm)
         {
+            Debug.Log("fsm.LastErrorCode:" + fsm.LastExitCode);
             if (fsm.LastExitCode < 0)
                 return;
 
@@ -44,12 +46,13 @@ namespace HW
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
+            Debug.Log("fsm.LastExitCode:" + fsm.LastExitCode);
             if (fsm.LastExitCode < 0)
                 return;
 
             // Get the right message depending on the id and language
             string message = MessageFactory.Instance.GetMessage(fsm.LastExitCode);
-            Debug.Log("fsm.LastExitCode:" + fsm.LastExitCode);
+            
 
             // Show message on screen
             MessageViewer.Instance.ShowMessage(message);
