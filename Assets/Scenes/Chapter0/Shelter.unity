@@ -1301,6 +1301,7 @@ GameObject:
   - component: {fileID: 580516826}
   - component: {fileID: 580516827}
   - component: {fileID: 580516828}
+  - component: {fileID: 580516829}
   m_Layer: 0
   m_Name: CookingMachine
   m_TagString: Untagged
@@ -1317,7 +1318,7 @@ Transform:
   m_GameObject: {fileID: 580516815}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.557, y: 0, z: 6.709}
-  m_LocalScale: {x: 1.0332023, y: 1.0332023, z: 1.0332023}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_Children:
   - {fileID: 840614543}
   m_Father: {fileID: 822884648}
@@ -1539,6 +1540,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a664822f6b8ba74296eace05d153587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &580516829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580516815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9db41f8afdbfe4fa5aeea438ae82f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &649234032 stripped
@@ -16851,7 +16864,7 @@ Transform:
   m_GameObject: {fileID: 7862409801259195505}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.366, y: 0, z: 4.181}
-  m_LocalScale: {x: 1.1205808, y: 1.1205808, z: 1.1205808}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_Children:
   - {fileID: 349024594}
   m_Father: {fileID: 822884648}
@@ -20985,6 +20998,7 @@ GameObject:
   - component: {fileID: 7862409801259195510}
   - component: {fileID: 7862409801259195509}
   - component: {fileID: 7862409801259195512}
+  - component: {fileID: 7862409801259195513}
   m_Layer: 0
   m_Name: PickerTeapot
   m_TagString: Untagged
@@ -21116,6 +21130,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unavailableStates: 00000000
+--- !u!114 &7862409801259195513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7862409801259195505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9db41f8afdbfe4fa5aeea438ae82f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8023308397478009250
 PrefabInstance:
   m_ObjectHideFlags: 0
