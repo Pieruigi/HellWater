@@ -313,6 +313,9 @@ namespace HW
             int oldState = currentStateId;
             currentStateId = stateId;
 
+            // We don't want to send message if we are forcing this fsm
+            lastExitCode = -1;
+
             if (callEvent)
                 OnStateChange?.Invoke(this, oldState);
 

@@ -12,6 +12,10 @@ namespace HW
     // Action to perform depend on the state of the object we are interacting to.
     public class ActionAnimator : MonoBehaviour
     {
+        //[SerializeField]
+        //[Tooltip("The state you want the fsm to be in order to activate this action; leave -1 to set all states.")]
+        //int desiredState = -1;
+
         [SerializeField]
         ActionType actionType = ActionType.None;
 
@@ -20,8 +24,6 @@ namespace HW
 
         [SerializeField]
         GameObject toolPrefab = null;
-
-
        
         [SerializeField]
         //Transform toolParentNode = null;
@@ -35,10 +37,7 @@ namespace HW
 
         [SerializeField]
         Transform target; // If you want the player to stay in a given position
-
-        //[SerializeField]
-        //int state = -1; // The state in which we want this operation to be performed ( -1 means any state )
-               
+       
 
         Animator animator;
 
@@ -107,6 +106,8 @@ namespace HW
         // Also called when holding and repeating
         void HandleOnActionStart(ActionController ctrl)
         {
+
+
             //if (state >= 0 && fsm.CurrentStateId != state)
             //    return;
 
@@ -141,7 +142,7 @@ namespace HW
         // Also called when holding and repeating
         void HandleOnActionStop(ActionController ctrl)
         {
-
+    
             //if (state >= 0 && fsm.CurrentStateId != state)
             //    return;
 
@@ -166,11 +167,12 @@ namespace HW
         // Also used on simple action controller
         void HandleOnActionPerformed(ActionController ctrl)
         {
+
             //if (state >= 0 && fsm.CurrentStateId != state)
             //    return;
 
             // We only use this on simple action controller. For holding and repeating check actionStart and actionStop.
-            if(actionController.GetType() == typeof(ActionController))
+            if (actionController.GetType() == typeof(ActionController))
             {
                 // Set disable, animation must send an ActionCompleted event in order to enable the player again
                 if (disablePlayerOnActionPerformed)
