@@ -191,7 +191,7 @@ PrefabInstance:
     - target: {fileID: 6666270541346899262, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6666270541346899262, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
@@ -226,7 +226,7 @@ PrefabInstance:
     - target: {fileID: 6666270541521683904, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6666270541521683909, guid: 53ff6b74914fd6d44a3e948687f0cbee,
         type: 3}
@@ -381,7 +381,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 822884648}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &86841661
 MonoBehaviour:
@@ -2116,10 +2116,10 @@ Transform:
   - {fileID: 3692779901821737802}
   - {fileID: 1803953520}
   - {fileID: 326854755}
-  - {fileID: 1183220315}
   - {fileID: 1179413320}
   - {fileID: 86841660}
   - {fileID: 965886476}
+  - {fileID: 1159695564}
   - {fileID: 580516816}
   - {fileID: 6252042700652622236}
   m_Father: {fileID: 0}
@@ -4254,7 +4254,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 822884648}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &965886477
 MonoBehaviour:
@@ -4794,6 +4794,67 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1149955825}
   m_Mesh: {fileID: -8116138440861595531, guid: be9b108c9925f8a47a9388be85c17e71, type: 3}
+--- !u!1 &1159695563
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1159695564}
+  - component: {fileID: 1159695566}
+  - component: {fileID: 1159695565}
+  m_Layer: 0
+  m_Name: FakeShelterBlock
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1159695564
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159695563}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 40.68, y: 0, z: 34.02}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 822884648}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1159695565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159695563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69dd1cc459be37541bb99970f61564bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  code: d002
+--- !u!114 &1159695566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159695563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d0132db7448104db3a429b47dd7ae1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  states: []
+  transitions: []
+  currentStateName: Disabled
+  currentStateId: 0
 --- !u!1 &1171405648
 GameObject:
   m_ObjectHideFlags: 0
@@ -4910,7 +4971,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 822884648}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1179413321
 MonoBehaviour:
@@ -4946,82 +5007,6 @@ MonoBehaviour:
     errorCode: -1
   currentStateName: NotReady
   currentStateId: 2
---- !u!1 &1183220312
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1183220315}
-  - component: {fileID: 1183220314}
-  - component: {fileID: 1183220313}
-  m_Layer: 0
-  m_Name: FakeRoadBlock
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1183220313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1183220312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69dd1cc459be37541bb99970f61564bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  code: d001
---- !u!114 &1183220314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1183220312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2d0132db7448104db3a429b47dd7ae1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  states:
-  - name: Mall
-    id: 0
-    othersToSet: []
-    commonStateErrorCode: -1
-    commonStateSucceedCode: -1
-  - name: Drugstore
-    id: 1
-    othersToSet: []
-    commonStateErrorCode: -1
-    commonStateSucceedCode: -1
-  - name: Garage
-    id: 2
-    othersToSet: []
-    commonStateErrorCode: -1
-    commonStateSucceedCode: -1
-  transitions: []
-  currentStateName: Disabled
-  currentStateId: -1
---- !u!4 &1183220315
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1183220312}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.466, y: 0, z: 4.588}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 822884648}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1212045864
 GameObject:
   m_ObjectHideFlags: 0
@@ -10345,13 +10330,13 @@ MonoBehaviour:
     id: 0
     othersToSet:
     - fsm: {fileID: 1908560454}
-      newStateId: 4
-      callEvent: 0
-    - fsm: {fileID: 1183220314}
-      newStateId: 0
+      newStateId: 2
       callEvent: 0
     - fsm: {fileID: 639564447625180847}
       newStateId: 1
+      callEvent: 0
+    - fsm: {fileID: 1159695566}
+      newStateId: -1
       callEvent: 0
     commonStateErrorCode: -1
     commonStateSucceedCode: -1

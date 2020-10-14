@@ -25,6 +25,7 @@ namespace HW
        
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
+            Debug.Log("Handle SaveGame");
             if(fsm.CurrentStateId == stateId && oldState != fsm.CurrentStateId)
             {
                 StartCoroutine(Save());
@@ -33,6 +34,7 @@ namespace HW
 
         IEnumerator Save()
         {
+            Debug.Log("Saving....");
             yield return new WaitForEndOfFrame();
 
             // Set the spawn point

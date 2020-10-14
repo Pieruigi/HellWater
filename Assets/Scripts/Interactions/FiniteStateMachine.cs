@@ -310,6 +310,8 @@ namespace HW
         // common gameplay actions.
         public void ForceState(int stateId, bool callEvent, bool setOthers)
         {
+            Debug.Log(name + " forceState("+stateId+","+callEvent+","+setOthers+")");
+
             int oldState = currentStateId;
             currentStateId = stateId;
 
