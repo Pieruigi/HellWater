@@ -150,12 +150,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 1
---- !u!198 &9123995 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 198460122919131902, guid: 663df327931bb6f49867d419a2d096ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 819847739}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &53309363
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1422,6 +1416,11 @@ MonoBehaviour:
     othersToSet: []
     commonStateErrorCode: -1
     commonStateSucceedCode: -1
+  - name: NoPower
+    id: 2
+    othersToSet: []
+    commonStateErrorCode: 1
+    commonStateSucceedCode: -1
   transitions:
   - tag: Cook
     fromStateId: 1
@@ -1430,8 +1429,8 @@ MonoBehaviour:
     - fsm: {fileID: 1803953522}
       desiredStateId: 0
     errorCode: 19
-  currentStateName: Ready
-  currentStateId: 1
+  currentStateName: NoPower
+  currentStateId: 2
 --- !u!135 &580516823
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1513,8 +1512,7 @@ MonoBehaviour:
   objectsToShow:
   - {fileID: 1035441723}
   objectsToHide: []
-  particlesToPlay:
-  - {fileID: 9123995}
+  particlesToPlay: []
   particlesToStop: []
 --- !u!114 &580516827
 MonoBehaviour:
@@ -1964,6 +1962,10 @@ PrefabInstance:
     - target: {fileID: 1151502900046148, guid: 663df327931bb6f49867d419a2d096ce, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151502900046148, guid: 663df327931bb6f49867d419a2d096ce, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4135970006866112, guid: 663df327931bb6f49867d419a2d096ce, type: 3}
       propertyPath: m_LocalScale.x
