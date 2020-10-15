@@ -7,6 +7,9 @@ namespace HW
 {
     public class Messenger : MonoBehaviour
     {
+        [SerializeField]
+        float delay = 0;
+
         private void Awake()
         {
             FiniteStateMachine fsm = GetComponent<FiniteStateMachine>();
@@ -41,7 +44,8 @@ namespace HW
             string message = MessageFactory.Instance.GetMessage(fsm.LastExitCode);
 
             // Show message on screen
-            MessageViewer.Instance.ShowMessage(message);
+            //MessageViewer.Instance.ShowMessage(message);
+            StartCoroutine(ShowMessage(message, delay));
         }
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
@@ -52,9 +56,18 @@ namespace HW
 
             // Get the right message depending on the id and language
             string message = MessageFactory.Instance.GetMessage(fsm.LastExitCode);
-            
+
 
             // Show message on screen
+            //MessageViewer.Instance.ShowMessage(message);
+            StartCoroutine(ShowMessage(message, delay));
+        }
+
+        IEnumerator ShowMessage(string message, float delay)
+        {
+            if (delay > 0)
+                yield return new WaitForSeconds(delay);
+
             MessageViewer.Instance.ShowMessage(message);
         }
     }
