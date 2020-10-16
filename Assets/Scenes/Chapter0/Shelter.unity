@@ -333,6 +333,67 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3094373657994007181}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &70575022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 70575023}
+  - component: {fileID: 70575025}
+  - component: {fileID: 70575024}
+  m_Layer: 0
+  m_Name: HammeerAndNailsNotReady
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &70575023
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70575022}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 40.68, y: 0, z: 34.02}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 822884648}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &70575024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70575022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69dd1cc459be37541bb99970f61564bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  code: e017
+--- !u!114 &70575025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70575022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d0132db7448104db3a429b47dd7ae1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  states: []
+  transitions: []
+  currentStateName: Disabled
+  currentStateId: 0
 --- !u!1 &83084956 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 94eaa9ca3011baf46aed1db70ed660f6,
@@ -375,7 +436,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 822884648}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &86841661
 MonoBehaviour:
@@ -1213,7 +1274,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 822884648}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!114 &504104550
 MonoBehaviour:
@@ -1531,7 +1592,7 @@ Transform:
   m_Children:
   - {fileID: 840614543}
   m_Father: {fileID: 822884648}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &580516817
 MonoBehaviour:
@@ -3221,7 +3282,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 822884648}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &717312108
 MonoBehaviour:
@@ -3814,6 +3875,7 @@ Transform:
   - {fileID: 1803953520}
   - {fileID: 326854755}
   - {fileID: 1179413320}
+  - {fileID: 70575023}
   - {fileID: 86841660}
   - {fileID: 717312107}
   - {fileID: 965886476}
@@ -5953,7 +6015,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 822884648}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &965886477
 MonoBehaviour:
@@ -5981,14 +6043,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   states: []
-  transitions:
-  - tag: Pick
-    fromStateId: 1
-    toStateId: 0
-    othersToCheck: []
-    errorCode: -1
+  transitions: []
   currentStateName: Disabled
-  currentStateId: -1
+  currentStateId: 1
 --- !u!1001 &1035441722
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6523,7 +6580,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 822884648}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1159695565
 MonoBehaviour:
@@ -6704,8 +6761,8 @@ MonoBehaviour:
     toStateId: 0
     othersToCheck: []
     errorCode: -1
-  currentStateName: NotReady
-  currentStateId: 2
+  currentStateName: Disabled
+  currentStateId: -1
 --- !u!1 &1212045864
 GameObject:
   m_ObjectHideFlags: 0
@@ -9367,6 +9424,9 @@ MonoBehaviour:
       newStateId: 0
       callEvent: 0
     - fsm: {fileID: 717312109}
+      newStateId: -1
+      callEvent: 0
+    - fsm: {fileID: 70575025}
       newStateId: -1
       callEvent: 0
     commonStateErrorCode: -1
@@ -21300,7 +21360,7 @@ Transform:
   m_Children:
   - {fileID: 83084957}
   m_Father: {fileID: 822884648}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!65 &6274551486467195520
 BoxCollider:
