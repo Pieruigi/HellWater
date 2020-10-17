@@ -19,6 +19,7 @@ namespace HW
             get { return language; }
         }
 
+        #region LOADING
         public static GameManager Instance { get; private set; }
 
         bool inGame = false;
@@ -31,9 +32,23 @@ namespace HW
         {
             get { return loading; }
         }
+        #endregion
 
-        
-        
+        #region GAMEPLAY_FlAGS
+        bool cutSceneRunning = false;
+        public bool CutSceneRunning
+        {
+            get { return cutSceneRunning; }
+            set { cutSceneRunning = value; }
+        }
+
+        bool inventoryOpen = false;
+        public bool InventoryOpen
+        {
+            get { return inventoryOpen; }
+            set { inventoryOpen = value; }
+        }
+        #endregion
 
         private void Awake()
         {
@@ -60,6 +75,16 @@ namespace HW
             
         }
 
+        public void Pause()
+        {
+            Time.timeScale = 0f;
+        }
+
+        public void Unpause()
+        {
+            Time.timeScale = 1f;
+        }
+
         public bool IsSaveGameAvailable()
         {
             return CacheManager.Instance.IsSaveGameAvailable();
@@ -72,19 +97,28 @@ namespace HW
 
         public void LoadScene(int index)
         {
+            // Reset all, flags, handles ecc.
+            ResetAll();
+
             SceneLoader.LoadingSceneIndex = index;
             SceneManager.LoadScene(index);
             loading = true;
+
+
         }
 
         // Starts a new game
         public void StartNewGame()
         {
-            //SceneManager.LoadScene(startingSceneIndex);   
+            // Delete cache when a new game is started
             CacheManager.Instance.Delete();
-            SceneLoader.LoadingSceneIndex = startingSceneIndex;
-            SceneManager.LoadScene(loadingSceneIndex);
-            loading = true;
+
+            // Load level
+            LoadScene(startingSceneIndex);
+            
+            //SceneLoader.LoadingSceneIndex = startingSceneIndex;
+            //SceneManager.LoadScene(loadingSceneIndex);
+            //loading = true;
         }
 
         // Load an existing game
@@ -98,12 +132,12 @@ namespace HW
             if(!CacheManager.Instance.TryGetCacheValue(Constants.CacheCodeSceneIndex, out index))
                 throw new System.Exception("Save game must be corrupted: unable to find the scene to load.");
 
-            // Load the last scene
-            //SceneManager.LoadScene(int.Parse(index));
+            // Load the saved level
+            LoadScene(int.Parse(index));
 
-            SceneLoader.LoadingSceneIndex = int.Parse(index);
-            SceneManager.LoadScene(loadingSceneIndex);
-            loading = true;
+            //SceneLoader.LoadingSceneIndex = int.Parse(index);
+            //SceneManager.LoadScene(loadingSceneIndex);
+            //loading = true;
 
         }
 
@@ -111,6 +145,7 @@ namespace HW
         {
             Debug.Log("SceneLoaded:" + scene.buildIndex);
 
+          
             // Skip the loading screen
             if(scene.buildIndex != loadingSceneIndex)
             {
@@ -127,6 +162,12 @@ namespace HW
                     inGame = true;
                 }
             }
+        }
+
+        private void ResetAll()
+        {
+            cutSceneRunning = false;
+            inventoryOpen = false;
         }
     }
 

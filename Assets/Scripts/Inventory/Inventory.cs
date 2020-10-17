@@ -38,6 +38,7 @@ namespace HW
 
         }
 
+        // Adds a new item
         public void Add(Item item)
         {
             // Item must be an object
@@ -52,17 +53,25 @@ namespace HW
             items.Add(item);
         }
 
+        // Removes an existing item
         public void Remove(Item item)
         {
             items.Remove(item);
         }
 
+        // Returns true if the item passed as param exists, otherwise returns false
         public bool Contains(Item item)
         {
             if (item.Type != ItemType.Object)
                 return false;
 
             return items.Contains(item);
+        }
+
+        // Returns the list of item as readeble only
+        public IList<Item> GetItems()
+        {
+            return items.AsReadOnly();
         }
     }
 

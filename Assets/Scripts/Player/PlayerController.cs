@@ -127,6 +127,7 @@ namespace HW
         string shootAxis = "Shoot";
         string actionAxis = "Action";
         string backAxis = "Back";
+        string inventoryAxis = "Inventory"; // Left button
         #endregion
 
         #region MISC FIELDS
@@ -257,6 +258,16 @@ namespace HW
         public bool GetBackButtonUp()
         {
             return GetButtonUp(backAxis);
+        }
+
+        public bool GetInventoryButtonDown()
+        {
+            return GetButtonDown(inventoryAxis);
+        }
+
+        public bool GetInventoryButtonUp()
+        {
+            return GetButtonUp(inventoryAxis);
         }
 
         public bool IsRunning()
