@@ -270,6 +270,11 @@ namespace HW
             return GetButtonUp(inventoryAxis);
         }
 
+        public float GetHorizontalAxisRaw()
+        {
+            return GetAxisRaw(horizontalAxis);
+        }
+
         public bool IsRunning()
         {
             return running;
