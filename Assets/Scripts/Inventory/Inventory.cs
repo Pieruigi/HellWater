@@ -10,8 +10,10 @@ namespace HW
      * */
     public class Inventory : MonoBehaviour
     {
-        // All the items 
-        List<Item> items = new List<Item>();
+        
+        List<Item> items = new List<Item>();// List of items  
+
+      
 
         public static Inventory Instance { get; private set; }
         private void Awake()
