@@ -4,11 +4,16 @@ using UnityEngine;
 using HW.Collections;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Events;
 
 namespace HW.UI
 {
     public class InventoryUI : MonoBehaviour
     {
+        public UnityAction OnOpen;
+        public UnityAction OnClose;
+        public UnityAction<ItemUI> OnSelect;
+
         [SerializeField]
         GameObject panel;
 
@@ -154,7 +159,8 @@ namespace HW.UI
             // Show up the inventory
             LeanTween.moveY((RectTransform)panel.transform, -height, 0.5f).setEaseSpring().setOnComplete(HandleOnComplete);
 
-            
+            // Call event
+            OnOpen?.Invoke();
         }
 
         void Close()
@@ -166,6 +172,9 @@ namespace HW.UI
 
             // Hide the inventory
             LeanTween.moveY((RectTransform)panel.transform, 0, 0.25f).setOnComplete(HandleOnComplete);
+
+            // Call event
+            OnClose?.Invoke();
         }
 
         void HandleOnComplete()
@@ -294,44 +303,17 @@ namespace HW.UI
             selecting = true; // Start moving
 
             lastMove = DateTime.UtcNow;
+
+            // Call event
+            OnSelect?.Invoke(items[selectedId].GetComponent<ItemUI>());
         }
 
         void Select()
         {
-            
-
-            // Movement amount
-            float desiredValue = disp * selectedId;
-
-            // Move the selector
-            if (!scrolling)
-            {
-                    
-                //selecting = false;
-            }
-            else
-            {
-                // Keep trace of the current movement
-                //float t = currDisp / disp;
-
-                //moveSpeed = Mathf.SmoothStep(moveMaxSpeed, 0, t);
-                //scrollRect.velocity = new Vector2(-moveSpeed, 0);
-                //Debug.Log("Velocity:" + scrollRect.velocity);
-
+         
+            if(scrolling)
                 scrollRect.horizontalNormalizedPosition = Mathf.MoveTowards(scrollRect.horizontalNormalizedPosition, scrollValue, scrollSpeed * deltaTime);
-
-                //if(scrollRect.horizontalNormalizedPosition == scrollValue)
-                //{
-                //    Debug.Log("set normalized posizion");
-                //    selecting = false;
-                //}
-                    
-                
-            }
         }
-
-       
-
  
     }
 

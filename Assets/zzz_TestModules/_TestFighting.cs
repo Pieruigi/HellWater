@@ -47,7 +47,7 @@ public class _TestFighting : MonoBehaviour
         //playerController.FireWeapon.Reload();
 
 
-        playerController.HolsterWeapon();
+        //playerController.HolsterWeapon();
 
         
     }

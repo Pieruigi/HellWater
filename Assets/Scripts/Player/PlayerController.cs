@@ -27,6 +27,7 @@ namespace HW
         public UnityAction<Weapon> OnHitSomething; // Called when you hit something with your weapon
         public UnityAction<Weapon, Transform> OnTargeting; // Called everytime you acquire or switch a target ( null means no target )
         public UnityAction OnDead;
+        public UnityAction OnHolsterForced;
 
         #endregion
 
@@ -79,6 +80,7 @@ namespace HW
         bool attackCharged = false;
         bool attackFailed = false;
         bool hit = false;
+        bool holsterForced = false;
 
         // Health 
         Health health;
@@ -298,7 +300,6 @@ namespace HW
         }
 
 
-
         public void SetDisabled(bool value)
         {
            
@@ -310,6 +311,7 @@ namespace HW
             if (value)
                 Reset();
         }
+
         public void SetAiming(bool value)
         {
             aiming = value;
@@ -333,13 +335,25 @@ namespace HW
             }
         }
 
-        public void HolsterWeapon()
+        public void HolsterWeapon(bool forced = false)
         {
+            holsterForced = forced;
             ResetCurrentWeapon();
+        }
+
+        public void ResetHolsterForced()
+        {
+            holsterForced = false;
         }
 
         public void EquipWeapon(Item item)
         {
+            //if (holsterForced)
+            //{
+            //    OnHolsterForced?.Invoke();
+            //    return;
+            //}
+
             if (item.Type != ItemType.Weapon)
                 throw new System.Exception("EquipWeapon() can't be called with param of type " + item.Type + ".");
 
@@ -368,7 +382,7 @@ namespace HW
                     fireWeapon = weapon as FireWeapon;
 
                 // Ok let's see this weapon
-                SetCurrentWeapon(fireWeapon);
+                //SetCurrentWeapon(fireWeapon);
             }
             else // Is melee ( we only have bat )
             {
@@ -377,7 +391,7 @@ namespace HW
                     meleeWeapon = weapon as MeleeWeapon;
 
                 // Ok let's see this weapon
-                SetCurrentWeapon(meleeWeapon);
+                //SetCurrentWeapon(meleeWeapon);
             }
         }
 
@@ -387,8 +401,7 @@ namespace HW
 
         void SetCurrentWeapon(Weapon weapon)
         {
-
-
+            
             currentReleaseWeaponTimer = releaseWeaponTimer;
 
             if (currentWeapon != null && currentWeapon != weapon)
@@ -447,6 +460,8 @@ namespace HW
 
         void CheckIsAiming()
         {
+            
+
             // Aiming only works with fire weapons
             if (!fireWeapon)
             {
@@ -454,8 +469,21 @@ namespace HW
                 return;
             }
 
-            // Check input
-            SetAiming(GetAxisRaw(aimAxis) > 0 ? true : false);
+            bool aim = GetAxisRaw(aimAxis) > 0;
+
+            if (aim)
+            {
+                if (holsterForced)
+                {
+                    OnHolsterForced?.Invoke();
+                    return;    
+                }
+                
+            }
+
+            SetAiming(aim);
+
+
         }
 
         void CheckIsReloading()
@@ -819,20 +847,30 @@ namespace HW
                 // Start charging melee attack
                 if (GetAxisRaw(shootAxis) > 0)
                 {
-                    if (meleeWeapon && !attackFailed)
+
+                    if (holsterForced) // No weapon allowed here
                     {
-                        // Stop moving
-                        desiredVelocity = Vector3.zero;
-
-                        // Get all the targets inside the weapon range which are not hidden by any obstacle
-                        List<Transform> targets = GetAvailableTargets(meleeWeapon.Range * 2f);
-
-                        // Set the target or null
-                        currentTarget = GetClosestTarget(targets);
-
-           
-                        TryChargeAttack();
+                        OnHolsterForced?.Invoke();
+                        
                     }
+                    else // Ok, lets fight
+                    {
+                        if (meleeWeapon && !attackFailed)
+                        {
+                            // Stop moving
+                            desiredVelocity = Vector3.zero;
+
+                            // Get all the targets inside the weapon range which are not hidden by any obstacle
+                            List<Transform> targets = GetAvailableTargets(meleeWeapon.Range * 2f);
+
+                            // Set the target or null
+                            currentTarget = GetClosestTarget(targets);
+
+
+                            TryChargeAttack();
+                        }
+                    }
+                    
 
                 }
 

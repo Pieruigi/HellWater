@@ -117,7 +117,7 @@ namespace HW
             if(weapons.Count < 3)
             {
                 PlayerController.Instance.EquipWeapon(item);
-                PlayerController.Instance.HolsterWeapon();
+                //PlayerController.Instance.HolsterWeapon();
             }
                 
 

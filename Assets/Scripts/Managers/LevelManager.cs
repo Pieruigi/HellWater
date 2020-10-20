@@ -14,6 +14,8 @@ namespace HW
             get { return defaultGroundType; }
         }
 
+        [SerializeField]
+        bool weaponNotAllowed = false; // Can you handle you weapons?
 
         public static LevelManager Instance { get; private set; }
 
@@ -32,7 +34,11 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
-
+            // Force holster if needed
+            if (weaponNotAllowed)
+                PlayerController.Instance.HolsterWeapon(true);
+             
+             
         }
 
         // Update is called once per frame
