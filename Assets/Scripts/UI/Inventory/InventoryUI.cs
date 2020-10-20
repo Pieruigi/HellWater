@@ -220,6 +220,9 @@ namespace HW.UI
             selecting = false;
             firstEmptyIndex = 0;
             sameDirectionCount = 0;
+            scrolling = false;
+            scrollValue = 0;
+            scrollRect.horizontalNormalizedPosition = scrollValue;
         }
 
         void Fill()

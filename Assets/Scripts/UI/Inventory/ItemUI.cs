@@ -33,7 +33,7 @@ namespace HW.UI
         {
             _name.text = "";
             scaleDefault = Vector3.one;
-            
+            transform.localScale = Vector3.zero;
         }
 
         // Start is called before the first frame update

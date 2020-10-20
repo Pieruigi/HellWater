@@ -14,6 +14,7 @@ namespace HW
 
     public enum GroundType { Concrete, Grass, Dirt }
 
+    public enum GameOverType { Death, Capture, Arrest }
 
     // Tags
     public class Tags

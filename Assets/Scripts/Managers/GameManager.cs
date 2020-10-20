@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using HW.CachingSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 namespace HW
 {
     public class GameManager : MonoBehaviour
     {
+        //public UnityAction<int> OnGameOver;
 
         int mainSceneIndex = 0;
         int loadingSceneIndex = 1;
@@ -66,7 +68,7 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
-
+            //PlayerController.Instance.OnDead += HandleOnDead;
         }
 
         // Update is called once per frame
@@ -97,8 +99,8 @@ namespace HW
 
         public void LoadScene(int index)
         {
-            // Reset all, flags, handles ecc.
-            ResetAll();
+            //// Reset all, flags, handles ecc.
+            //ResetAll();
 
             SceneLoader.LoadingSceneIndex = index;
             SceneManager.LoadScene(index);
@@ -115,10 +117,7 @@ namespace HW
 
             // Load level
             LoadScene(startingSceneIndex);
-            
-            //SceneLoader.LoadingSceneIndex = startingSceneIndex;
-            //SceneManager.LoadScene(loadingSceneIndex);
-            //loading = true;
+       
         }
 
         // Load an existing game
@@ -135,17 +134,11 @@ namespace HW
             // Load the saved level
             LoadScene(int.Parse(index));
 
-            //SceneLoader.LoadingSceneIndex = int.Parse(index);
-            //SceneManager.LoadScene(loadingSceneIndex);
-            //loading = true;
-
         }
 
         void HandleOnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            Debug.Log("SceneLoaded:" + scene.buildIndex);
-
-          
+            
             // Skip the loading screen
             if(scene.buildIndex != loadingSceneIndex)
             {
@@ -164,11 +157,27 @@ namespace HW
             }
         }
 
-        private void ResetAll()
-        {
-            cutSceneRunning = false;
-            inventoryOpen = false;
-        }
+        //void HandleOnDead()
+        //{
+        //    StartCoroutine(CoroutineGameOver((int)GameOverType.Death));
+        //}
+
+        //IEnumerator CoroutineGameOver(int gameOverType)
+        //{
+        //    yield return new WaitForSeconds(3f);
+
+        //    OnGameOver?.Invoke(gameOverType);
+
+        //    yield return new WaitForSeconds(5f);
+
+        //    LoadMainMenu();
+        //}
+
+        //private void ResetAll()
+        //{
+        //    cutSceneRunning = false;
+        //    inventoryOpen = false;
+        //}
     }
 
 }
