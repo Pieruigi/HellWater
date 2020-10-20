@@ -8,10 +8,10 @@ namespace HW
 {
     public class InGameTutorialController : MonoBehaviour, IInteractable
     {
-        public UnityAction<int> OnShow;
+        public UnityAction<string> OnShow;
 
         [SerializeField]
-        int tutorialIndex;
+        string tutorialCode;
 
         FiniteStateMachine fsm;
         int stateDisabled = -1;
@@ -49,7 +49,7 @@ namespace HW
         {
             // Since the new state is -1 we are sure the come from the enable state
             //InGameTutorialViewer.Instance.Show(tutorialIndex);
-            OnShow?.Invoke(tutorialIndex);
+            OnShow?.Invoke(tutorialCode);
         }
     }
 

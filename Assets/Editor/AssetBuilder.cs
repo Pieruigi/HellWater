@@ -98,6 +98,26 @@ namespace HW.Editor
             Selection.activeObject = asset;
         }
 
+        [MenuItem("Assets/Create/HW/Tutorial")]
+        public static void CreateTutorial()
+        {
+            Tutorial asset = ScriptableObject.CreateInstance<Tutorial>();
+
+            string name = "tutorial.asset";
+            string folder = "Assets/Resources/" + Tutorial.ResourceFolder + "/";
+
+            if (!System.IO.Directory.Exists(folder))
+                System.IO.Directory.CreateDirectory(folder);
+
+            AssetDatabase.CreateAsset(asset, folder + name);
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+
+            Selection.activeObject = asset;
+        }
+
+
     }
 
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HW.Collections;
+using UnityEngine.UI;
 
 namespace HW.UI
 {
@@ -9,7 +11,14 @@ namespace HW.UI
         [SerializeField]
         GameObject panel;
 
+        [SerializeField]
+        Transform tutorialRoot;
+
         public static InGameTutorialViewer Instance { get; private set; }
+
+        bool open = false;
+
+        GameObject currentTutorial;
 
         private void Awake()
         {
@@ -35,18 +44,43 @@ namespace HW.UI
         // Update is called once per frame
         void Update()
         {
-
+            if (open)
+            {
+                if (PlayerController.Instance.GetActionButtonDown())
+                    Hide();
+            }
         }
 
 
-        void HandleOnShow(int tutorialId)
+        void HandleOnShow(string tutorialCode)
         {
+            // Get the tutorial asset
+            Tutorial tutorial = Tutorial.GetTutorial(tutorialCode);
+            
+            // Freeze game
+            Time.timeScale = 0;
+            open = true;
+
+            // Create object
+            currentTutorial = Instantiate(tutorial.Prefab, tutorialRoot);
+
+            // Set panel active
             panel.SetActive(true);
+
+
         }
 
         public void Hide()
         {
+            // Deactivate panel
             panel.SetActive(false);
+
+            // Remove current tutorial
+            if(currentTutorial)
+                Destroy(currentTutorial.gameObject);
+
+            open = false;
+            Time.timeScale = 1;
         }
     }
 
