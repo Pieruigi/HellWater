@@ -36,13 +36,13 @@ public class _TestFighting : MonoBehaviour
         gun = playerController.GetComponentInChildren<FireWeapon>();
         bat = playerController.GetComponentInChildren<MeleeWeapon>();
 
-        //Equipment.Instance.Add(gunAmmo, 24);
-        //Equipment.Instance.Add(batItem);
-        //Equipment.Instance.Add(gunItem);
+        Equipment.Instance.Add(gunAmmo, 24);
+        Equipment.Instance.Add(batItem);
+        Equipment.Instance.Add(gunItem);
         
 
         playerController.EquipWeapon(batItem);
-        //playerController.EquipWeapon(gunItem);
+        playerController.EquipWeapon(gunItem);
 
         //playerController.FireWeapon.Reload();
 

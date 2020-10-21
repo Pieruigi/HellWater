@@ -31,6 +31,9 @@ namespace HW
         ParticleSystem shootPS;
 
         [SerializeField]
+        GameObject bulletPS;
+
+        [SerializeField]
         Transform shootPoint;
 
         AudioSource audioSource;
@@ -73,6 +76,16 @@ namespace HW
                 //ps.transform.parent = shootPoint;
                 
                 ps.Play();
+
+            }
+
+            if (bulletPS)
+            {
+                GameObject g = Instantiate(bulletPS, shootPoint);
+                g.transform.localPosition = Vector3.zero;
+                g.transform.localEulerAngles = Vector3.zero;
+                g.transform.parent = null;
+                
             }
         }
 
