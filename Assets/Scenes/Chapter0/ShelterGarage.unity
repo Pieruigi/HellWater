@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.103773594, g: 0.103773594, b: 0.07489321, a: 1}
+  m_AmbientSkyColor: {r: 0.21698111, g: 0.14199299, b: 0.056292273, a: 1}
   m_AmbientEquatorColor: {r: 0.5188679, g: 0.43133867, b: 0.2716714, a: 1}
   m_AmbientGroundColor: {r: 0.3679245, g: 0.23776254, b: 0.23776254, a: 1}
   m_AmbientIntensity: 1
@@ -51,7 +51,7 @@ LightmapSettings:
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
+    m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 12
@@ -3076,7 +3076,7 @@ GameObject:
   m_Component:
   - component: {fileID: 476419885}
   m_Layer: 0
-  m_Name: Lighting
+  m_Name: LightingRealtime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5931,10 +5931,10 @@ Light:
     serializedVersion: 2
     m_Bits: 4096
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 3
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -6984,6 +6984,41 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1343860175}
   m_PrefabAsset: {fileID: 0}
+--- !u!84 &1348660361
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 'Spot Light : Cookie Map Render Texture'
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  serializedVersion: 3
+  m_Width: 256
+  m_Height: 256
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthFormat: 0
+  m_ColorFormat: 5
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!1001 &1360697839
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7118,26 +7153,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f01d29d88278f45458d99e6b5199e920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strength: 100
+  strength: 14.9
   useScattering: 0
   overrideScattering: 1
-  overridingScattering: 0.215
+  overridingScattering: 0.071
   scatteringBias: 0
   useColorTemperatureTint: 0
   overrideColor: 0
   overridingColor: {r: 1, g: 1, b: 1, a: 1}
   useShadow: 1
   useCookie: 1
-  cookieMapRenderTexture: {fileID: 1838555936}
+  cookieMapRenderTexture: {fileID: 1348660361}
   enableOutOfPhaseColor: 0
   outOfPhaseColorStrength: 0.1
   outOfPhaseColor: {r: 0, g: 1, b: 1, a: 1}
-  customDistanceFalloffThreshold: 0.163
+  customDistanceFalloffThreshold: 0.54
   customDistanceFalloffPower: 2
   customCookieDistanceFalloffStartThreshold: 0.52286035
   customCookieDistanceFalloffEndThreshold: 0.9114584
   customCookieDistanceFalloffPower: 2
-  customAngularFalloffThreshold: 0.959
+  customAngularFalloffThreshold: 0.574
   customAngularFalloffPower: 2
 --- !u!108 &1365011335
 Light:
@@ -7151,14 +7186,14 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 0.9920593, b: 0.8632076, a: 1}
-  m_Intensity: 4.43
-  m_Range: 5.56
-  m_SpotAngle: 60.8
+  m_Intensity: 5.51
+  m_Range: 4.33
+  m_SpotAngle: 71
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
-    m_Resolution: -1
+    m_Resolution: 3
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.01
@@ -7190,10 +7225,10 @@ Light:
     serializedVersion: 2
     m_Bits: 6967
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -7207,13 +7242,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1365011333}
-  m_LocalRotation: {x: -0, y: 0.9368976, z: -0.34960398, w: 0}
-  m_LocalPosition: {x: -0.29, y: 2.131, z: 2.78}
+  m_LocalRotation: {x: -0, y: 0.973698, z: -0.22784261, w: 0}
+  m_LocalPosition: {x: -0.272, y: 1.704, z: 3.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 476419885}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 40.926003, y: -179.99998, z: 0}
+  m_LocalEulerAnglesHint: {x: 26.340002, y: -179.99998, z: 0}
 --- !u!1001 &1365895900
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8981,41 +9016,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1836127454}
   m_PrefabAsset: {fileID: 0}
---- !u!84 &1838555936
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 'Spot Light : Cookie Map Render Texture'
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  serializedVersion: 3
-  m_Width: 256
-  m_Height: 256
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthFormat: 0
-  m_ColorFormat: 5
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &1887498682
 GameObject:
   m_ObjectHideFlags: 0
@@ -10170,7 +10170,7 @@ Light:
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
-    m_Resolution: -1
+    m_Resolution: 3
     m_CustomResolution: -1
     m_Strength: 0.54
     m_Bias: 0.02
@@ -10202,10 +10202,10 @@ Light:
     serializedVersion: 2
     m_Bits: 3895
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 3
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -10687,6 +10687,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1809940712102174129, guid: ca2f57d822c34874e85eb702f82023b9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2208841138428596447, guid: ca2f57d822c34874e85eb702f82023b9,
         type: 3}
