@@ -22,8 +22,8 @@ namespace HW
         // Update is called once per frame
         void Update()
         {
-            if (!ps.isPlaying)
-                Destroy(gameObject);
+            //if (!ps.isPlaying)
+            //    Destroy(gameObject);
         }
     }
 

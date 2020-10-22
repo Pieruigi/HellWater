@@ -28,10 +28,10 @@ namespace HW
 
         [Header("Particle Systems")]
         [SerializeField]
-        ParticleSystem shootPS;
+        GameObject shootPS;
 
-        [SerializeField]
-        GameObject bulletPS;
+        //[SerializeField]
+        //GameObject bulletPS;
 
         [SerializeField]
         Transform shootPoint;
@@ -69,24 +69,27 @@ namespace HW
             // Play particle system
             if (shootPS)
             {
-                ParticleSystem ps = GameObject.Instantiate(shootPS);
+                GameObject ps = GameObject.Instantiate(shootPS);
                 ps.transform.position = shootPoint.position;
                 ps.transform.rotation = shootPoint.rotation;
-                ps.transform.localScale = shootPoint.localScale;
+                //ps.transform.localScale = shootPoint.localScale;
                 //ps.transform.parent = shootPoint;
-                
-                ps.Play();
+
+                // Play every particle
+                ParticleSystem[] pList = GetComponentsInChildren<ParticleSystem>();
+                foreach(ParticleSystem p in pList)
+                    p.Play();
 
             }
 
-            if (bulletPS)
-            {
-                GameObject g = Instantiate(bulletPS, shootPoint);
-                g.transform.localPosition = Vector3.zero;
-                g.transform.localEulerAngles = Vector3.zero;
-                g.transform.parent = null;
+            //if (bulletPS)
+            //{
+            //    GameObject g = Instantiate(bulletPS, shootPoint);
+            //    g.transform.localPosition = Vector3.zero;
+            //    g.transform.localEulerAngles = Vector3.zero;
+            //    g.transform.parent = null;
                 
-            }
+            //}
         }
 
         void HandleOnReload()

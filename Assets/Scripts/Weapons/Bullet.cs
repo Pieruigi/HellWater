@@ -6,7 +6,7 @@ namespace HW
 {
     public class Bullet : MonoBehaviour
     {
-        float speed = 30f;
+        float speed = 60f;
 
         // Start is called before the first frame update
         void Start()
