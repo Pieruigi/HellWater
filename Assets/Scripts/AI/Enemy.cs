@@ -611,6 +611,8 @@ namespace HW
 
         public void DeadCompleted()
         {
+            fighting = false;
+
             if(GetComponent<Collider>())
                 GetComponent<Collider>().enabled = false;
         }

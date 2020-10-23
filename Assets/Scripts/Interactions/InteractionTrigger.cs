@@ -95,8 +95,8 @@ namespace HW
             {
                 inside = true;
              
-
-                actionController.DisableAction();
+                if(actionController)
+                    actionController.DisableAction();
 
                 // Remove weapons
                 PlayerController.Instance.HolsterWeapon();
@@ -108,8 +108,9 @@ namespace HW
             if (other.tag == Tags.Player)
             {
                 inside = false;
-               
-                actionController.DisableAction();
+
+                if (actionController)
+                    actionController.DisableAction();
             }
         }
 
@@ -117,7 +118,9 @@ namespace HW
         {
             
             interactable.Interact();
-            actionController.DisableAction();
+
+            if (actionController)
+                actionController.DisableAction();
         }
 
     }

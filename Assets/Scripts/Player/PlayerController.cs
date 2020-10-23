@@ -536,6 +536,9 @@ namespace HW
                 // Set reloading
                 reloading = true;
 
+                // Set aiming false to fix transition issues
+                SetAiming(false);
+
                 // Event on player
                 OnReload?.Invoke();
 
@@ -794,11 +797,12 @@ namespace HW
             // Switch fire weapon
             //CheckIsSwitchingWeapon();
 
-            // Check if equipped fire weapon must be reloaded
-            CheckIsReloading();
-
             // Check if player is aiming
             CheckIsAiming();
+
+            // Check if equipped fire weapon must be reloaded
+            CheckIsReloading();
+                      
             
             if (!aiming)
             {
