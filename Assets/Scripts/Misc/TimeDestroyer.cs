@@ -4,14 +4,10 @@ using UnityEngine;
 
 namespace HW
 {
-    public class ParticleDestroyer : MonoBehaviour
+    public class TimeDestroyer : MonoBehaviour
     {
-        ParticleSystem ps;
-
-        private void Awake()
-        {
-            ps = GetComponent<ParticleSystem>();
-        }
+        [SerializeField]
+        float time = 1;
 
         // Start is called before the first frame update
         void Start()
@@ -22,8 +18,14 @@ namespace HW
         // Update is called once per frame
         void Update()
         {
-            if (!ps.isPlaying)
-                Destroy(gameObject);
+
+        }
+
+        IEnumerator CoroutineDestroy()
+        {
+            yield return new WaitForSeconds(time);
+
+            Destroy(gameObject);
         }
     }
 
