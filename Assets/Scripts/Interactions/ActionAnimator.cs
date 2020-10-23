@@ -24,7 +24,10 @@ namespace HW
         ActionType actionType = ActionType.None;
 
         [SerializeField]
-        float loopTime = 0;
+        bool loop = false;
+
+        [SerializeField]
+        float length = 0;
 
         [SerializeField]
         bool disablePlayerOnActionPerformed = false;
@@ -145,21 +148,20 @@ namespace HW
 
                 animator.SetInteger(paramActionId, (int)actionType);
                     
-                if(loopTime > 0)
+                if(loop)
                 {
                     // Start loop
                     animator.SetBool(paramActing, true);
-
-                    // Launch the coroutine to end loop
-                    StartCoroutine(CoroutineActing());
                 }
 
                 else
                 {
                     animator.SetTrigger(paramDoAction);
                 }
-                    
 
+                // If length is >0 the start coroutine
+                if (length > 0)
+                    StartCoroutine(CoroutineActing());
             }
 
             // Move player to the desired position
@@ -182,8 +184,10 @@ namespace HW
             //yield return new WaitForEndOfFrame();
             interactionController.ForceDisabled(true);
 
-            yield return new WaitForSeconds(loopTime);
-            animator.SetBool(paramActing, false);
+            yield return new WaitForSeconds(length);
+
+            if(loop)
+                animator.SetBool(paramActing, false);
 
             // Remove tool if needed
             if (tool)
