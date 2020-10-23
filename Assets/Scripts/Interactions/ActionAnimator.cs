@@ -12,12 +12,19 @@ namespace HW
     // Action to perform depend on the state of the object we are interacting to.
     public class ActionAnimator : MonoBehaviour
     {
-        //[SerializeField]
-        //[Tooltip("The state you want the fsm to be in order to activate this action; leave -1 to set all states.")]
-        //int desiredState = -1;
+        [SerializeField]
+        [Tooltip("The state you want the fsm to be in order to activate this action; leave -1 to set all states.")]
+        int desiredState = -1;
+
+        [SerializeField]
+        [Tooltip("The old state you want the fsm in order to activate this action; leave -1 to set all states.")]
+        int desiredOldState = -1;
 
         [SerializeField]
         ActionType actionType = ActionType.None;
+
+        [SerializeField]
+        float loopTime = 0;
 
         [SerializeField]
         bool disablePlayerOnActionPerformed = false;
@@ -60,16 +67,20 @@ namespace HW
         GameObject tool;
 
         Transform playerNode;
+        InteractionController interactionController;
+        int oldState = -1;
+        
 
         private void Awake()
         {
             actionController = GetComponentInParent<ActionController>();
 
             actionController.OnActionPerformed += HandleOnActionPerformed;
-            actionController.OnActionStart += HandleOnActionStart;
-            actionController.OnActionStop += HandleOnActionStop;
-
+ 
             fsm = GetComponentInParent<FiniteStateMachine>();
+            fsm.OnStateChange += HandleOnStateChange;
+          
+            interactionController = GetComponent<InteractionController>();
         }
 
         // Start is called before the first frame update
@@ -101,34 +112,55 @@ namespace HW
                 move = false;
         }
 
-     
-
-        // Also called when holding and repeating
-        void HandleOnActionStart(ActionController ctrl)
+       void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
+            this.oldState = oldState;
+        }
 
+        IEnumerator CoroutineHandleOnActionPerformed(ActionController ctrl)
+        {
+            yield return new WaitForEndOfFrame();
 
-            //if (state >= 0 && fsm.CurrentStateId != state)
-            //    return;
+            if (desiredState >= 0 && fsm.CurrentStateId != desiredState)
+                yield break;
 
-            PlayerController.Instance.SetDisabled(true);
+            if (desiredOldState >= 0 && desiredOldState != oldState)
+                yield break;
 
-            // Create tool if needed
-            if (toolPrefab)
-            {
-                tool = GeneralUtility.ObjectPopIn(toolPrefab, playerNode, toolPosition, toolRotation, Vector3.one);
-            }
+            Debug.Log("ActionPerformed:" + fsm.CurrentStateId);
+            // Set disable, animation must send an ActionCompleted event in order to enable the player again
+            if (disablePlayerOnActionPerformed)
+                PlayerController.Instance.SetDisabled(true);
 
-            // Reset the param action performed to avoid keeping an old value
-            animator.SetBool(paramActionPerformed, false);
+            
 
+            // Start animation
             if (actionType != ActionType.None)
             {
-                // We don't use trigger but only action id
+                // Create tool if needed
+                if (toolPrefab)
+                {
+                    tool = GeneralUtility.ObjectPopIn(toolPrefab, playerNode, toolPosition, toolRotation, Vector3.one);
+                }
+
                 animator.SetInteger(paramActionId, (int)actionType);
-                animator.SetBool(paramActing, true);
+                    
+                if(loopTime > 0)
+                {
+                    // Start loop
+                    animator.SetBool(paramActing, true);
+
+                    // Launch the coroutine to end loop
+                    StartCoroutine(CoroutineActing());
+                }
+
+                else
+                {
+                    animator.SetTrigger(paramDoAction);
+                }
+                    
+
             }
-            
 
             // Move player to the desired position
             if (target)
@@ -136,76 +168,34 @@ namespace HW
                 move = true;
                 lastMove = System.DateTime.UtcNow;
             }
-                
+        
+
         }
 
-        // Also called when holding and repeating
-        void HandleOnActionStop(ActionController ctrl)
+        void HandleOnActionPerformed(ActionController controller)
         {
-    
-            //if (state >= 0 && fsm.CurrentStateId != state)
-            //    return;
+            StartCoroutine(CoroutineHandleOnActionPerformed(controller));
+        }
 
-            PlayerController.Instance.SetDisabled(false);
+        IEnumerator CoroutineActing()
+        {
+            //yield return new WaitForEndOfFrame();
+            interactionController.ForceDisabled(true);
+
+            yield return new WaitForSeconds(loopTime);
+            animator.SetBool(paramActing, false);
 
             // Remove tool if needed
             if (tool)
                 GeneralUtility.ObjectPopOut(tool);
 
-            // We don't use trigger but only action id
-            if (actionType != ActionType.None)
-                animator.SetBool(paramActing, false);
+            if (disablePlayerOnActionPerformed)
+                    PlayerController.Instance.SetDisabled(false);
 
-            // Move player to the desired position
-            if (target)
-            {
-                move = false;
-            }
-                
+            yield return new WaitForSeconds(Constants.InteractionCooldownTime);
+            interactionController.ForceDisabled(false);
         }
 
-        // Also used on simple action controller
-        void HandleOnActionPerformed(ActionController ctrl)
-        {
-
-            //if (state >= 0 && fsm.CurrentStateId != state)
-            //    return;
-
-            // We only use this on simple action controller. For holding and repeating check actionStart and actionStop.
-            if (actionController.GetType() == typeof(ActionController))
-            {
-                // Set disable, animation must send an ActionCompleted event in order to enable the player again
-                if (disablePlayerOnActionPerformed)
-                    PlayerController.Instance.SetDisabled(true);
-
-                // Start animation
-                if (actionType != ActionType.None)
-                {
-                    animator.SetInteger(paramActionId, (int)actionType);
-                    animator.SetTrigger(paramDoAction);
-                }
-
-                // Move player to the desired position
-                if (target)
-                {
-                    move = true;
-                    lastMove = System.DateTime.UtcNow;
-                }
-            }
-            else
-            {
-                // Set disable, animation must send an ActionCompleted event in order to enable the player again
-                if(disablePlayerOnActionPerformed)
-                    PlayerController.Instance.SetDisabled(true);
-
-                // Start animation
-                if (actionType != ActionType.None)
-                {
-                    animator.SetBool(paramActionPerformed, true);
-                    
-                }
-            }
-        }
     }
 
 }

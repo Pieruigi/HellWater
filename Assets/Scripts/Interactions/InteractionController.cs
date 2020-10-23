@@ -25,7 +25,6 @@ namespace HW
         private void Awake()
         {
             fsm = GetComponent<FiniteStateMachine>();
-            //fsm.OnStateChange += HandleOnStateChange;
         }
 
         // Start is called before the first frame update
@@ -73,10 +72,6 @@ namespace HW
             return true;
         }
 
-        //void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
-        //{
-        //    OnStateChange?.Invoke(oldState, fsm.CurrentStateId);
-        //}
     }
 
 }

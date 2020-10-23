@@ -18,25 +18,22 @@ namespace HW
         [SerializeField]
         ActionController actionController;
 
-        bool inside;
+        bool inside = false;
 
         IInteractable interactable;
-
-        //GameObject player;
-
-        //PlayerController playerController;
 
         private void Awake()
         {
             interactable = interactableObject.GetComponent<IInteractable>();
-            
+
+            if(actionController)
+                actionController.OnActionPerformed += HandleOnActionPerformed;
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            //player = GameObject.FindGameObjectWithTag(Tags.Player);
-            //playerController = player.GetComponent<PlayerController>();
+        
         }
 
         // Update is called once per frame
@@ -75,18 +72,18 @@ namespace HW
                         {
                             interactable.Interact();
                         }
-                        else // We need to play a little
-                        {
-                            if(!actionController.ActionEnable)
-                                StartActing();
-                        }
-
+                   
                     }
-                    else
+                   
+                    // Try to enable or disable action controller
+                    if (actionController)
                     {
-                        if(actionController && actionController.ActionEnable)
-                            StopActing();
-                    }    
+                        if (canInteract)
+                            actionController.EnableAction();
+                        else
+                            actionController.DisableAction();
+                    }
+                    
                 }
                    
             }
@@ -97,6 +94,9 @@ namespace HW
             if(other.tag == Tags.Player)
             {
                 inside = true;
+             
+
+                actionController.DisableAction();
 
                 // Remove weapons
                 PlayerController.Instance.HolsterWeapon();
@@ -108,28 +108,16 @@ namespace HW
             if (other.tag == Tags.Player)
             {
                 inside = false;
-                
-                if(actionController && actionController.ActionEnable)
-                    StopActing();
+               
+                actionController.DisableAction();
             }
         }
 
         void HandleOnActionPerformed(ActionController controller)
         {
+            
             interactable.Interact();
-            StopActing();
-        }
-
-        void StartActing()
-        {
-            actionController.OnActionPerformed += HandleOnActionPerformed;
-            actionController.EnableAction();
-        }
-
-        void StopActing()
-        {
             actionController.DisableAction();
-            actionController.OnActionPerformed -= HandleOnActionPerformed;
         }
 
     }

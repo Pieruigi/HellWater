@@ -32,11 +32,11 @@ namespace HW
         private void Awake()
         {
             fsm.OnStateChange += HandleOnStateChange;
-            actionController.OnActionStart += HandleOnActionStart;
-            actionController.OnActionStop += HandleOnActionStop;
+            actionController.OnActionPerformed += HandleOnActionPerformed;
+            //actionController.OnActionStop += HandleOnActionStop;
 
-            tankActionController.OnActionStart += HandleOnActionStart;
-            tankActionController.OnActionStop += HandleOnActionStop;
+            //tankActionController.OnActionStart += HandleOnActionStart;
+            //tankActionController.OnActionStop += HandleOnActionStop;
 
         }
 
@@ -65,6 +65,19 @@ namespace HW
            
         }
 
+        void HandleOnActionPerformed(ActionController ctrl)
+        {
+            if(ctrl == actionController)
+            {
+                startingAudioSource.Play();
+            }
+            
+            if(ctrl == tankActionController)
+            {
+                tankAudioSource.PlayDelayed(0.5f);
+            }
+        }
+
         void StartFX()
         {
             // Play particle system
@@ -74,22 +87,22 @@ namespace HW
             workingAudioSource.Play();
         }
 
-        void HandleOnActionStart(ActionController ctrl)
-        {
-            if (ctrl == actionController)
-                startingAudioSource.Play();
-            else
-                tankAudioSource.PlayDelayed(0.5f);
+        //void HandleOnActionStart(ActionController ctrl)
+        //{
+        //    if (ctrl == actionController)
+        //        startingAudioSource.Play();
+        //    else
+        //        tankAudioSource.PlayDelayed(0.5f);
 
-        }
+        //}
 
-        void HandleOnActionStop(ActionController ctrl)
-        {
-            if (ctrl == actionController)
-                startingAudioSource.Stop();
-            else
-                tankAudioSource.Stop();
-        }
+        //void HandleOnActionStop(ActionController ctrl)
+        //{
+        //    if (ctrl == actionController)
+        //        startingAudioSource.Stop();
+        //    else
+        //        tankAudioSource.Stop();
+        //}
 
     }
 

@@ -14,6 +14,9 @@ namespace HW
         [SerializeField]
         int desiredStateId = -1; // The state you want to be processed
 
+        [SerializeField]
+        float delay = 0;
+
         [Header("Fade Section")]
         [SerializeField]
         float fadeSpeed = 1f;
@@ -78,6 +81,9 @@ namespace HW
 
         IEnumerator CoroutineBreak()
         {
+            if (delay > 0)
+                yield return new WaitForSeconds(delay);
+
             // Stop player
             PlayerController.Instance.SetDisabled(true);
 

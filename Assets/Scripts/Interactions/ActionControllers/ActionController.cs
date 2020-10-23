@@ -35,8 +35,6 @@ namespace HW
             if (!actionEnable)
                 return;
 
-            //if (PerformAction())
-            //    OnActionPerformed?.Invoke(this);
             PerformAction();
         }
 
@@ -56,7 +54,6 @@ namespace HW
         {
             if (PlayerController.Instance.GetActionButtonDown())
                 OnActionPerformed?.Invoke(this);
-
             
         }
 
