@@ -1,7 +1,7 @@
 ﻿// Toony Colors Pro+Mobile 2
 // (c) 2014-2020 Jean Moreno
 
-Shader "HW_Shaders/ToonShaderWithOutlineAmbient"
+Shader "HW_Shaders/ToonShaderWithOutlineAndDissolveMap"
 {
 	Properties
 	{
@@ -21,13 +21,21 @@ Shader "HW_Shaders/ToonShaderWithOutlineAmbient"
 		//TOONY COLORS RAMP
 		[TCP2Header(RAMP SETTINGS)]
 
-		_RampThresholdRGB ("Ramp Threshold (RGB)", Color) = (0.5,0.5,0.5,1)
+		_RampThreshold ("Ramp Threshold", Range(0,1)) = 0.5
 		_RampSmooth ("Ramp Smoothing", Range(0.001,1)) = 0.1
 	[TCP2Separator]
 
 	[TCP2HeaderHelp(EMISSION, Emission)]
 		[NoScaleOffset] _EmissionMap ("Emission (RGB)", 2D) = "black" {}
 		[HDR] _EmissionColor ("Emission Color", Color) = (1,1,1,1.0)
+	[TCP2Separator]
+
+	[TCP2HeaderHelp(DISSOLVE)]
+		[NoScaleOffset]
+		_DissolveMap ("Dissolve Map", 2D) = "white" {}
+		_DissolveValue ("Dissolve Value", Range(0,1)) = 0.5
+		[TCP2Gradient] _DissolveRamp ("Dissolve Ramp", 2D) = "white" {}
+		_DissolveGradientWidth ("Ramp Width", Range(0,1)) = 0.2
 	[TCP2Separator]
 
 	[TCP2HeaderHelp(OUTLINE, Outline)]
@@ -191,11 +199,11 @@ Shader "HW_Shaders/ToonShaderWithOutlineAmbient"
 		// OUTLINE INCLUDE END
 		//================================================================
 
-		Tags { "RenderType"="Opaque" }
+		Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
 
 		CGPROGRAM
 
-		#pragma surface surf ToonyColorsCustom fullforwardshadows exclude_path:deferred exclude_path:prepass
+		#pragma surface surf ToonyColorsCustom fullforwardshadows addshadow exclude_path:deferred exclude_path:prepass
 		#pragma target 3.0
 
 		//================================================================
@@ -204,6 +212,10 @@ Shader "HW_Shaders/ToonShaderWithOutlineAmbient"
 		fixed4 _Color;
 		sampler2D _MainTex;
 		sampler2D _STexture;
+		sampler2D _DissolveMap;
+		half _DissolveValue;
+		sampler2D _DissolveRamp;
+		half _DissolveGradientWidth;
 		half4 _EmissionColor;
 		sampler2D _EmissionMap;
 
@@ -223,7 +235,7 @@ Shader "HW_Shaders/ToonShaderWithOutlineAmbient"
 		fixed4 _SColor;
 		fixed _HighlightMultiplier;
 		fixed _ShadowMultiplier;
-		float4 _RampThresholdRGB;
+		half _RampThreshold;
 		half _RampSmooth;
 
 		// Instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -263,8 +275,8 @@ Shader "HW_Shaders/ToonShaderWithOutlineAmbient"
 			fixed ndl = max(0, dot(IN_NORMAL, lightDir));
 			#define NDL ndl
 
-			#define		RAMP_THRESHOLD	(1-_RampThresholdRGB.rgb)
-			#define		RAMP_SMOOTH		_RampSmooth.xxx
+			#define		RAMP_THRESHOLD	_RampThreshold
+			#define		RAMP_SMOOTH		_RampSmooth
 
 			fixed3 ramp = smoothstep(RAMP_THRESHOLD - RAMP_SMOOTH*0.5, RAMP_THRESHOLD + RAMP_SMOOTH*0.5, NDL);
 		#if !(POINT) && !(SPOT)
@@ -312,6 +324,17 @@ Shader "HW_Shaders/ToonShaderWithOutlineAmbient"
 			mainTex *= vertexColors;
 			o.Albedo = mainTex.rgb * _Color.rgb;
 			o.Alpha = mainTex.a * _Color.a;
+
+			//Dissolve
+			fixed4 dslv = tex2D(_DissolveMap, IN.UV_MAINTEX.xy);
+			#define DSLV dslv.a
+			float dissValue = lerp(-_DissolveGradientWidth, 1, _DissolveValue);
+			float dissolveUV = smoothstep(DSLV - _DissolveGradientWidth, DSLV + _DissolveGradientWidth, dissValue);
+			half4 dissolveColor = tex2D(_DissolveRamp, dissolveUV.xx);
+			dissolveColor *= lerp(0, 2.0, dissolveUV);
+			o.Emission += dissolveColor.rgb;
+
+			o.Alpha *= DSLV - dissValue;
 
 			//Emission
 			half3 emissiveColor = half3(1,1,1);
