@@ -38,7 +38,7 @@ namespace HW.UI
         // Start is called before the first frame update
         protected virtual void Start()
         {
-            
+            Open();
         }
 
         // Update is called once per frame

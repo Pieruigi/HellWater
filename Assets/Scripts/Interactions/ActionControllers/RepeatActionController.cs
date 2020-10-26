@@ -26,7 +26,7 @@ namespace HW
 
             charge = Mathf.Max(0, charge - Time.deltaTime);
 
-            if (PlayerController.Instance.GetActionButtonDown())
+            if (PlayerInput.GetActionButtonDown())
                 charge = Mathf.Min(1, charge + speed);
 
 

@@ -89,6 +89,12 @@ namespace HW
                 return;
             }
 
+            //if (internalName.ToLower().Contains("playstation"))
+            //{
+            //    suffix = "_3";
+            //    return;
+            //}
+
             // Alfred's gamepad ( XTR94270 ) 
             if (internalName.ToLower().Contains("generic") && internalName.ToLower().Contains("usb") && internalName.ToLower().Contains("joystick"))
             {
@@ -97,8 +103,8 @@ namespace HW
             }
                 
 
-            // Bho
-            suffix = "";
+            // Not recognised, we return xbox controller as default
+            suffix = "_1"; 
         }
 
         void SetTriggers()

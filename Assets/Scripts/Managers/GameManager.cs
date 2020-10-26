@@ -136,6 +136,15 @@ namespace HW
 
         }
 
+        // Returns to main menu if in game, otherwise exit
+        public void ExitGame()
+        {
+            if (inGame)
+                LoadMainMenu();
+            else
+                Application.Quit();
+        }
+
         void HandleOnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             
@@ -157,27 +166,7 @@ namespace HW
             }
         }
 
-        //void HandleOnDead()
-        //{
-        //    StartCoroutine(CoroutineGameOver((int)GameOverType.Death));
-        //}
-
-        //IEnumerator CoroutineGameOver(int gameOverType)
-        //{
-        //    yield return new WaitForSeconds(3f);
-
-        //    OnGameOver?.Invoke(gameOverType);
-
-        //    yield return new WaitForSeconds(5f);
-
-        //    LoadMainMenu();
-        //}
-
-        //private void ResetAll()
-        //{
-        //    cutSceneRunning = false;
-        //    inventoryOpen = false;
-        //}
+       
     }
 
 }

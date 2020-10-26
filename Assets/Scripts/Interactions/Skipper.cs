@@ -44,7 +44,7 @@ namespace HW
             // Check back button and eventually set timer to skip
             if (!buttonIsDown)
             {
-                if (PlayerController.Instance.GetBackButtonDown())
+                if (PlayerInput.GetBackButtonDown())
                 {
                     buttonIsDown = true;
                     timer = skipInSecs;
@@ -54,7 +54,7 @@ namespace HW
             }
             else
             {
-                if (PlayerController.Instance.GetBackButtonUp())
+                if (PlayerInput.GetBackButtonUp())
                 {
                     buttonIsDown = false;
                     timer = 0;

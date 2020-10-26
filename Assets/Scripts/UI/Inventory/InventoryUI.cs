@@ -194,7 +194,7 @@ namespace HW.UI
 
         void CheckOpenCloseInput()
         {
-            if (PlayerController.Instance.GetInventoryButtonDown())
+            if (PlayerInput.GetInventoryButtonDown())
             {
                 if (!open)
                     Open();
@@ -245,7 +245,7 @@ namespace HW.UI
 
             selecting = false;
 
-            float axisRaw = PlayerController.Instance.GetHorizontalAxisRaw();
+            float axisRaw = PlayerInput.GetHorizontalAxisRaw();
 
             // Nothing to do
             if (axisRaw != 1 && axisRaw != -1)

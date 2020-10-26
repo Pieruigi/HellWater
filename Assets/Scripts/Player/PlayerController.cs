@@ -120,17 +120,17 @@ namespace HW
         float shootTime = 0.35f;
         #endregion
 
-        #region CONTROLLER AXIS 
-        string horizontalAxis = "Horizontal";
-        string verticalAxis = "Vertical";
-        string sprintAxis = "Run";
-        string aimAxis = "Aim";
-        string reloadAxis = "Reload";
-        string shootAxis = "Shoot";
-        string actionAxis = "Action";
-        string backAxis = "Back";
-        string inventoryAxis = "Inventory"; // Left button
-        #endregion
+        //#region CONTROLLER AXIS 
+        //string horizontalAxis = "Horizontal";
+        //string verticalAxis = "Vertical";
+        //string sprintAxis = "Run";
+        //string aimAxis = "Aim";
+        //string reloadAxis = "Reload";
+        //string shootAxis = "Shoot";
+        //string actionAxis = "Action";
+        //string backAxis = "Back";
+        //string inventoryAxis = "Inventory"; // Left button
+        //#endregion
 
         #region MISC FIELDS
         Rigidbody rb;
@@ -242,40 +242,40 @@ namespace HW
 
         #region PUBLIC
         
-        public bool GetActionButtonDown()
-        {
-            return GetButtonDown(actionAxis);
-        }
+        //public bool GetActionButtonDown()
+        //{
+        //    return GetButtonDown(actionAxis);
+        //}
 
-        public bool GetActionButtonUp()
-        {
-            return GetButtonUp(actionAxis);
-        }
+        //public bool GetActionButtonUp()
+        //{
+        //    return GetButtonUp(actionAxis);
+        //}
 
-        public bool GetBackButtonDown()
-        {
-            return GetButtonDown(backAxis);
-        }
+        //public bool GetBackButtonDown()
+        //{
+        //    return GetButtonDown(backAxis);
+        //}
 
-        public bool GetBackButtonUp()
-        {
-            return GetButtonUp(backAxis);
-        }
+        //public bool GetBackButtonUp()
+        //{
+        //    return GetButtonUp(backAxis);
+        //}
 
-        public bool GetInventoryButtonDown()
-        {
-            return GetButtonDown(inventoryAxis);
-        }
+        //public bool GetInventoryButtonDown()
+        //{
+        //    return GetButtonDown(inventoryAxis);
+        //}
 
-        public bool GetInventoryButtonUp()
-        {
-            return GetButtonUp(inventoryAxis);
-        }
+        //public bool GetInventoryButtonUp()
+        //{
+        //    return GetButtonUp(inventoryAxis);
+        //}
 
-        public float GetHorizontalAxisRaw()
-        {
-            return GetAxisRaw(horizontalAxis);
-        }
+        //public float GetHorizontalAxisRaw()
+        //{
+        //    return GetAxisRaw(horizontalAxis);
+        //}
 
         public bool IsRunning()
         {
@@ -437,7 +437,9 @@ namespace HW
         void CheckIsRunning()
         {
             // Get input
-            bool axis = GetAxisRaw(sprintAxis) > 0 ? true : false;
+            //bool axis = GetAxisRaw(sprintAxis) > 0 ? true : false;
+            //bool axis = GetAxisRaw(sprintAxis) > 0 ? true : false;
+            bool axis = PlayerInput.GetSprintButton();
 
             // Run
             if (axis)
@@ -469,7 +471,7 @@ namespace HW
                 return;
             }
 
-            bool aim = GetAxisRaw(aimAxis) > 0;
+            bool aim = PlayerInput.GetAxisRaw(PlayerInput.AimAxis) > 0;
 
             if (aim)
             {
@@ -501,7 +503,7 @@ namespace HW
             // Check button
             if(currentWeapon == fireWeapon)
             {
-                if (GetButtonDown(reloadAxis))
+                if (PlayerInput.GetButtonDown(PlayerInput.ReloadAxis))
                 {
 
                     Debug.Log("Reload");
@@ -620,51 +622,51 @@ namespace HW
             attackFailed = false;
         }
 
-        // Returns true if axis raw is higher than 0, otherwise false
-        float GetAxisRaw(string axis)
-        {
-            // No suffix for mouse and keyboard
-            string suffix = "_0";
+        //// Returns true if axis raw is higher than 0, otherwise false
+        //float GetAxisRaw(string axis)
+        //{
+        //    // No suffix for mouse and keyboard
+        //    string suffix = "_0";
 
-            // Are we using the gamepad ?
-            if (JoystickManager.Instance.Connected)
-            {
-                // If so which type ?
-                suffix = JoystickManager.Instance.Suffix;
-            }
+        //    // Are we using the gamepad ?
+        //    if (JoystickManager.Instance.Connected)
+        //    {
+        //        // If so which type ?
+        //        suffix = JoystickManager.Instance.Suffix;
+        //    }
 
-            return Input.GetAxisRaw(axis + suffix);
-        }
+        //    return Input.GetAxisRaw(axis + suffix);
+        //}
 
-        bool GetButtonDown(string button)
-        {
-            // No suffix for mouse and keyboard
-            string suffix = "_0";
+        //bool GetButtonDown(string button)
+        //{
+        //    // No suffix for mouse and keyboard
+        //    string suffix = "_0";
 
-            // Are we using the gamepad ?
-            if (JoystickManager.Instance.Connected)
-            {
-                // If so which type ?
-                suffix = JoystickManager.Instance.Suffix;
-            }
+        //    // Are we using the gamepad ?
+        //    if (JoystickManager.Instance.Connected)
+        //    {
+        //        // If so which type ?
+        //        suffix = JoystickManager.Instance.Suffix;
+        //    }
 
-            return Input.GetButtonDown(button + suffix);
-        }
+        //    return Input.GetButtonDown(button + suffix);
+        //}
 
-        bool GetButtonUp(string button)
-        {
-            // No suffix for mouse and keyboard
-            string suffix = "_0";
+        //bool GetButtonUp(string button)
+        //{
+        //    // No suffix for mouse and keyboard
+        //    string suffix = "_0";
 
-            // Are we using the gamepad ?
-            if (JoystickManager.Instance.Connected)
-            {
-                // If so which type ?
-                suffix = JoystickManager.Instance.Suffix;
-            }
+        //    // Are we using the gamepad ?
+        //    if (JoystickManager.Instance.Connected)
+        //    {
+        //        // If so which type ?
+        //        suffix = JoystickManager.Instance.Suffix;
+        //    }
 
-            return Input.GetButtonUp(button + suffix);
-        }
+        //    return Input.GetButtonUp(button + suffix);
+        //}
 
         // Returns all the available target depending on radius and obstacles
         List<Transform> GetAvailableTargets(float radius)
@@ -770,7 +772,8 @@ namespace HW
             // If you are reloading you can still move, but reloading will be interrupted
             if (reloading)
             {
-                if (GetAxisRaw(horizontalAxis) != 0 || GetAxisRaw(verticalAxis) != 0)
+                if (PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis) != 0 || PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis) != 0)
+                
                 {
                     reloading = false;
                     OnReloadInterrupted?.Invoke();
@@ -786,7 +789,7 @@ namespace HW
                 // Rotate the player towards the choosen target if there is one
                 TryRotateTowardsTarget();
 
-                if (GetAxisRaw(shootAxis) == 0)
+                if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) == 0)
                 {
                     TryAttack();
                 }
@@ -821,7 +824,7 @@ namespace HW
                 CheckIsRunning();
 
                 // Get player movement input 
-                Vector2 input = new Vector2(GetAxisRaw(horizontalAxis), GetAxisRaw(verticalAxis)).normalized;
+                Vector2 input = new Vector2(PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis), PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis)).normalized;
 
                 // Get the desired velocity depending on the camera orientation ( for ex. if the camera if looking
                 // from north to south we need to reverse the forward direction )
@@ -849,7 +852,7 @@ namespace HW
                 //
 
                 // Start charging melee attack
-                if (GetAxisRaw(shootAxis) > 0)
+                if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) > 0)
                 {
 
                     if (holsterForced) // No weapon allowed here
@@ -914,7 +917,7 @@ namespace HW
                 else
                 {
                     // Get the aiming direction
-                    Vector3 direction = new Vector3(GetAxisRaw(horizontalAxis), 0, GetAxisRaw(verticalAxis)).normalized;
+                    Vector3 direction = new Vector3(PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis), 0, PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis)).normalized;
 
                     // I'm trying to target someone else
                     if (direction != Vector3.zero)
@@ -948,7 +951,7 @@ namespace HW
                 //
 
                 // If magazine is not empty then shoot
-                if (GetAxisRaw(shootAxis) > 0 && (System.DateTime.UtcNow - lastShoot).TotalSeconds > shootTime)
+                if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) > 0 && (System.DateTime.UtcNow - lastShoot).TotalSeconds > shootTime)
                 {
                     lastShoot = System.DateTime.UtcNow;
                     if (!fireWeapon.IsEmpty())

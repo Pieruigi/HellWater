@@ -46,7 +46,7 @@ namespace HW.UI
         {
             if (open)
             {
-                if (PlayerController.Instance.GetActionButtonDown())
+                if (PlayerInput.GetActionButtonDown())
                     Hide();
             }
         }

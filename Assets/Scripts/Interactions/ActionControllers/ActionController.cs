@@ -52,7 +52,7 @@ namespace HW
 
         protected virtual void PerformAction()
         {
-            if (PlayerController.Instance.GetActionButtonDown())
+            if (PlayerInput.GetActionButtonDown())
                 OnActionPerformed?.Invoke(this);
             
         }

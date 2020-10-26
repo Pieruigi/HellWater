@@ -181,7 +181,7 @@ namespace HW.CutScene
                 if((DateTime.UtcNow - lastSpeech).TotalSeconds > 0.5f)
                 {
                     // Go to next speech or exit on action button pressed
-                    if (PlayerController.Instance.GetActionButtonDown())
+                    if (PlayerInput.GetActionButtonDown())
                     {
                         int maxId = dialogStartIndex + dialogSpeechCount;
                         if (dialogSpeechCount == 0)

@@ -36,7 +36,7 @@ namespace HW
         {
             if (!charging)
             {
-                if (PlayerController.Instance.GetActionButtonDown())
+                if (PlayerInput.GetActionButtonDown())
                 {
                     charging = true;
                     OnActionStart?.Invoke(this);
@@ -45,7 +45,7 @@ namespace HW
             }
             else
             {
-                if (PlayerController.Instance.GetActionButtonUp())
+                if (PlayerInput.GetActionButtonUp())
                 {
                     charging = false;
                     OnActionStop?.Invoke(this);
