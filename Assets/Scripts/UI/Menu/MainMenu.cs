@@ -22,6 +22,8 @@ namespace HW.UI
 
         GameObject lastSelectedObject;
 
+        int exitGameTextId = 4;
+
         private void Awake()
         {
             gameObject.SetActive(false);
@@ -74,7 +76,8 @@ namespace HW.UI
         {
             inputDisabled = true;
             lastSelectedObject = EventSystem.current.currentSelectedGameObject;
-            MessageBox.Show(MessageBox.Type.YesNo, "Sicuro di voler uscire dal gioco?", HandleOnExitYes, HandleOnExitNo);
+            string msg = UITextTranslator.GetMessage(exitGameTextId);
+            MessageBox.Show(MessageBox.Type.YesNo, msg, HandleOnExitYes, HandleOnExitNo);
         }
 
 

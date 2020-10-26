@@ -46,10 +46,10 @@ namespace HW
         public static readonly float RaycastVerticalOffset = 1f;
 
         // Resources
-        public static readonly string ResourcesFolderEquipment = "Items/Equipment";
-        public static readonly string ResourcesFolderMessageCollection = "MessageCollection";
+        public static readonly string ResourceFolderEquipment = "Items/Equipment";
+        public static readonly string ResourceFolderMessageCollection = "MessageCollection";
+        public static readonly string ResourceFolderMessageCollectionUI = "UI/MessageCollection";
         
-        //public static readonly string ResourcesFolderMessageCollection = "MessageCollection";
 
         // Misc
         public static readonly float OrthographicAngle = 60f;

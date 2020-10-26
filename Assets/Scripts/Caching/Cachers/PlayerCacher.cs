@@ -37,7 +37,7 @@ namespace HW.CachingSystem
             health.Init(data.Health);
 
             // Load resources
-            List<Item> items = new List<Item>(Resources.LoadAll<Item>(Constants.ResourcesFolderEquipment));
+            List<Item> items = new List<Item>(Resources.LoadAll<Item>(Constants.ResourceFolderEquipment));
 
             // Init weapons
             if (!"-".Equals(data.MeleeWeaponCode))

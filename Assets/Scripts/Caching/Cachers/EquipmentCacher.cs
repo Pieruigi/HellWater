@@ -44,7 +44,7 @@ namespace HW.CachingSystem
             old.Parse(cacheValue);
 
             // Get resources
-            List<Item> items = new List<Item>(Resources.LoadAll<Item>(Constants.ResourcesFolderEquipment));
+            List<Item> items = new List<Item>(Resources.LoadAll<Item>(Constants.ResourceFolderEquipment));
             //Debug.Log("Resources found:" + Resources.LoadAll(ResourcesFolder).Length);
             Debug.Log("Resources found:" + items.Count);
 

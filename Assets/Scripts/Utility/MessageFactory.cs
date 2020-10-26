@@ -26,7 +26,7 @@ namespace HW
         private MessageFactory()
         {
             // Load resources depending on the language
-            string path = System.IO.Path.Combine(Constants.ResourcesFolderMessageCollection, GameManager.Instance.Language.ToString());
+            string path = System.IO.Path.Combine(Constants.ResourceFolderMessageCollection, GameManager.Instance.Language.ToString());
             Debug.Log("Message collection path:" + path);
             messageCollection = Resources.LoadAll<MessageCollection>(path)[0];
         }
