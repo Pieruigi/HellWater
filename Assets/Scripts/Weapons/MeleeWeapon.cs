@@ -9,7 +9,7 @@ namespace HW
     public class MeleeWeapon : Weapon
     {
         public UnityAction<bool, Weapon> OnHit;
-        
+        public UnityAction<Weapon> OnStrike;
 
         IStriker striker;
 
@@ -22,6 +22,8 @@ namespace HW
         public bool Strike()
         {
             striker.Strike(this);
+
+            OnStrike?.Invoke(this);
 
             return true;
         }

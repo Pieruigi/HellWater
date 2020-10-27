@@ -7,6 +7,7 @@ namespace HW
 {
     public class MeleeWeaponFX : MonoBehaviour
     {
+        [Header("Audio")]
         [SerializeField]
         AudioClip hitClip;
 
@@ -19,15 +20,20 @@ namespace HW
         [SerializeField]
         float missVolume = 1;
 
+        [Header("Particles")]
+        [SerializeField]
+        ParticleSystem trailPS;
+
         AudioSource audioSource;
         MeleeWeapon weapon;
+        
 
         private void Awake()
         {
             audioSource = GetComponent<AudioSource>();
             weapon = GetComponent<MeleeWeapon>();
             weapon.OnHit += HandleOnHit;
-            
+            weapon.OnStrike += HandleOnStrike;
         }
 
         // Start is called before the first frame update
@@ -48,6 +54,11 @@ namespace HW
                 PlayClip(hitClip, hitVolume);
             else
                 PlayClip(missClip, missVolume);
+        }
+
+        void HandleOnStrike(Weapon weapon)
+        {
+            trailPS.Play();
         }
 
         void PlayClip(AudioClip clip, float volume)
