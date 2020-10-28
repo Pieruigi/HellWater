@@ -37,25 +37,12 @@ namespace HW
         }
         #endregion
 
-        #region GAMEPLAY_FlAGS
-        //bool cutSceneRunning = false;
-        //public bool CutSceneRunning
-        //{
-        //    get { return cutSceneRunning; }
-        //    set { cutSceneRunning = value; }
-        //}
-
-        //bool inventoryOpen = false;
-        //public bool InventoryOpen
-        //{
-        //    get { return inventoryOpen; }
-        //    set { inventoryOpen = value; }
-        //}
-
-        bool gameBusy = false; // Use this rather than CutSceneRunning 
-        
-
-        #endregion
+        bool gameBusy = false; // Set true when game is doing some important stuff, for example cut scenes
+        public bool GameBusy
+        {
+            get { return gameBusy; }
+            set { gameBusy = value; }
+        }
 
         MenuManager menuManager;
         InventoryUI inventory;
@@ -89,6 +76,7 @@ namespace HW
             // Check in game input
             if (inGame)
             {
+
                 // Game is busy, is problably running some cut scene or whatever else important stuff
                 if (gameBusy)
                     return;
@@ -208,7 +196,6 @@ namespace HW
             else
                 Application.Quit();
         }
-
 
         void HandleOnSceneLoaded(Scene scene, LoadSceneMode mode)
         {

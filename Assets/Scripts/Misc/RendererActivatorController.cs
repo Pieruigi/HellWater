@@ -78,6 +78,7 @@ namespace HW
             foreach(GameObject o in activables)
             {
                 o.GetComponent<IActivable>().Activate(value);
+                
             }
 
             if (fade)

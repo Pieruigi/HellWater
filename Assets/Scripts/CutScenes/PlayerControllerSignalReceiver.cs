@@ -21,11 +21,15 @@ namespace HW.CutScene
         public void DisableController()
         {
             PlayerController.Instance.SetDisabled(true);
+
+            GameManager.Instance.GameBusy = true;
         }
 
         public void EnableController()
         {
             PlayerController.Instance.SetDisabled(false);
+
+            GameManager.Instance.GameBusy = false;
         }
     }
 

@@ -329,6 +329,10 @@ namespace HW.CutScene
                 DialogViewer.Instance.Hide();
             }
 
+            // If player needs to be enable then it was disable before, so the game was busy
+            if (onExitPlayerState == PlayerState.Enabled)
+                GameManager.Instance.GameBusy = false;
+
             CheckPlayerVisibility(onExitPlayerState);
             CheckPlayerController(onExitPlayerState);
 
@@ -346,6 +350,10 @@ namespace HW.CutScene
             // We can skip
             canSkip = true;
             playing = true;
+
+            // If player is disabled on enter the game is busy
+            if (onEnterPlayerState == PlayerState.Hidden || onEnterPlayerState == PlayerState.OnlyDisabled)
+                GameManager.Instance.GameBusy = true;
 
             CheckPlayerVisibility(onEnterPlayerState);
             CheckPlayerController(onEnterPlayerState);
