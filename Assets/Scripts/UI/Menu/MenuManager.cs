@@ -20,36 +20,47 @@ namespace HW.UI
         [SerializeField]
         GameObject menuDefault;
 
+        //[SerializeField]
+        //bool closedOnStart = false;
+
         GameObject current;
 
-        bool isOpened = false;
-        public bool IsOpened
-        {
-            get { return isOpened; }
-            protected set { isOpened = value; }
-        }
+        bool open = false;
+        //public bool IsOpen
+        //{
+        //    get { return open; }
+        //    protected set { open = value; }
+        //}
 
         public GameObject Current
         {
             get { return current; }
         }
 
-
+        
         // Start is called before the first frame update
         protected virtual void Start()
         {
-            Open();
+            //if (!closedOnStart)
+                //Open();
+            //else
+            //    Close();
         }
 
         // Update is called once per frame
         void Update()
         {
-       
+            
+        }
+
+        public bool IsOpen()
+        {
+            return open;
         }
 
         public virtual void Close()
         {
-            isOpened = false;
+            open = false;
             HideAll();
 
             
@@ -60,7 +71,7 @@ namespace HW.UI
         {
            
             HideAll();
-            isOpened = true;
+            open = true;
             Open(menuDefault);
 
             
@@ -69,7 +80,7 @@ namespace HW.UI
 
         public void Open(GameObject menu)
         {
-            if (!isOpened)
+            if (!open)
             {
                 Debug.LogWarning("The menu is closed; call open() first.");
                 return;

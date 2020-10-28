@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 using HW.Interfaces;
+using UnityEngine.EventSystems;
 
 namespace HW.UI
 {
@@ -34,7 +35,8 @@ namespace HW.UI
 
         //private UnityAction _noAction;
 
-        private static MessageBox instance;
+        static MessageBox instance;
+        
 
         private Color panelColorDefault;
 
@@ -45,7 +47,7 @@ namespace HW.UI
             if (instance == null)
             {
                 instance = this;
-                transform.SetAsLastSibling();
+                //transform.SetAsLastSibling();
                 panelColorDefault = panelImage.color;
                 box = transform.GetChild(0) as RectTransform;
                 gameObject.SetActive(false);
@@ -135,14 +137,23 @@ namespace HW.UI
         static void SetDefaultSelection(Type type)
         {
             if (type == Type.YesNo)
+            {
                 instance.noButton.Select();
+                //EventSystem.current.SetSelectedGameObject(instance.noButton.gameObject);
+            }
+
             else
+            {
                 instance.okButton.Select();
+                //EventSystem.current.SetSelectedGameObject(instance.noButton.gameObject);
+            }
+                
         }
 
         public void Activate(bool value)
         {
             //throw new System.NotImplementedException();
+            Debug.LogWarning("Use the MessageBox.Show() static method.");
         }
 
         public bool IsActive()

@@ -4,6 +4,7 @@ using UnityEngine;
 using HW.CachingSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using HW.UI;
 
 namespace HW
 {
@@ -37,20 +38,27 @@ namespace HW
         #endregion
 
         #region GAMEPLAY_FlAGS
-        bool cutSceneRunning = false;
-        public bool CutSceneRunning
-        {
-            get { return cutSceneRunning; }
-            set { cutSceneRunning = value; }
-        }
+        //bool cutSceneRunning = false;
+        //public bool CutSceneRunning
+        //{
+        //    get { return cutSceneRunning; }
+        //    set { cutSceneRunning = value; }
+        //}
 
-        bool inventoryOpen = false;
-        public bool InventoryOpen
-        {
-            get { return inventoryOpen; }
-            set { inventoryOpen = value; }
-        }
+        //bool inventoryOpen = false;
+        //public bool InventoryOpen
+        //{
+        //    get { return inventoryOpen; }
+        //    set { inventoryOpen = value; }
+        //}
+
+        bool gameBusy = false; // Use this rather than CutSceneRunning 
+        
+
         #endregion
+
+        MenuManager menuManager;
+        InventoryUI inventory;
 
         private void Awake()
         {
@@ -69,12 +77,68 @@ namespace HW
         void Start()
         {
             //PlayerController.Instance.OnDead += HandleOnDead;
+            
         }
 
         // Update is called once per frame
         void Update()
         {
-            
+            if (loading)
+                return;
+
+            // Check in game input
+            if (inGame)
+            {
+                // Game is busy, is problably running some cut scene or whatever else important stuff
+                if (gameBusy)
+                    return;
+
+                if (PlayerInput.GetButtonDown(PlayerInput.EscapeAxis))
+                {
+                    Debug.Log("GameManager - player input: " + PlayerInput.EscapeAxis);
+
+                    if (!menuManager.IsOpen())
+                    {
+                        // Can't be opened if you already open the inventory or a cut
+                        if (inventory.IsOpen())
+                            return;
+
+                        // Open menu
+                        menuManager.Open();
+
+                        // Disable player controller
+                        PlayerController.Instance.SetDisabled(true);
+                    }
+                    else
+                    {
+                        CloseMenu();
+
+                        
+                    }
+
+                }
+
+                if (PlayerInput.GetInventoryButtonDown())
+                {
+                    // Can't open both inventory and menu
+                    if (menuManager.IsOpen())
+                        return;
+
+                    if (inventory.IsOpen())
+                        inventory.Close();
+                    else
+                        inventory.Open();
+                }
+            }
+        }
+
+        public void CloseMenu()
+        {
+            // Close menu
+            menuManager.Close();
+
+            // Enable player controller
+            PlayerController.Instance.SetDisabled(false);
         }
 
         public void Pause()
@@ -145,6 +209,7 @@ namespace HW
                 Application.Quit();
         }
 
+
         void HandleOnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             
@@ -154,14 +219,28 @@ namespace HW
                 // Loading completed
                 loading = false;
 
+                menuManager = GameObject.FindObjectOfType<HW.UI.MenuManager>();
+
                 // Update inGame flag
-                if(scene.buildIndex == mainSceneIndex)
+                if (scene.buildIndex == mainSceneIndex) // Not in game
                 {
                     inGame = false;
+
+                    // Release inventory
+                    inventory = null;
+
+                    // Open main menu
+                    menuManager.Open();
                 }
                 else
                 {
                     inGame = true;
+
+                    // Get inventory
+                    inventory = GameObject.FindObjectOfType<InventoryUI>();
+
+                    // Close the game menu
+                    menuManager.Close();
                 }
             }
         }

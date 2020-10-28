@@ -33,6 +33,12 @@ namespace HW.UI
         {
             // Get all selectables
             selectables = new List<Selectable>(GetComponentsInChildren<Selectable>());
+            Debug.Log("Selectables.Count:" + selectables.Count);
+        }
+
+        private void OnEnable()
+        {
+            selectables = new List<Selectable>(GetComponentsInChildren<Selectable>());
         }
 
         // Update is called once per frame
@@ -55,6 +61,7 @@ namespace HW.UI
                 return;
 
             // Get selected button
+            Debug.Log("EventSystem.Current:" + EventSystem.current.name);
             Selectable selected = selectables.Find(b => b.gameObject == EventSystem.current.currentSelectedGameObject);
             Debug.Log("Selected:" + selected);
 
@@ -66,6 +73,7 @@ namespace HW.UI
                 v += Vector3.up * inputV;
 
             Selectable next = selected.FindSelectable(v);
+            Debug.Log("Next:" + next);
 
             // The object we want to select must be contained in the selectable list because UI navigation also
             // takes into accout selectables beholding to other panels

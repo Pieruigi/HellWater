@@ -24,11 +24,7 @@ namespace HW.UI
 
         int exitGameTextId = 4;
 
-        private void Awake()
-        {
-            gameObject.SetActive(false);
-        }
-
+        
         // Start is called before the first frame update
         void Start()
         {
@@ -57,10 +53,6 @@ namespace HW.UI
         {
         }
 
-        private void OnEnable()
-        {
-           
-        }
 
         public void StartNewGame()
         {

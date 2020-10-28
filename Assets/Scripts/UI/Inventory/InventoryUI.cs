@@ -96,17 +96,14 @@ namespace HW.UI
             //        Select();
             //}
 
-            if (GameManager.Instance != null && GameManager.Instance.CutSceneRunning)
-                return;
+            //if (GameManager.Instance != null && GameManager.Instance.CutSceneRunning)
+            //    return;
 
             if (wait)
                 return;
 
-
-
-
-            // Check the player input
-            CheckOpenCloseInput();
+            //// Check the player input
+            //CheckOpenCloseInput();
 
             // We need to compute the delta time since the timeScale is zero
             if (open)
@@ -123,10 +120,19 @@ namespace HW.UI
 
         }
 
-
-
-        void Open()
+        public bool IsOpen()
         {
+            return open;
+        }
+
+        public void Open()
+        {
+            if (wait)
+                return;
+
+            wait = true;
+            open = true;
+
             // Just to be sure
             Clear();
 
@@ -163,8 +169,14 @@ namespace HW.UI
             OnOpen?.Invoke();
         }
 
-        void Close()
+        public void Close()
         {
+            if (wait)
+                return;
+
+            wait = true;
+            open = false;
+
             // Restart playing
             GameManager.Instance.Unpause();
 
@@ -192,22 +204,22 @@ namespace HW.UI
 
         }
 
-        void CheckOpenCloseInput()
-        {
-            if (PlayerInput.GetInventoryButtonDown())
-            {
-                if (!open)
-                    Open();
-                else
-                    Close();
+        //void CheckOpenCloseInput()
+        //{
+        //    if (PlayerInput.GetInventoryButtonDown())
+        //    {
+        //        if (!open)
+        //            Open();
+        //        else
+        //            Close();
 
-                GameManager.Instance.InventoryOpen = open;
-                wait = true;
-                open = !open;
-            }
+        //        //GameManager.Instance.InventoryOpen = open;
+        //        wait = true;
+        //        open = !open;
+        //    }
     
 
-        }
+        //}
 
         void Clear()
         {

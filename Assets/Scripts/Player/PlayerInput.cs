@@ -16,6 +16,7 @@ namespace HW
         public static readonly string ActionAxis = "Action";
         public static readonly string BackAxis = "Back";
         public static readonly string InventoryAxis = "Inventory"; // Left button
+        public static readonly string EscapeAxis = "Escape";
         #endregion
 
         // Some usefull mappings
