@@ -17,13 +17,6 @@ namespace HW.Collections
         }
 
         [SerializeField]
-        bool optional = false;
-        public bool Optional
-        {
-            get { return optional; }
-        }
-
-        [SerializeField]
         [TextAreaAttribute(1, 8)]  
         string shortDescription;
         public string ShortDescription
@@ -39,7 +32,7 @@ namespace HW.Collections
             get { return longDescription; }
         }
 
-      
+        
 
         public static QuestDetail GetQuestDetail(string code, Language language)
         {

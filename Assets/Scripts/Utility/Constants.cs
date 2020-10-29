@@ -63,6 +63,10 @@ namespace HW
         public static readonly string CacheCodePlayer = "ply";
         public static readonly string CacheCodeEquipment = "eqp";
         public static readonly string CacheCodeInventory = "inv";
+
+
+        // Debug format
+        public static readonly string DebugStringFormat = "{0}.{1}: {2}."; // Class name, method and message
     }
 
 

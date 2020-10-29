@@ -81,6 +81,7 @@ namespace HW
                 if (gameBusy)
                     return;
 
+                // Open/close game menu
                 if (PlayerInput.GetButtonDown(PlayerInput.EscapeAxis))
                 {
                     Debug.Log("GameManager - player input: " + PlayerInput.EscapeAxis);
@@ -106,6 +107,7 @@ namespace HW
 
                 }
 
+                // Open/close inventory
                 if (PlayerInput.GetInventoryButtonDown())
                 {
                     // Can't open both inventory and menu
@@ -117,6 +119,14 @@ namespace HW
                     else
                         inventory.Open();
                 }
+
+                // Open/close quest tab
+                bool open = false;
+                if (PlayerInput.GetButton(PlayerInput.QuestAxis))
+                    open = true;
+
+                if (open != QuestViewer.Instance.IsOpen())
+                    QuestViewer.Instance.Show(open);
             }
         }
 
