@@ -10255,6 +10255,7 @@ GameObject:
   - component: {fileID: 1508507325}
   - component: {fileID: 1508507328}
   - component: {fileID: 1508507329}
+  - component: {fileID: 1508507330}
   m_Layer: 0
   m_Name: HavingBreakfast
   m_TagString: Untagged
@@ -10570,6 +10571,21 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 1
+--- !u!114 &1508507330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508507318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79930eeb97fd7dc4c94eceaaa4a518c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  desiredState: 0
+  desiredOldState: -1
+  nextQuestCode: g002
 --- !u!4 &1508556034 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 6ce03a51a78a1554f9c461d195baf1b8,

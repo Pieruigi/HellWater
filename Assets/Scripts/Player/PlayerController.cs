@@ -120,17 +120,6 @@ namespace HW
         float shootTime = 0.35f;
         #endregion
 
-        //#region CONTROLLER AXIS 
-        //string horizontalAxis = "Horizontal";
-        //string verticalAxis = "Vertical";
-        //string sprintAxis = "Run";
-        //string aimAxis = "Aim";
-        //string reloadAxis = "Reload";
-        //string shootAxis = "Shoot";
-        //string actionAxis = "Action";
-        //string backAxis = "Back";
-        //string inventoryAxis = "Inventory"; // Left button
-        //#endregion
 
         #region MISC FIELDS
         Rigidbody rb;
@@ -194,8 +183,29 @@ namespace HW
 
         void FixedUpdate()
         {
+            // Check collision to avoid player keep moving against walls.
+            Ray ray = new Ray(rb.position + Vector3.up, transform.forward);
+            RaycastHit hitInfo;
+            // We must add the player collider radius to the distance
+            float distance = coll.radius + (currentVelocity.magnitude * Time.fixedDeltaTime);
+            if (Physics.Raycast(ray, out hitInfo, distance)) // We hit something
+            {
+                // Move the player to the collision point
+                // We keep the player y position
+                float y = rb.position.y;
 
-            rb.MovePosition(rb.position + transform.forward * currentVelocity.magnitude * Time.fixedDeltaTime);
+                // We must take into account the collider radius when moving player towards collider
+                Vector3 safePos = hitInfo.point - transform.forward * coll.radius;
+                safePos.y = y;
+                rb.MovePosition(safePos);
+
+            }
+            else // No collision detected
+            {
+                // Move the player according to his velocity
+                rb.MovePosition(rb.position + transform.forward * currentVelocity.magnitude * Time.fixedDeltaTime);
+            }
+            
 
         }
         #endregion
@@ -242,40 +252,6 @@ namespace HW
 
         #region PUBLIC
         
-        //public bool GetActionButtonDown()
-        //{
-        //    return GetButtonDown(actionAxis);
-        //}
-
-        //public bool GetActionButtonUp()
-        //{
-        //    return GetButtonUp(actionAxis);
-        //}
-
-        //public bool GetBackButtonDown()
-        //{
-        //    return GetButtonDown(backAxis);
-        //}
-
-        //public bool GetBackButtonUp()
-        //{
-        //    return GetButtonUp(backAxis);
-        //}
-
-        //public bool GetInventoryButtonDown()
-        //{
-        //    return GetButtonDown(inventoryAxis);
-        //}
-
-        //public bool GetInventoryButtonUp()
-        //{
-        //    return GetButtonUp(inventoryAxis);
-        //}
-
-        //public float GetHorizontalAxisRaw()
-        //{
-        //    return GetAxisRaw(horizontalAxis);
-        //}
 
         public bool IsRunning()
         {
@@ -622,51 +598,7 @@ namespace HW
             attackFailed = false;
         }
 
-        //// Returns true if axis raw is higher than 0, otherwise false
-        //float GetAxisRaw(string axis)
-        //{
-        //    // No suffix for mouse and keyboard
-        //    string suffix = "_0";
-
-        //    // Are we using the gamepad ?
-        //    if (JoystickManager.Instance.Connected)
-        //    {
-        //        // If so which type ?
-        //        suffix = JoystickManager.Instance.Suffix;
-        //    }
-
-        //    return Input.GetAxisRaw(axis + suffix);
-        //}
-
-        //bool GetButtonDown(string button)
-        //{
-        //    // No suffix for mouse and keyboard
-        //    string suffix = "_0";
-
-        //    // Are we using the gamepad ?
-        //    if (JoystickManager.Instance.Connected)
-        //    {
-        //        // If so which type ?
-        //        suffix = JoystickManager.Instance.Suffix;
-        //    }
-
-        //    return Input.GetButtonDown(button + suffix);
-        //}
-
-        //bool GetButtonUp(string button)
-        //{
-        //    // No suffix for mouse and keyboard
-        //    string suffix = "_0";
-
-        //    // Are we using the gamepad ?
-        //    if (JoystickManager.Instance.Connected)
-        //    {
-        //        // If so which type ?
-        //        suffix = JoystickManager.Instance.Suffix;
-        //    }
-
-        //    return Input.GetButtonUp(button + suffix);
-        //}
+      
 
         // Returns all the available target depending on radius and obstacles
         List<Transform> GetAvailableTargets(float radius)
