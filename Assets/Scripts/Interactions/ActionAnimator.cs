@@ -73,7 +73,6 @@ namespace HW
         InteractionController interactionController;
         int oldState = -1;
         
-
         private void Awake()
         {
             actionController = GetComponentInParent<ActionController>();
@@ -82,6 +81,7 @@ namespace HW
  
             fsm = GetComponentInParent<FiniteStateMachine>();
             fsm.OnStateChange += HandleOnStateChange;
+            fsm.OnFail += HandleOnFail;
           
             interactionController = GetComponent<InteractionController>();
         }
@@ -118,6 +118,17 @@ namespace HW
        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
             this.oldState = oldState;
+        }
+
+        /// <summary>
+        /// In the HandleOnActionPerformed method we check both old and new states, but if the fsm fails the old state
+        /// is the one we stored the last time the fsm changed state ( that is wrong ). So we store the current fsm
+        /// state on failure.
+        /// </summary>
+        /// <param name="fsm">The finite state machine attached to this game object.</param>
+        void HandleOnFail(FiniteStateMachine fsm)
+        {
+            this.oldState = fsm.CurrentStateId;
         }
 
         IEnumerator CoroutineHandleOnActionPerformed(ActionController ctrl)
