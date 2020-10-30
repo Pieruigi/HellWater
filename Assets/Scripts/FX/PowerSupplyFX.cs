@@ -16,7 +16,7 @@ namespace HW
         AudioSource startingAudioSource;
 
         [SerializeField]
-        FiniteStateMachine fsm;
+        FiniteStateMachine starterFsm;
 
         [SerializeField]
         ActionController actionController;
@@ -27,25 +27,27 @@ namespace HW
         [SerializeField]
         AudioSource tankAudioSource;
 
+        [SerializeField]
+        FiniteStateMachine tankFsm;
+
         int playOnStateId = 0;
+        float workingDelay = 0;
+        float startingDelay = 0.5f;
 
         private void Awake()
         {
-            fsm.OnStateChange += HandleOnStateChange;
+            starterFsm.OnStateChange += HandleOnStateChange;
+            tankFsm.OnStateChange += HandleOnStateChange;
             actionController.OnActionPerformed += HandleOnActionPerformed;
-            //actionController.OnActionStop += HandleOnActionStop;
-
-            //tankActionController.OnActionStart += HandleOnActionStart;
-            //tankActionController.OnActionStop += HandleOnActionStop;
+            //tankActionController.OnActionPerformed += HandleOnActionPerformed;
 
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            if(fsm.CurrentStateId == playOnStateId) 
+            if(starterFsm.CurrentStateId == playOnStateId) 
             {
-                
                 StartFX();
             }
         }
@@ -58,9 +60,16 @@ namespace HW
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
-            if (fsm.CurrentStateId == playOnStateId)
+            if(fsm == starterFsm && fsm.CurrentStateId == playOnStateId)
             {
+                workingDelay = 3f;
+
                 StartFX();
+            }
+
+            if(fsm == tankFsm && oldState == 1 && fsm.CurrentStateId == 0)
+            {
+                tankAudioSource.Play();
             }
            
         }
@@ -69,22 +78,30 @@ namespace HW
         {
             if(ctrl == actionController)
             {
-                startingAudioSource.Play();
+                startingAudioSource.PlayDelayed(startingDelay);
             }
-            
-            if(ctrl == tankActionController)
-            {
-                tankAudioSource.PlayDelayed(0.5f);
-            }
+                        
         }
 
         void StartFX()
         {
+            if(workingDelay > 0)
+            {
+                // We add some delay 
+                ParticleSystem.MainModule main = particle.main;
+                main.startDelay = 3f;
+
+                // Play sound delayed
+                workingAudioSource.PlayDelayed(workingDelay);
+            }
+            else
+            {
+                // Play audio loop 
+                workingAudioSource.Play();
+            }
+
             // Play particle system
             particle.Play();
-
-            // Play audio loop 
-            workingAudioSource.Play();
         }
 
         //void HandleOnActionStart(ActionController ctrl)
