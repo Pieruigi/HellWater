@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Andrea
   m_Shader: {fileID: 4800000, guid: ad5551aa81ee9c841874d7f598e257ab, type: 3}
-  m_ShaderKeywords: TCP2_DISABLE_WRAPPED_LIGHT TCP2_NONE
+  m_ShaderKeywords: TCP2_DISABLE_WRAPPED_LIGHT TCP2_NONE TCP2_OUTLINE_TEXTURED
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -68,9 +68,9 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _DstBlendOutline: 10
+    - _DstBlendOutline: 2
     - _EnableConstSizeOutline: 0
-    - _EnableTexturedOutline: 0
+    - _EnableTexturedOutline: 1
     - _EnableZSmooth: 0
     - _GlossMapScale: 1
     - _Glossiness: 0
@@ -95,7 +95,7 @@ Material:
     - _SpecSmooth: 1
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _SrcBlendOutline: 5
+    - _SrcBlendOutline: 3
     - _TCP2_DISABLE_WRAPPED_LIGHT: 1
     - _TCP2_OUTLINE_CONST_SIZE: 0
     - _TCP2_OUTLINE_TEXTURED: 0
