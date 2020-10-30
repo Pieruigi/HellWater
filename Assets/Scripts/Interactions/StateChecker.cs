@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace HW
 {
@@ -9,7 +10,9 @@ namespace HW
     // conditions in order to check the other machines.
     public class StateChecker : MonoBehaviour
     {
-      
+        // This is called every time a fsm is checked
+        public UnityAction<StateChecker, FiniteStateMachine> OnChecked;
+
         [SerializeField]
         List<FiniteStateMachine> targets;
        
@@ -40,12 +43,17 @@ namespace HW
 
         }
 
+        public int TargetCount()
+        {
+            return targets.Count;
+        }
+
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
             // If true set the new state
             Check();
-                
-            
+
+            OnChecked?.Invoke(this, fsm);
         }
 
         // Returns true if every fsm has the desired state, otherwise false
@@ -53,7 +61,7 @@ namespace HW
         {
 
             fsm.Lookup();
-
+            
         }
     }
 

@@ -34,6 +34,25 @@ namespace HW
 
         }
 
+        /// <summary>
+        /// Send the corresponding message to the UI.
+        /// </summary>
+        /// <param name="messageId">The id of the message you want to show.</param>
+        public void ShowMessage(int messageId)
+        {
+            if(messageId < 0)
+            {
+                Debug.LogErrorFormat("Messenger has been receiving a wrong message id: {0}", messageId);
+                return;
+            }
+
+            // Get the right message depending on the id and language
+            string message = MessageFactory.Instance.GetMessage(messageId);
+
+            //MessageViewer.Instance.ShowMessage(message);
+            StartCoroutine(ShowMessage(message, delay));
+        }
+
         void HandleOnFail(FiniteStateMachine fsm)
         {
             Debug.Log("fsm.LastErrorCode:" + fsm.LastExitCode);
@@ -62,6 +81,8 @@ namespace HW
             //MessageViewer.Instance.ShowMessage(message);
             StartCoroutine(ShowMessage(message, delay));
         }
+
+
 
         IEnumerator ShowMessage(string message, float delay)
         {
