@@ -13261,6 +13261,7 @@ GameObject:
   - component: {fileID: 2099317542}
   - component: {fileID: 2099317537}
   - component: {fileID: 2099317538}
+  - component: {fileID: 2099317539}
   m_Layer: 0
   m_Name: RobertDialog-3
   m_TagString: Untagged
@@ -13322,6 +13323,21 @@ MonoBehaviour:
   keepPlayingOnExit: 0
   onSkipOrDialogCompletedFadeOut: 0
   onSkipOrDialogCompletedFadeOutSpeed: 0
+--- !u!114 &2099317539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099317535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79930eeb97fd7dc4c94eceaaa4a518c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  desiredState: 0
+  desiredOldState: -1
+  nextQuestCode: g003
 --- !u!114 &2099317542
 MonoBehaviour:
   m_ObjectHideFlags: 0

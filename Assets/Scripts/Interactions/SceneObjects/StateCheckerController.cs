@@ -24,7 +24,7 @@ namespace HW
         // The messenger attached to this object
         Messenger messenger;
 
-        int nextIndex;
+        int nextIndex = 0;
 
         private void Awake()
         {
@@ -37,8 +37,6 @@ namespace HW
             // Get the messenger
             messenger = GetComponent<Messenger>();
 
-            // Next index in the message list
-            nextIndex = messageIds.Count - 1;
         }
 
         // Start is called before the first frame update
@@ -56,7 +54,7 @@ namespace HW
         void HandleOnChecked(StateChecker stateChecker, FiniteStateMachine fsm)
         {
             // If the next index is less than zero return
-            if (nextIndex < 0)
+            if (nextIndex >= messageIds.Count)
                 return;
 
             // If this fsm was already checked return
@@ -70,7 +68,7 @@ namespace HW
             int messageId = messageIds[nextIndex];
 
             // Update the next index
-            nextIndex--;
+            nextIndex++;
 
             // If the message id is greater than zero then let the UI show the message
             if (messageId >= 0)
