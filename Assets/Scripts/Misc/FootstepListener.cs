@@ -82,8 +82,8 @@ namespace HW
 
         public void ExitFootstepTrigger(FootstepTrigger trigger)
         {
-            // It may happen that you enter a trigger and leave onother trigger in the same frame, so we must be sure
-            // the trigger we are leaving is the current one, oterwise we do nothing.
+            // It may happen that you enter a trigger and leave another trigger in the same frame, so we must be sure
+            // the trigger we are leaving is the current one, otherwise we do nothing.
             if (trigger != currentTrigger)
                 return;
 
