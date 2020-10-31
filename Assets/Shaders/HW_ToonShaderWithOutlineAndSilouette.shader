@@ -55,10 +55,6 @@ Shader "HW_Shaders/ToonShaderWithOutlineAndSilouette"
 
 		//This property will be ignored and will draw the custom normals GUI instead
 		[TCP2OutlineNormalsGUI] __outline_gui_dummy__ ("_unused_", Float) = 0
-		//Blending
-		[TCP2Header(OUTLINE BLENDING)]
-		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlendOutline ("Blending Source", Float) = 5
-		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlendOutline ("Blending Dest", Float) = 10
 	[TCP2Separator]
 
 
@@ -393,8 +389,7 @@ Shader "HW_Shaders/ToonShaderWithOutlineAndSilouette"
 			Cull Front
 			Offset [_Offset1],[_Offset2]
 
-			Tags { "LightMode"="ForwardBase" "Queue"="Transparent" "IgnoreProjectors"="True" "RenderType"="Transparent" }
-			Blend [_SrcBlendOutline] [_DstBlendOutline]
+			Tags { "LightMode"="ForwardBase" "IgnoreProjectors"="True" }
 
 			CGPROGRAM
 
