@@ -29,6 +29,7 @@ namespace HW
         string paramAttackOK = "AttackOK";
         string paramAttackKO = "AttackKO";
         string paramAttackChargeSpeed = "AttackChargeSpeed";
+        string paramCrouching = "Crouching";
         //string paramLocomotion = "Locomotion";
         
         #endregion
@@ -67,29 +68,27 @@ namespace HW
 
             // Update locomotion
             //animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
-            animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed());
+            if (!playerController.Crouching)
+            {
+                // If player is crouching then return to walk
+                if (animator.GetBool(paramCrouching))
+                    animator.SetBool(paramCrouching, false);
 
+                // Set speed
+                animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed());
+                //animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
+            }
+            else
+            {
+                // If player is walking then start crouching
+                if (!animator.GetBool(paramCrouching))
+                    animator.SetBool(paramCrouching, true);
 
-            //if (playerController.GetCurrentSpeed() > 0)
-            //{
-            //    if (playerController.IsRunning())
-            //    {
-            //        if (animator.GetInteger(paramLocomotion) != (int)Locomotion.Run)
-            //            animator.SetInteger(paramLocomotion, (int)Locomotion.Run);
-                        
-            //    }
-            //    else
-            //    {
-            //        if (animator.GetInteger(paramLocomotion) != (int)Locomotion.Walk)
-            //            animator.SetInteger(paramLocomotion, (int)Locomotion.Walk);
-            //    }
+                // Set speed
+                animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
+            }
 
-            //}
-            //else
-            //{
-            //    if (animator.GetInteger(paramLocomotion) != (int)Locomotion.Idle)
-            //        animator.SetInteger(paramLocomotion, (int)Locomotion.Idle);
-            //}
+            
 
             // If player is aiming then check rotation
             if (animator.GetBool(paramAiming))

@@ -69,6 +69,14 @@ namespace HW
         // The target velocity
         Vector3 desiredVelocity;
         Vector3 currentVelocity;
+
+        float crouchMultiplier = 0.7f;
+        
+        bool crouching = false;
+        public bool Crouching
+        {
+            get { return crouching; }
+        }
         #endregion
 
         #region FIGHTING FIELDS
@@ -164,6 +172,8 @@ namespace HW
         {
            
             Reset();
+
+            SetCrouching(true);
 
             GetComponentInChildren<MeleeWeapon>().OnHit += HandleOnHitSomething;
 
@@ -272,7 +282,7 @@ namespace HW
 
         public float GetMaximumSpeed()
         {
-            return maxRunningSpeed;
+            return crouching ? maxSpeed : maxRunningSpeed;
         }
 
 
@@ -369,6 +379,19 @@ namespace HW
                 // Ok let's see this weapon
                 //SetCurrentWeapon(meleeWeapon);
             }
+        }
+
+        /// <summary>
+        /// This is called when player starts or stops standing crouched.
+        /// </summary>
+        public void SetCrouching(bool value)
+        {
+            // Needed force weapons disabled before to move crouched.
+            if (value && !holsterForced)
+                HolsterWeapon(true);
+                
+            crouching = value;
+            ResetMaxSpeed();
         }
 
         #endregion
@@ -490,10 +513,13 @@ namespace HW
 
         }
 
-        // Max speed will change depending on whether the player is running or not
+        // Max speed will change depending on whether the player is running or not.
+        // It also decrease if player is crouching.
         void ResetMaxSpeed()
         {
             maxSpeed = running ? maxRunningSpeed : maxWalkingSpeed;
+            if (crouching)
+                maxSpeed *= crouchMultiplier;
         }
 
         void TryReload()
@@ -682,7 +708,7 @@ namespace HW
             attackCharged = false;
             toTargetSignedAngleRotation = 0;
             hit = false;
-
+            crouching = false;
             desiredVelocity = Vector2.zero;
 
             currentTarget = null;
@@ -748,14 +774,11 @@ namespace HW
                 if (currentReleaseWeaponTimer < 0)
                     ResetCurrentWeapon();
 
-                //
-                // Check movement
-                //
-
-                // Check if player is running
+                // Check movement.
+                // Check if player is running.
                 CheckIsRunning();
 
-                // Get player movement input 
+                // Get player movement input. 
                 Vector2 input = new Vector2(PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis), PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis)).normalized;
 
                 // Get the desired velocity depending on the camera orientation ( for ex. if the camera if looking
@@ -765,9 +788,7 @@ namespace HW
 
                 desiredVelocity *= maxSpeed;
                
-                //
-                // Look towards the direction you are moving to
-                //
+                // Look to the direction you are moving towards.
                 Vector3 desiredFwd = desiredVelocity.normalized;
 
                 // Get the direction player is looking at
