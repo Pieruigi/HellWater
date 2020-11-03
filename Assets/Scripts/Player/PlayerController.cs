@@ -70,7 +70,9 @@ namespace HW
         Vector3 desiredVelocity;
         Vector3 currentVelocity;
 
-        float crouchMultiplier = 0.7f;
+        float crouchMaxWalkSpeed = 1f;
+        float crouchRunSpeedMul = 2f;
+        
         
         bool crouching = false;
         public bool Crouching
@@ -173,7 +175,7 @@ namespace HW
            
             Reset();
 
-            SetCrouching(true);
+            //SetCrouching(true);
 
             GetComponentInChildren<MeleeWeapon>().OnHit += HandleOnHitSomething;
 
@@ -275,14 +277,17 @@ namespace HW
 
         public float GetCurrentSpeed()
         {
-            //Debug.Log("HSpeed:" + rb.velocity);
             return currentVelocity.magnitude;
-            
+        }
+
+        public float GetCurrentSpeedNormalized()
+        {
+            return currentVelocity.magnitude / GetMaximumSpeed();
         }
 
         public float GetMaximumSpeed()
         {
-            return crouching ? maxSpeed : maxRunningSpeed;
+            return crouching ? crouchMaxWalkSpeed * crouchRunSpeedMul : maxRunningSpeed;
         }
 
 
@@ -517,9 +522,10 @@ namespace HW
         // It also decrease if player is crouching.
         void ResetMaxSpeed()
         {
-            maxSpeed = running ? maxRunningSpeed : maxWalkingSpeed;
-            if (crouching)
-                maxSpeed *= crouchMultiplier;
+            if(!crouching)
+                maxSpeed = running ? maxRunningSpeed : maxWalkingSpeed;
+            else
+                maxSpeed = running ? crouchMaxWalkSpeed * crouchRunSpeedMul : crouchMaxWalkSpeed;
         }
 
         void TryReload()

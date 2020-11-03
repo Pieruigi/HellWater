@@ -11,14 +11,20 @@ namespace HW
         [SerializeField]
         List<RendererActivator> objects;
 
+        // Object to activate inside
         [SerializeField]
         List<GameObject> activables;
 
+        // Object to deactivade inside
+        [SerializeField]
+        List<GameObject> deactivables;
+
         bool fadeEnabled = false;
+
 
         private void Awake()
         {
-            Deactivate();  
+              Deactivate();  
         }
 
         // Start is called before the first frame update
@@ -78,7 +84,11 @@ namespace HW
             foreach(GameObject o in activables)
             {
                 o.GetComponent<IActivable>().Activate(value);
-                
+            }
+
+            foreach (GameObject o in deactivables)
+            {
+                o.GetComponent<IActivable>().Activate(!value);
             }
 
             if (fade)

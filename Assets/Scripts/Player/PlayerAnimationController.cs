@@ -84,8 +84,9 @@ namespace HW
                 if (!animator.GetBool(paramCrouching))
                     animator.SetBool(paramCrouching, true);
 
+                Debug.Log("NormalizedSpeed:" + playerController.GetCurrentSpeedNormalized());
                 // Set speed
-                animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
+                animator.SetFloat(paramSpeed, playerController.GetCurrentSpeedNormalized());
             }
 
             

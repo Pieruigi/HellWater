@@ -153,15 +153,19 @@ namespace HW
                 case State.Engaged:
                     if (CheckForDisengagement())
                     {
+                        // If disangaged the enemy stays for a while in alert mode.
                         Alert(transform.position);
                     }
                     else
                     {
-                        // Withing the fighting range
+                        // Check if player is inside the enemy fighting range.
                         if ((transform.position - target.position).magnitude < (fightBehaviour as IFighter).GetFightingRange())
                         {
+                            // Enemy starts fighing.
+                            // First he stop moving.
                             agent.velocity = Vector3.MoveTowards(agent.velocity, Vector3.zero, closeEnoughDeceleration * Time.deltaTime);
                             
+                            // Start fighting.
                             if (!fighting)
                             {
                                 fighting = true;
@@ -171,10 +175,9 @@ namespace HW
                             }
 
                         }
-                        else // Out of the fighting range
+                        else // Out of the fighting range.
                         {
-
-                            // Move to target
+                            // Keep moving towards target.
                             if(!IsOccluded(PlayerController.Instance.transform))
                                 MoveTo(target.position);
                         }
@@ -183,15 +186,21 @@ namespace HW
                     break;
 
                 case State.Alerted:
+
+                    // If alerted the enemy can still turn to engaged, otherwise, after a given time
+                    // he goes back in idle state.
                     if (CheckForEngagement())
                     {
+                        // Engaged, stop the alert coroutine.
                         StopCoroutine(DoAlert());
-                        movingAlerted = false;
-                        Engage();
+                        movingAlerted = false; // No moving alerted.
+                        // Engage the player.
+                        Engage(); 
                     }
 
                     break;
                 case State.Idle:
+                    // Check for engamement.
                     if (CheckForEngagement())
                     {
                         // Engage
@@ -360,7 +369,8 @@ namespace HW
             // Always update alert position
             alertPosition = position;
             
-            // If true there is already a coroutine running
+            // If already alerted then reset position and continue with the already running 
+            // coroutine.
             if (state == State.Alerted)
             {
                 // Maybe coroutine started moving AI, so we need to update manually the direction

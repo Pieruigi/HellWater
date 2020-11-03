@@ -7,7 +7,7 @@ namespace HW
     public class EnemyPS : MonoBehaviour
     {
         [SerializeField]
-        List<ParticleSystem> splatters;
+        List<GameObject> splatters;
 
         Enemy enemy;
 
@@ -38,7 +38,7 @@ namespace HW
         {
             if (splatters.Count > 0)
             {
-                ParticleSystem ps = Instantiate(splatters[Random.Range(0, splatters.Count)]);
+                GameObject ps = Instantiate(splatters[Random.Range(0, splatters.Count)]);
 
                 ps.transform.forward = hitInfo.Normal;
                 Debug.Log("HitNormal:" + hitInfo.Normal);
