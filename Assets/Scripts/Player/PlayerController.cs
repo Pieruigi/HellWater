@@ -71,7 +71,7 @@ namespace HW
         Vector3 currentVelocity;
 
         float crouchMaxWalkSpeed = 1f;
-        float crouchRunSpeedMul = 2f;
+        float crouchRunSpeedMul = 2.5f;
         
         
         bool crouching = false;
