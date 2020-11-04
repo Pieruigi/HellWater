@@ -57,8 +57,6 @@ namespace HW
             fsm = GetComponent<FiniteStateMachine>();
             fsm.OnStateChange += HandleOnStateChange;
             
-
-
         }
 
         // Start is called before the first frame update
@@ -142,11 +140,11 @@ namespace HW
                 StartCoroutine(CoroutineBreak());
             else
                 if(oldState == desiredStateId)
-            {
-                // Check objects to de/activate
-                CheckObjects();
-                CheckParticles();
-            }
+                {
+                    // Check objects to de/activate
+                    CheckObjects();
+                    CheckParticles();
+                }
             
                 
         }
