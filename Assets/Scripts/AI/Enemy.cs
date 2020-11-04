@@ -266,7 +266,14 @@ namespace HW
             health.Damage(hitInfo.DamageAmount);
 
             if(health.CurrentHealth <= 0)
+            {
+                // Stop moving
+                agent.ResetPath();
+                agent.speed = 0;
+
                 state = State.Dead;
+            }
+                
                 
          
             // Manage physical reaction
