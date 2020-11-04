@@ -3601,6 +3601,7 @@ GameObject:
   - component: {fileID: 145159789}
   - component: {fileID: 145159788}
   - component: {fileID: 145159787}
+  - component: {fileID: 145159790}
   m_Layer: 0
   m_Name: SearchChecker
   m_TagString: Untagged
@@ -3674,7 +3675,7 @@ MonoBehaviour:
       newStateId: 1
       callEvent: 1
     commonStateErrorCode: -1
-    commonStateSucceedCode: -1
+    commonStateSucceedCode: 37
   - name: ToDo
     id: 1
     othersToSet: []
@@ -3700,6 +3701,19 @@ MonoBehaviour:
     errorCode: -1
   currentStateName: ToDo
   currentStateId: 1
+--- !u!114 &145159790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145159785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a664822f6b8ba74296eace05d153587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 5
 --- !u!1001 &146337487
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5698,21 +5712,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 242592926}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c93c54c29b81334bae2ef1be9c9ca47, type: 3}
+  m_Script: {fileID: 11500000, guid: a6fb889543ddc0b41a647ebac448be8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredStateId: 0
-  delay: 1.2
-  fadeSpeed: 1
-  fadeLength: 1
-  messageId: -1
-  messageDelay: 0
-  messageTime: 0
-  objectsToShow: []
-  objectsToHide:
-  - {fileID: 1207921223}
-  particlesToPlay: []
-  particlesToStop: []
+  item: {fileID: 0}
+  count: 1
+  target: {fileID: 1207921223}
+  delay: 0.7
 --- !u!1001 &244390949
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9881,7 +9887,7 @@ GameObject:
   - component: {fileID: 448939588}
   - component: {fileID: 448939598}
   - component: {fileID: 448939592}
-  - component: {fileID: 448939599}
+  - component: {fileID: 448939600}
   m_Layer: 0
   m_Name: SearchTrigger-6
   m_TagString: Untagged
@@ -9919,9 +9925,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredState: 0
   desiredOldState: 1
-  actionType: 8
+  actionType: 1
   loop: 0
-  length: 3.5
+  length: 1.5
   disablePlayerOnActionPerformed: 1
   toolPrefab: {fileID: 0}
   playerNodeName: 0
@@ -10108,7 +10114,7 @@ MonoBehaviour:
   toolPosition: {x: 0, y: 0, z: 0}
   toolRotation: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
---- !u!114 &448939599
+--- !u!114 &448939600
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10117,21 +10123,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 448939586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c93c54c29b81334bae2ef1be9c9ca47, type: 3}
+  m_Script: {fileID: 11500000, guid: a6fb889543ddc0b41a647ebac448be8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredStateId: 0
-  delay: 1.2
-  fadeSpeed: 1
-  fadeLength: 1
-  messageId: -1
-  messageDelay: 0
-  messageTime: 0
-  objectsToShow: []
-  objectsToHide:
-  - {fileID: 1857023020}
-  particlesToPlay: []
-  particlesToStop: []
+  item: {fileID: 0}
+  count: 1
+  target: {fileID: 1857023020}
+  delay: 0.7
 --- !u!1001 &453114473
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22326,21 +22324,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 835960848}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c93c54c29b81334bae2ef1be9c9ca47, type: 3}
+  m_Script: {fileID: 11500000, guid: a6fb889543ddc0b41a647ebac448be8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredStateId: 0
-  delay: 1.2
-  fadeSpeed: 1
-  fadeLength: 1
-  messageId: -1
-  messageDelay: 0
-  messageTime: 0
-  objectsToShow: []
-  objectsToHide:
-  - {fileID: 1178602097}
-  particlesToPlay: []
-  particlesToStop: []
+  item: {fileID: 0}
+  count: 1
+  target: {fileID: 1178602097}
+  delay: 0.7
 --- !u!1 &836732916
 GameObject:
   m_ObjectHideFlags: 0
@@ -24041,21 +24031,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 913386291}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c93c54c29b81334bae2ef1be9c9ca47, type: 3}
+  m_Script: {fileID: 11500000, guid: a6fb889543ddc0b41a647ebac448be8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredStateId: 0
-  delay: 1.2
-  fadeSpeed: 1
-  fadeLength: 1
-  messageId: -1
-  messageDelay: 0
-  messageTime: 0
-  objectsToShow: []
-  objectsToHide:
-  - {fileID: 1483554912}
-  particlesToPlay: []
-  particlesToStop: []
+  item: {fileID: 0}
+  count: 1
+  target: {fileID: 1483554912}
+  delay: 0.7
 --- !u!1 &913705332
 GameObject:
   m_ObjectHideFlags: 0
@@ -27943,21 +27925,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1128888398}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c93c54c29b81334bae2ef1be9c9ca47, type: 3}
+  m_Script: {fileID: 11500000, guid: a6fb889543ddc0b41a647ebac448be8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredStateId: 0
-  delay: 1.2
-  fadeSpeed: 1
-  fadeLength: 1
-  messageId: -1
-  messageDelay: 0
-  messageTime: 0
-  objectsToShow: []
-  objectsToHide:
-  - {fileID: 764827343}
-  particlesToPlay: []
-  particlesToStop: []
+  item: {fileID: 0}
+  count: 1
+  target: {fileID: 764827343}
+  delay: 0.7
 --- !u!1001 &1131313127
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34944,21 +34918,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1489154263}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c93c54c29b81334bae2ef1be9c9ca47, type: 3}
+  m_Script: {fileID: 11500000, guid: a6fb889543ddc0b41a647ebac448be8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredStateId: 0
-  delay: 1.2
-  fadeSpeed: 1
-  fadeLength: 1
-  messageId: -1
-  messageDelay: 0
-  messageTime: 0
-  objectsToShow: []
-  objectsToHide:
-  - {fileID: 2115863464}
-  particlesToPlay: []
-  particlesToStop: []
+  item: {fileID: 0}
+  count: 1
+  target: {fileID: 2115863464}
+  delay: 0.7
 --- !u!1 &1490903754
 GameObject:
   m_ObjectHideFlags: 0
@@ -36976,6 +36942,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1574925218}
   m_Mesh: {fileID: -5419185347669243956, guid: 9999bd65f2644814b9a4ac849e3254d0, type: 3}
+--- !u!1 &1581732634 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9129620693199325137, guid: b4c59c3dd4462254888b47c3e0202e8f,
+    type: 3}
+  m_PrefabInstance: {fileID: 9129620693541040901}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1584845254
 GameObject:
   m_ObjectHideFlags: 0
@@ -46013,6 +45985,8 @@ GameObject:
   - component: {fileID: 1978036018}
   - component: {fileID: 1978036017}
   - component: {fileID: 1978036020}
+  - component: {fileID: 1978036022}
+  - component: {fileID: 1978036021}
   m_Layer: 0
   m_Name: DoorTrigger
   m_TagString: Untagged
@@ -46215,6 +46189,45 @@ MonoBehaviour:
   toolPosition: {x: 0, y: 0, z: 0}
   toolRotation: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
+--- !u!95 &1978036021
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978036010}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!320 &1978036022
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978036010}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 71a08672af2c45d418e20503a12d0b66, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -7030014585637670003, guid: 71a08672af2c45d418e20503a12d0b66, type: 2}
+    value: {fileID: 1978036021}
+  m_ExposedReferences:
+    m_References:
+    - f02068388ff436a4f8c3d0a645028b9e: {fileID: 1581732634}
 --- !u!4 &1978053925 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: b5aa90c58aee6974484f27ee020eb59f,
@@ -50411,6 +50424,7 @@ MonoBehaviour:
   item: {fileID: 0}
   count: 1
   target: {fileID: 0}
+  delay: 1
 --- !u!114 &5576053328561325879
 MonoBehaviour:
   m_ObjectHideFlags: 0

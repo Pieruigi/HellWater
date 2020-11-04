@@ -16,6 +16,9 @@ namespace HW
         [SerializeField]
         GameObject target;
 
+        [SerializeField]
+        float delay = 0.7f;
+
         FiniteStateMachine fsm;
 
         float time = 1f;
@@ -54,6 +57,9 @@ namespace HW
 
         IEnumerator PickUp()
         {
+            if(delay > 0)
+                yield return new WaitForSeconds(delay);
+
             // Hide
             if (target)
             {
