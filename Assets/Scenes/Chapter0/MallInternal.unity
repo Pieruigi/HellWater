@@ -2227,6 +2227,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 297195171}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &84810736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 84810732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a75081a1613bf1c428795ecf8452a3ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &98026959
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31924,6 +31936,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 799605648}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1346356542 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -4172394025372185167, guid: 4c078c4d210177641a6ec2ad22d57cc7,
+    type: 3}
+  m_PrefabInstance: {fileID: 799605648}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1346356541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f5c68ae736158b488a511021736a660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1350335924
 GameObject:
   m_ObjectHideFlags: 0
@@ -46198,11 +46222,11 @@ GameObject:
   - component: {fileID: 1978036013}
   - component: {fileID: 1978036012}
   - component: {fileID: 1978036016}
-  - component: {fileID: 1978036019}
   - component: {fileID: 1978036018}
   - component: {fileID: 1978036017}
   - component: {fileID: 1978036022}
   - component: {fileID: 1978036021}
+  - component: {fileID: 1978036020}
   m_Layer: 0
   m_Name: DoorTrigger
   m_TagString: Untagged
@@ -46357,7 +46381,7 @@ MonoBehaviour:
   twoWay: 1
   interactableObject: {fileID: 1978036010}
   actionController: {fileID: 0}
---- !u!114 &1978036019
+--- !u!114 &1978036020
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46366,24 +46390,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1978036010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c93c54c29b81334bae2ef1be9c9ca47, type: 3}
+  m_Script: {fileID: 11500000, guid: 59272f81377d6cb4fa0f71754657d540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredStateId: 0
-  delay: 0
-  fadeSpeed: 1
-  fadeLength: 5
-  messageId: -1
-  messageDelay: 0
-  messageTime: 0
-  objectsToShow:
-  - {fileID: 1974046907}
-  - {fileID: 1926802327}
-  - {fileID: 84810732}
-  objectsToHide:
-  - {fileID: 1268718151}
-  particlesToPlay: []
-  particlesToStop: []
+  fsm: {fileID: 1978036016}
+  state: 0
+  loopAllowed: 0
 --- !u!95 &1978036021
 Animator:
   serializedVersion: 3
@@ -46432,6 +46444,14 @@ PlayableDirector:
     value: {fileID: 206212538}
   - key: {fileID: 2014993192049789017, guid: 71a08672af2c45d418e20503a12d0b66, type: 2}
     value: {fileID: 1226338143}
+  - key: {fileID: -5323001687391789278, guid: 71a08672af2c45d418e20503a12d0b66, type: 2}
+    value: {fileID: 1346356542}
+  - key: {fileID: 1754342241781117352, guid: 71a08672af2c45d418e20503a12d0b66, type: 2}
+    value: {fileID: 1268718151}
+  - key: {fileID: 6413396334661817059, guid: 71a08672af2c45d418e20503a12d0b66, type: 2}
+    value: {fileID: 84810732}
+  - key: {fileID: -2440917739570579085, guid: 71a08672af2c45d418e20503a12d0b66, type: 2}
+    value: {fileID: 2115620171}
   m_ExposedReferences:
     m_References:
     - f02068388ff436a4f8c3d0a645028b9e: {fileID: 1581732634}

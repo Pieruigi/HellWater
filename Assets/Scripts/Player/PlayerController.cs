@@ -389,12 +389,8 @@ namespace HW
         /// <summary>
         /// This is called when player starts or stops standing crouched.
         /// </summary>
-        public void SetCrouching(bool value)
+        public void SetStealthMode(bool value)
         {
-            // Needed force weapons disabled before to move crouched.
-            if (value && !holsterForced)
-                HolsterWeapon(true);
-                
             crouching = value;
             ResetMaxSpeed();
         }
