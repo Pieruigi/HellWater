@@ -28,6 +28,7 @@ namespace HW
         public UnityAction<Weapon, Transform> OnTargeting; // Called everytime you acquire or switch a target ( null means no target )
         public UnityAction OnDead;
         public UnityAction OnHolsterForced;
+        public UnityAction OnSurrender;
 
         #endregion
 
@@ -196,7 +197,7 @@ namespace HW
         void FixedUpdate()
         {
             // Check collision to avoid player keep moving against walls.
-            Ray ray = new Ray(rb.position + Vector3.up, transform.forward);
+            Ray ray = new Ray(rb.position + Vector3.up*0.5f, transform.forward);
             RaycastHit hitInfo;
             // We must add the player collider radius to the distance
             float distance = coll.radius + (currentVelocity.magnitude * Time.fixedDeltaTime);
@@ -263,7 +264,15 @@ namespace HW
         #endregion
 
         #region PUBLIC
-        
+        public void Surrender()
+        {
+            // Player gets captured by a human enemy ( marauder, soldier, etc. ).
+            // Disable controller.
+            SetDisabled(true);
+
+            // Call event.
+            OnSurrender?.Invoke();
+        }
 
         public bool IsRunning()
         {

@@ -5,8 +5,9 @@ using UnityEngine;
 namespace HW
 {
     /// <summary>
-    /// This class control which objects must be deactivated on start depending on a given
-    /// finite state machine.
+    /// This class control which objects must be de/activated on start depending on a given
+    /// finite state machine. All the objects in the object list will be activated if the 
+    /// current fsm state is contained in the state list, otherwise they will be deactivated.
     /// </summary>
     public class ActivationController : MonoBehaviour
     {
@@ -15,25 +16,34 @@ namespace HW
         FiniteStateMachine fsm;
 
         [SerializeField]
-        int state = 0; 
+        List<int> states = new List<int>(); 
 
-        // The list of object you want to de/activate on the given fsm state.
+        // The list of object you want to activate when states match and deactivate when 
+        // states don't match.
         [SerializeField]
-        List<GameObject> objects;
+        List<GameObject> positiveObjects;
 
-        // True if you want the objects in the list to be deactivated. Otherwise leave false.
+        // The list of object you want to deactivate when states match and activate when
+        // states don't match.
         [SerializeField]
-        bool deactivate = false;
+        List<GameObject> negativeObjects;
 
         // Start is called before the first frame update
         void Start()
         {
-            if(state == fsm.CurrentStateId)
+            // Return true if the current state of the active state machine is in the state list.
+            bool activate = states.Exists(s => s == fsm.CurrentStateId);
+
+            // De/activate positive objects in the list.
+            foreach (GameObject obj in positiveObjects)
             {
-                foreach(GameObject obj in objects)
-                {
-                    obj.SetActive(!deactivate);
-                }
+                obj.SetActive(activate);
+            }
+
+            // De/activate negative objects in the list.
+            foreach (GameObject obj in negativeObjects)
+            {
+                obj.SetActive(!activate);
             }
         }
 

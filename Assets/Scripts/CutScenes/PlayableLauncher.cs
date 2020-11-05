@@ -36,8 +36,8 @@ namespace HW.CutScene
         {
             // If the fsm current state is equal to the activation state then fast forward 
             // the playable director.
-            if (fsm.CurrentStateId == state)
-                playableDirector.time = playableDirector.duration;
+            //if (fsm.CurrentStateId == state)
+            //    playableDirector.time = playableDirector.duration;
         }
 
         // Update is called once per frame

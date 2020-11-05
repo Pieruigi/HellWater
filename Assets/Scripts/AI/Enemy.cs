@@ -29,6 +29,9 @@ namespace HW
         float sqrSightRange;
 
         [SerializeField]
+        float sightAngle = 30f;
+
+        [SerializeField]
         float shotHearingRange = 8f; // Enemy can hear you if you shoot within this distance ( zero or negative to disable )
         float sqrShotHearingRange;
 
@@ -93,7 +96,7 @@ namespace HW
         NavMeshAgent agent;
         //GameObject player;
         bool active = false;
-        float sightAngle = 30f;
+        
 
 
 
@@ -125,6 +128,7 @@ namespace HW
             PlayerController.Instance.OnHitSomething += HandlePlayerOnHitSomething;
             PlayerController.Instance.OnShoot += HandlePlayerOnShoot;
             target = PlayerController.Instance.transform;
+            
         }
 
         // Update is called once per frame

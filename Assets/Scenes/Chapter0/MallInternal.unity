@@ -3614,6 +3614,7 @@ GameObject:
   - component: {fileID: 145159788}
   - component: {fileID: 145159787}
   - component: {fileID: 145159790}
+  - component: {fileID: 145159791}
   m_Layer: 0
   m_Name: SearchChecker
   m_TagString: Untagged
@@ -3726,6 +3727,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 5
+--- !u!114 &145159791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145159785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bbb5494d77cddf4ca7652b1578d5df0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateId: 0
+  spawnPointId: 2
 --- !u!1001 &146337487
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4516,6 +4531,56 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 194577618}
   m_Mesh: {fileID: -5419185347669243956, guid: 9999bd65f2644814b9a4ac849e3254d0, type: 3}
+--- !u!1 &197696969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 197696970}
+  - component: {fileID: 197696971}
+  m_Layer: 0
+  m_Name: ActivationCntroller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &197696970
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197696969}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1978036011}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &197696971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197696969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2414c173c3675d42b098127790b9997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fsm: {fileID: 1978036016}
+  states: 00000000
+  positiveObjects:
+  - {fileID: 84810732}
+  - {fileID: 2115620171}
+  negativeObjects:
+  - {fileID: 1268718151}
 --- !u!95 &197825105 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5019855053185065392, guid: 4c078c4d210177641a6ec2ad22d57cc7,
@@ -9677,6 +9742,7 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 518703718}
   - {fileID: 1626870473}
+  - {fileID: 1750915240}
 --- !u!4 &427024551
 Transform:
   m_ObjectHideFlags: 0
@@ -46247,6 +46313,7 @@ Transform:
   m_Children:
   - {fileID: 206212537}
   - {fileID: 1750915240}
+  - {fileID: 197696970}
   m_Father: {fileID: 2001073990}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
