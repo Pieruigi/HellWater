@@ -9,8 +9,8 @@ namespace HW
 {
     public class Scratcher : MonoBehaviour, IFighter
     {
-        [SerializeField]
-        float attackCooldown;
+        //[SerializeField]
+        //float attackCooldown;
 
         [SerializeField]
         float attackRange;
@@ -18,7 +18,7 @@ namespace HW
         [SerializeField]
         float damageAmount;
 
-        DateTime lastAttack;
+        //DateTime lastAttack;
 
         // Start is called before the first frame update
         void Start()
@@ -35,7 +35,7 @@ namespace HW
         public bool Fight(Transform target)
         {
             // Set last time for cooldown.
-            lastAttack = DateTime.UtcNow;
+            //lastAttack = DateTime.UtcNow;
 
             // Get the original ray
             Ray ray = new Ray(transform.root.position + Vector3.up * Constants.RaycastVerticalOffset, transform.root.forward);
@@ -68,9 +68,9 @@ namespace HW
         public bool AttackAvailable()
         {
             // We need to wait for the attack cooldown.
-            if ((DateTime.UtcNow - lastAttack).TotalSeconds < attackCooldown)
-                return false;
-            else
+            //if ((DateTime.UtcNow - lastAttack).TotalSeconds < attackCooldown)
+            //    return false;
+            //else
                 return true;
         }
 

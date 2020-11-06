@@ -61,6 +61,32 @@ namespace HW
             
             return ret;
         }
+
+        public static float GetAttackSpeedValue(SpeedClass speedClass)
+        {
+            float ret = 0;
+            switch (speedClass)
+            {
+                case SpeedClass.VerySlow:
+                    ret = 0.3f;
+                    break;
+                case SpeedClass.Slow:
+                    ret = 0.7f;
+                    break;
+
+                case SpeedClass.Average:
+                    ret = 1f;
+                    break;
+                case SpeedClass.Fast:
+                    ret = 1.5f;
+                    break;
+                case SpeedClass.VeryFast:
+                    ret = 2.0f;
+                    break;
+            }
+
+            return ret;
+        }
     }
 
 }

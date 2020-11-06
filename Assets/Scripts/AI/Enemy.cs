@@ -4,7 +4,7 @@ using UnityEngine;
 using HW.Interfaces;
 using UnityEngine.AI;
 using UnityEngine.Events;
-
+using System;
 
 namespace HW
 {
@@ -42,6 +42,9 @@ namespace HW
         [SerializeField]
         MonoBehaviour fightBehaviour;
 
+        //[SerializeField]
+        float attackCooldown = 0;
+
         [SerializeField]
         SpeedClass speedClass = SpeedClass.Average;
         public SpeedClass SpeedClass
@@ -70,6 +73,8 @@ namespace HW
         float pushSpeed = 4;
         Health health;
         bool fighting = false;
+        bool attackRecharging = false;
+        DateTime lastAttack;
         #endregion
 
         #region MOVEMENT
@@ -96,7 +101,8 @@ namespace HW
         NavMeshAgent agent;
         //GameObject player;
         bool active = false;
-        
+
+
 
 
 
@@ -105,6 +111,9 @@ namespace HW
             agent = GetComponent<NavMeshAgent>();
             angularSpeedDefault = agent.angularSpeed;
             ResetSpeed();
+
+            // Attack speed
+            attackCooldown = 1f/GameplayUtility.GetAttackSpeedValue(speedClass);
 
             // Ranges
             sqrProximityRange = proximityRange * proximityRange;
@@ -137,7 +146,7 @@ namespace HW
             if (!active)
                 return;
 
-            if(reacting || fighting)
+            if(reacting || fighting || attackRecharging)
             {
                 if (fighting)
                 {
@@ -146,6 +155,12 @@ namespace HW
                     dir.Normalize();
 
                     transform.forward = Vector3.RotateTowards(transform.forward, dir, agent.angularSpeed * Time.deltaTime, 0);
+                }
+
+                if (attackRecharging)
+                {
+                    if ((DateTime.UtcNow - lastAttack).TotalSeconds > attackCooldown)
+                        attackRecharging = false;
                 }
 
                 return;
@@ -165,18 +180,24 @@ namespace HW
                         // Check if player is inside the enemy fighting range.
                         if ((transform.position - target.position).magnitude < (fightBehaviour as IFighter).GetFightingRange())
                         {
-                            // Enemy starts fighing.
-                            // First he stop moving.
-                            agent.velocity = Vector3.MoveTowards(agent.velocity, Vector3.zero, closeEnoughDeceleration * Time.deltaTime);
-
-                            // Start fighting if available ( we may check the cool down ).
-                            if (!fighting && (fightBehaviour as IFighter).AttackAvailable())
+                            // If there is nothing between the AI and the target then attack,
+                            // otherwise skip and keep moving.
+                            if (!IsOccluded(PlayerController.Instance.transform))
                             {
-                                fighting = true;
-                                OnFight?.Invoke();
-                                agent.ResetPath();
-                                
+                                // Enemy starts figthing.
+                                // First he stop moving.
+                                agent.velocity = Vector3.MoveTowards(agent.velocity, Vector3.zero, closeEnoughDeceleration * Time.deltaTime);
+
+                                // Start fighting if available ( we may check the cool down ).
+                                if (!fighting && (fightBehaviour as IFighter).AttackAvailable())
+                                {
+                                    fighting = true;
+                                    OnFight?.Invoke();
+                                    agent.ResetPath();
+
+                                }
                             }
+                   
 
                         }
                         else // Out of the fighting range.
@@ -648,6 +669,7 @@ namespace HW
             ResetSpeed();
             reacting = false;
             fighting = false;
+            attackRecharging = false;
         }
 
         public void DeadCompleted()
@@ -660,7 +682,17 @@ namespace HW
 
         public void AttackCompleted()
         {
+            // Stop fighting
             fighting = false;
+
+            // Need to rechearge?
+            if (attackCooldown > 0)
+            {
+                attackRecharging = true;
+                lastAttack = DateTime.UtcNow;
+            }
+            
+
         }
 
         public void Hit()
