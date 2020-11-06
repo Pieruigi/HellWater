@@ -10,18 +10,9 @@ namespace HW
         [SerializeField]
         float attackRange = 10f;
 
-        public bool Fight(Transform target)
-        {
-            // There is no fight at all.
-            target.GetComponent<PlayerController>().Surrender();
-
-            return true;
-        }
-
-        public float GetFightingRange()
-        {
-            return attackRange;
-        }
+        [SerializeField]
+        GameOverType gameOverType = GameOverType.Capture;
+      
 
         // Start is called before the first frame update
         void Start()
@@ -33,6 +24,24 @@ namespace HW
         void Update()
         {
 
+        }
+
+        public bool Fight(Transform target)
+        {
+            // There is no fight at all.
+            target.GetComponent<PlayerController>().Surrender((int)gameOverType);
+
+            return true;
+        }
+
+        public float GetFightingRange()
+        {
+            return attackRange;
+        }
+
+        public bool AttackAvailable()
+        {
+            return true;
         }
     }
 

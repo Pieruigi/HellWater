@@ -28,7 +28,7 @@ namespace HW
         public UnityAction<Weapon, Transform> OnTargeting; // Called everytime you acquire or switch a target ( null means no target )
         public UnityAction OnDead;
         public UnityAction OnHolsterForced;
-        public UnityAction OnSurrender;
+        public UnityAction<int> OnSurrender;
 
         #endregion
 
@@ -264,14 +264,14 @@ namespace HW
         #endregion
 
         #region PUBLIC
-        public void Surrender()
+        public void Surrender(int gameOverType)
         {
             // Player gets captured by a human enemy ( marauder, soldier, etc. ).
             // Disable controller.
             SetDisabled(true);
 
             // Call event.
-            OnSurrender?.Invoke();
+            OnSurrender?.Invoke(gameOverType);
         }
 
         public bool IsRunning()

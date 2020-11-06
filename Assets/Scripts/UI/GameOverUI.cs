@@ -36,6 +36,7 @@ namespace HW.UI
         void Start()
         {
             PlayerController.Instance.OnDead += HandleOnDead;
+            PlayerController.Instance.OnSurrender += HandleOnSurrender;
 
             buttonContinue.onClick.AddListener(HandleOnContinue);
             buttonBack.onClick.AddListener(HandleOnBack);
@@ -50,6 +51,11 @@ namespace HW.UI
         void HandleOnDead()
         {
             StartCoroutine(CoroutineGameOver((int)GameOverType.Death));
+        }
+
+        void HandleOnSurrender(int gameOverType)
+        {
+            StartCoroutine(CoroutineGameOver(gameOverType));
         }
 
         void HandleOnContinue()

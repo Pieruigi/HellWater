@@ -168,9 +168,9 @@ namespace HW
                             // Enemy starts fighing.
                             // First he stop moving.
                             agent.velocity = Vector3.MoveTowards(agent.velocity, Vector3.zero, closeEnoughDeceleration * Time.deltaTime);
-                            
-                            // Start fighting.
-                            if (!fighting)
+
+                            // Start fighting if available ( we may check the cool down ).
+                            if (!fighting && (fightBehaviour as IFighter).AttackAvailable())
                             {
                                 fighting = true;
                                 OnFight?.Invoke();

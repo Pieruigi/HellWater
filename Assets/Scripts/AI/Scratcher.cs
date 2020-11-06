@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using HW.Interfaces;
 using UnityEngine.Events;
+using System;
 
 namespace HW
 {
     public class Scratcher : MonoBehaviour, IFighter
     {
-
+        [SerializeField]
+        float attackCooldown;
 
         [SerializeField]
         float attackRange;
@@ -16,6 +18,7 @@ namespace HW
         [SerializeField]
         float damageAmount;
 
+        DateTime lastAttack;
 
         // Start is called before the first frame update
         void Start()
@@ -31,6 +34,9 @@ namespace HW
 
         public bool Fight(Transform target)
         {
+            // Set last time for cooldown.
+            lastAttack = DateTime.UtcNow;
+
             // Get the original ray
             Ray ray = new Ray(transform.root.position + Vector3.up * Constants.RaycastVerticalOffset, transform.root.forward);
 
@@ -59,6 +65,14 @@ namespace HW
             return attackRange;
         }
 
+        public bool AttackAvailable()
+        {
+            // We need to wait for the attack cooldown.
+            if ((DateTime.UtcNow - lastAttack).TotalSeconds < attackCooldown)
+                return false;
+            else
+                return true;
+        }
 
     }
 
