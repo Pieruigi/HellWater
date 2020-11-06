@@ -483,7 +483,7 @@ namespace HW
             if (sqrHearingRange > 0 && sqrDistance < sqrHearingRange && PlayerController.Instance.IsRunning())
                 return true;
 
-            if (IsInFieldView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
+            if (IsInFieldOfView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
                 return true;
 
             return false;
@@ -518,26 +518,46 @@ namespace HW
                 return true;
 
 
-
-            // Check the last time the enemy saw you
-            if (IsInFieldView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
+            // Mutants can't see or hear anything, so their sight and hear range are zero. This
+            // means they can only feel you presence when you are too close ( generally their 
+            // proximity range is very large ) and they disangage you when you go too far away.
+            // Humans work in a different way: they can still fell you when you go too close but
+            // their range is smaller than mutants' range. But they can hear or see you in a long
+            // range yet. This means that if you are too close to a mutant he know where you are,
+            // instead if you go away from a human field of view he doesn't know where you are, but
+            // he reaches to check your last position.
+            //
+            // If sight range is bigger than zero then we are dealing with a human AI and we
+            // take into account the field of view.
+            if(sightRange > 0)
             {
-                lastPlayerOnSight = System.DateTime.UtcNow;
+                if (IsInFieldOfView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
+                {
+                    lastPlayerOnSight = System.DateTime.UtcNow;
+                }
+                else
+                {
+                    if ((System.DateTime.UtcNow - lastPlayerOnSight).TotalSeconds > playerLostMaxTime)
+                    {
+                        return true;
+                    }
+
+                }
             }
             else
             {
-                if ((System.DateTime.UtcNow - lastPlayerOnSight).TotalSeconds > playerLostMaxTime)
-                {
+                // Mutants, only proximity range is taken into account, increasing by 30%.
+                float sqrDist = (PlayerController.Instance.transform.position - transform.position).sqrMagnitude;
+                // Since we are using the square, 1.69 is 1.3 x 1.3. 
+                if (sqrDist > 1.69f * sqrProximityRange)
                     return true;
-                }
-
             }
 
             return false;
         }
 
         // Check for the target to be inside a visual cone given angle and distance 
-        bool IsInFieldView(Transform target, float maxDistance, float maxAngle)
+        bool IsInFieldOfView(Transform target, float maxDistance, float maxAngle)
         {
             // Vector to target
             Vector3 toTarget = target.position - transform.position;
