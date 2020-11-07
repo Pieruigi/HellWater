@@ -17,13 +17,16 @@ namespace HW
 
         [Header("Engagement ranges")]
         [SerializeField]
-        float proximityRange = 2f; // You are too close ( zero or negative to disable )
-        float sqrProximityRange;
+        float perceptionRange = 2f; // You are too close ( zero or negative to disable )
+        float sqrPerceptionRange;
 
+        /// <summary>
+        /// When you move or do something making noise, the noise range is multiplied by this value.
+        /// </summary>
         [SerializeField]
-        float hearingRange = 4f; // Valid for running and melee attack when you hit enemes ( zero or negative to disable )
-        float sqrHearingRange;
-
+        float hearingMul = 1f; 
+        //float sqrHearingRange;
+        
         [SerializeField]
         float sightRange = 8f; // They can see you ( zero or negative to disable )
         float sqrSightRange;
@@ -31,9 +34,9 @@ namespace HW
         [SerializeField]
         float sightAngle = 30f;
 
-        [SerializeField]
-        float shotHearingRange = 8f; // Enemy can hear you if you shoot within this distance ( zero or negative to disable )
-        float sqrShotHearingRange;
+        //[SerializeField]
+        //float shotHearingRange = 8f; // Enemy can hear you if you shoot within this distance ( zero or negative to disable )
+        //float sqrShotHearingRange;
 
         [Header("Behaviours")]
         [SerializeField]
@@ -116,10 +119,10 @@ namespace HW
             attackCooldown = 1f/GameplayUtility.GetAttackSpeedValue(speedClass);
 
             // Ranges
-            sqrProximityRange = proximityRange * proximityRange;
-            sqrHearingRange = hearingRange * hearingRange;
+            sqrPerceptionRange = perceptionRange * perceptionRange;
+            //sqrHearingRange = hearingRange * hearingRange;
             sqrSightRange = sightRange * sightRange;
-            sqrShotHearingRange = shotHearingRange * shotHearingRange;
+            //sqrShotHearingRange = shotHearingRange * shotHearingRange;
            
 
             health = GetComponent<Health>();
@@ -170,10 +173,11 @@ namespace HW
             switch (state)
             {
                 case State.Engaged:
-                    if (CheckForDisengagement())
+                    //if (CheckForDisengagement())
+                    if (!CheckForEngagement())
                     {
                         // If disangaged the enemy stays for a while in alert mode.
-                        Alert(transform.position);
+                        Alert(target.position);
                     }
                     else
                     {
@@ -472,110 +476,151 @@ namespace HW
         // Returns true if player is engaged otherwise false
         bool CheckForEngagement()
         {
-
+            
+            // Is already time to check for engagement?
             if ((System.DateTime.UtcNow - lastEngagementCheckTime).TotalSeconds < engagementCheckTimer)
-                return false;
+                return state == State.Engaged;
 
             lastEngagementCheckTime = System.DateTime.UtcNow;
 
-            // I should not be here... anyway
-            if (state == State.Engaged) 
-                return true;
+            //// I should not be here... anyway.
+            //if (state == State.Engaged) 
+            //    return true;
 
-            // Can't be eangaged by dead enemies
+            // You can't be eangaged by dead enemies.
             if (IsDead())
                 return false;
 
-            // If player is dead disengage
+            // No reason to engage player if he's dead.
             if (PlayerController.Instance.IsDead())
                 return false;
 
-            // Vector to player
+            // Distance vector from enemy to player.
             Vector3 toPlayer = PlayerController.Instance.transform.position - transform.position;
             toPlayer.y = 0; // Get rid of the y
 
-            // Distance from player
+            // Distance from player.
             float sqrDistance = toPlayer.sqrMagnitude;
+            Debug.Log("PlayerDistance:" + toPlayer.magnitude);
 
-            // Is the player within the proximity range ?
-            if (sqrProximityRange > 0 && sqrDistance < sqrProximityRange)
+            // If player is in the perception range then engage him.
+            if (sqrPerceptionRange > 0 && sqrDistance < sqrPerceptionRange)
                 return true;
 
-            if (sqrHearingRange > 0 && sqrDistance < sqrHearingRange && PlayerController.Instance.IsRunning())
-                return true;
-
-            if (IsInFieldOfView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
-                return true;
-
-            return false;
-            
-        }
-
-        bool CheckForDisengagement()
-        {
-            // Time to check?
-            if ((System.DateTime.UtcNow - lastEngagementCheckTime).TotalSeconds < engagementCheckTimer)
-                return false;
-
-         
-
-            // Lets check
-            lastEngagementCheckTime = System.DateTime.UtcNow;
-
-            // I should not be here... anyway
-            if (state != State.Engaged)
-                return true;
-
-           
-
-            // Can't be eangaged by dead enemies
-            if (IsDead())
-                return true;
-
-            
-
-            // If player is dead disengage
-            if (PlayerController.Instance.IsDead())
-                return true;
-
-
-            // Mutants can't see or hear anything, so their sight and hear range are zero. This
-            // means they can only feel you presence when you are too close ( generally their 
-            // proximity range is very large ) and they disangage you when you go too far away.
-            // Humans work in a different way: they can still fell you when you go too close but
-            // their range is smaller than mutants' range. But they can hear or see you in a long
-            // range yet. This means that if you are too close to a mutant he know where you are,
-            // instead if you go away from a human field of view he doesn't know where you are, but
-            // he reaches to check your last position.
-            //
-            // If sight range is bigger than zero then we are dealing with a human AI and we
-            // take into account the field of view.
-            if(sightRange > 0)
+            // Check if the enemy can hear the player.
+            // We must compute the difference between the noise range given by the player 
+            // and the hearing range of the enemy and then check if the value is bigger 
+            // than the distance from the player.
+            // First we check if the enemy has a hearing reange at all.
+            if (hearingMul > 0)
             {
-                if (IsInFieldOfView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
-                {
-                    lastPlayerOnSight = System.DateTime.UtcNow;
-                }
-                else
-                {
-                    if ((System.DateTime.UtcNow - lastPlayerOnSight).TotalSeconds > playerLostMaxTime)
-                    {
-                        return true;
-                    }
+                Debug.Log("PlayerNoise:" + PlayerController.Instance.GetNoiseRange());
 
-                }
-            }
-            else
-            {
-                // Mutants, only proximity range is taken into account, increasing by 30%.
-                float sqrDist = (PlayerController.Instance.transform.position - transform.position).sqrMagnitude;
-                // Since we are using the square, 1.69 is 1.3 x 1.3. 
-                if (sqrDist > 1.69f * sqrProximityRange)
+                // Add the enemy hearing range to the player noise range.
+                float sqrRange = PlayerController.Instance.GetNoiseRange() * hearingMul;
+                sqrRange *= sqrRange;
+                // If player is inside the above range then engage him.
+                if (sqrDistance < sqrRange)
                     return true;
             }
 
+            // Check if the enemy can see the player ( only if sight range > 0 ).
+            if(sightRange > 0)
+            {
+                // We simply check if the enemy can see the player.
+                if (IsInFieldOfView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
+                {
+                    // If enemy can see the player we need to check if he's already engaged,
+                    // and eventually engage him.
+                    
+                    // This will come in handy when disengaging.
+                    lastPlayerOnSight = System.DateTime.UtcNow;
+
+                    // Now if the player was not engaged then we engage him.
+                    //if (state != State.Engaged)
+                    return true;
+                }
+                else
+                {
+                    // The enemy can't see the player.
+                    // If he's engaged we need to check how long the player is out of the enemy
+                    // sight range, and eventually leave him engaged.
+                    if ((System.DateTime.UtcNow - lastPlayerOnSight).TotalSeconds < playerLostMaxTime)
+                    {
+                        return true;
+                    }
+                }
+  
+            }
+            
+
             return false;
+            
         }
+
+        //bool CheckForDisengagement()
+        //{
+        //    // Already time to check?
+        //    if ((System.DateTime.UtcNow - lastEngagementCheckTime).TotalSeconds < engagementCheckTimer)
+        //        return false;
+
+        //    lastEngagementCheckTime = System.DateTime.UtcNow;
+
+        //    // I should not be here... anyway
+        //    if (state != State.Engaged)
+        //        return true;
+    
+
+        //    // Dead enemies can't engage noone.
+        //    if (IsDead())
+        //        return true;
+            
+
+        //    // You already kill the player, disengage him.
+        //    if (PlayerController.Instance.IsDead())
+        //        return true;
+
+        //    // Now we must check for sight, hearing and perception.
+        //    // If all them fail checking then disangage.
+
+
+        //    // Mutants can't see or hear anything, so their sight and hear range are zero. This
+        //    // means they can only feel you presence when you are too close ( generally their 
+        //    // proximity range is very large ) and they disangage you when you go too far away.
+        //    // Humans work in a different way: they can still fell you when you go too close but
+        //    // their range is smaller than mutants' range. But they can hear or see you in a long
+        //    // range yet. This means that if you are too close to a mutant he know where you are,
+        //    // instead if you go away from a human field of view he doesn't know where you are, but
+        //    // he reaches to check your last position.
+        //    //
+        //    // If sight range is bigger than zero then we are dealing with a human AI and we
+        //    // take into account the field of view.
+        //    if(sightRange > 0)
+        //    {
+        //        if (IsInFieldOfView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
+        //        {
+        //            lastPlayerOnSight = System.DateTime.UtcNow;
+        //        }
+        //        else
+        //        {
+        //            if ((System.DateTime.UtcNow - lastPlayerOnSight).TotalSeconds > playerLostMaxTime)
+        //            {
+        //                return true;
+        //            }
+
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // Mutants, only proximity range is taken into account, increasing by 30%.
+        //        float sqrDist = (PlayerController.Instance.transform.position - transform.position).sqrMagnitude;
+        //        // Since we are using the square, 1.69 is 1.3 x 1.3. 
+        //        if (sqrDist > 1.69f * sqrPerceptionRange)
+        //            return true;
+        //    }
+
+        //    return false;
+        //}
 
         // Check for the target to be inside a visual cone given angle and distance 
         bool IsInFieldOfView(Transform target, float maxDistance, float maxAngle)
@@ -641,21 +686,23 @@ namespace HW
             if(weapon.GetType() == typeof(MeleeWeapon))
             {
                 float sqrDistance = (PlayerController.Instance.transform.position - transform.position).sqrMagnitude;
-                if (sqrDistance < sqrHearingRange)
+                float sqrNoiseRange = weapon.NoiseRange * weapon.NoiseRange;
+                if (sqrDistance < sqrNoiseRange)
                     Engage();
                     
             }
         }
 
         // Engages you if you shoot within a given range
-        void HandlePlayerOnShoot()
+        void HandlePlayerOnShoot(Weapon weapon)
         {
             
             if (state == State.Engaged || state == State.Dead)
                 return;
 
             float sqrDistance = (PlayerController.Instance.transform.position - transform.position).sqrMagnitude;
-            if (sqrDistance < sqrShotHearingRange)
+            float sqrNoiseRange = weapon.NoiseRange * weapon.NoiseRange;
+            if (sqrDistance < sqrNoiseRange)
                 Alert(PlayerController.Instance.transform.position);
                 
         }
@@ -700,6 +747,8 @@ namespace HW
             (fightBehaviour as IFighter).Fight(PlayerController.Instance.transform);
             
         }
+
+       
         #endregion
 
 

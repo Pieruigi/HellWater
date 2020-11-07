@@ -43,6 +43,13 @@ namespace HW
         }
 
         [SerializeField]
+        float noiseRange;
+        public float NoiseRange
+        {
+            get { return noiseRange; }
+        }
+
+        [SerializeField]
         int animationId = 0; // 1:bat; 2:gun; 3:shotgun; 4:combat rifle; 5:rifle
         public int AnimationId
         {
@@ -71,6 +78,8 @@ namespace HW
         {
             return weaponObject.activeSelf;
         }
+
+       
     }
 
 }

@@ -68,7 +68,7 @@ namespace HW
 
             // Update locomotion
             //animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
-            if (!playerController.Crouching)
+            if (!playerController.StealthMode)
             {
                 // If player is crouching then return to walk
                 if (animator.GetBool(paramCrouching))
@@ -125,7 +125,7 @@ namespace HW
             animator.SetBool(paramAiming, false);
         }
 
-        void HandleOnShoot()
+        void HandleOnShoot(Weapon weapon)
         {
             animator.SetTrigger(paramShoot);
         }

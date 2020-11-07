@@ -12,7 +12,7 @@ namespace HW
     public class PlayerController : MonoBehaviour, IHitable
     {
         #region ACTIONS
-        public UnityAction OnShoot; // Called on shoot
+        public UnityAction<Weapon> OnShoot; // Called on shoot
         public UnityAction OnStartAiming; // Called when you start aiming
         public UnityAction OnStopAiming; // Called when you stop aiming
         public UnityAction OnChargeAttack; // Called when you start charging melee attack
@@ -71,15 +71,27 @@ namespace HW
         Vector3 desiredVelocity;
         Vector3 currentVelocity;
 
-        float crouchMaxWalkSpeed = 1f;
-        float crouchRunSpeedMul = 2.5f;
-        
-        
-        bool crouching = false;
-        public bool Crouching
+        float stealthMaxWalkSpeed = 1f;
+        float stealthRunSpeedMul = 2.5f;
+        bool stealthModeAvailable = true;
+        public bool StealthModeAvailable
         {
-            get { return crouching; }
+            get { return stealthModeAvailable; }
+            set { stealthModeAvailable = value; }
         }
+        
+        bool stealthMode = false;
+        public bool StealthMode
+        {
+            get { return stealthMode; }
+        }
+        #endregion
+
+        #region Noise Ranges
+        float idleNoiseRange = 1.5f; // The minimum noise you can do ( normally in idle ).
+        float stealthNoiseRange = 2.5f; // Noise multiplier while walking in stealth mode.
+        float walkNoiseRange = 4f; // Noise multiplier while walking.
+        float runNoiseRange = 10; // Noise multiplier while running.
         #endregion
 
         #region FIGHTING FIELDS
@@ -296,7 +308,7 @@ namespace HW
 
         public float GetMaximumSpeed()
         {
-            return crouching ? crouchMaxWalkSpeed * crouchRunSpeedMul : maxRunningSpeed;
+            return stealthMode ? stealthMaxWalkSpeed * stealthRunSpeedMul : maxRunningSpeed;
         }
 
 
@@ -400,8 +412,38 @@ namespace HW
         /// </summary>
         public void SetStealthMode(bool value)
         {
-            crouching = value;
+            if(!stealthModeAvailable && value)
+            {
+                Debug.LogWarningFormat("You can not set the stealth mode; please make sure stealth mode is available first.");
+                return;
+            }
+
+            stealthMode = value;
             ResetMaxSpeed();
+        }
+
+        /// <summary>
+        /// Return the noise range.
+        /// </summary>
+        public float GetNoiseRange()
+        {
+            // If player is not moving we return the minimum range.
+            if (GetCurrentSpeed() == 0)
+                return idleNoiseRange;
+
+            // If player is moving we return the minimum range increased by a given amount
+            // depending on the locomotion type.
+            // First check if player is running.
+            if (IsRunning())
+                return runNoiseRange;
+
+            // Player is not runnig, so he's walking, an thus we must check whether is moving in
+            // stealth or not.
+            if (StealthMode)
+                return stealthNoiseRange;
+
+            // Not in stealth mode.
+            return walkNoiseRange;
         }
 
         #endregion
@@ -469,6 +511,22 @@ namespace HW
             }
         }
 
+        void CheckStealthMode()
+        {
+            if (PlayerInput.GetButtonDown(PlayerInput.BackAxis) && stealthModeAvailable)
+            {
+                if (!stealthMode)
+                    SetStealthMode(true);
+            }
+            else
+                if (PlayerInput.GetButtonUp(PlayerInput.BackAxis))
+            {
+                if (stealthMode)
+                    SetStealthMode(false);
+            }
+
+        }
+
         void CheckIsAiming()
         {
             
@@ -527,10 +585,10 @@ namespace HW
         // It also decrease if player is crouching.
         void ResetMaxSpeed()
         {
-            if(!crouching)
+            if(!stealthMode)
                 maxSpeed = running ? maxRunningSpeed : maxWalkingSpeed;
             else
-                maxSpeed = running ? crouchMaxWalkSpeed * crouchRunSpeedMul : crouchMaxWalkSpeed;
+                maxSpeed = running ? stealthMaxWalkSpeed * stealthRunSpeedMul : stealthMaxWalkSpeed;
         }
 
         void TryReload()
@@ -575,7 +633,7 @@ namespace HW
                 // Set shooting flag
                 shooting = true;
 
-                OnShoot?.Invoke();
+                OnShoot?.Invoke(fireWeapon);
             }
 
         }
@@ -719,7 +777,7 @@ namespace HW
             attackCharged = false;
             toTargetSignedAngleRotation = 0;
             hit = false;
-            crouching = false;
+            stealthMode = false;
             desiredVelocity = Vector2.zero;
 
             currentTarget = null;
@@ -765,6 +823,11 @@ namespace HW
                 // We can't move or do anything else while while we are charging attack
                 return;
             }
+
+            // Check stealth mode
+            CheckStealthMode();
+            
+
 
             // Switch fire weapon
             //CheckIsSwitchingWeapon();

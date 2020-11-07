@@ -12,7 +12,7 @@ namespace HW.CutScene
         bool disabled = false;
 
         [SerializeField]
-        bool stealthMode = false;
+        bool stealthModeAvailable = false;
 
         [SerializeField]
         bool noWeapon = false;
@@ -23,7 +23,7 @@ namespace HW.CutScene
             PlayerController p = playerData as PlayerController;
 
             p.SetDisabled(disabled);
-            p.SetStealthMode(stealthMode);
+            p.StealthModeAvailable = stealthModeAvailable;
             p.HolsterWeapon(noWeapon);
         }
     }
