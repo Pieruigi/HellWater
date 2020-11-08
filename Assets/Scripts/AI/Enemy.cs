@@ -207,8 +207,8 @@ namespace HW
                         else // Out of the fighting range.
                         {
                             // Keep moving towards target.
-                            if(!IsOccluded(PlayerController.Instance.transform))
-                                MoveTo(target.position);
+                            //if(!IsOccluded(PlayerController.Instance.transform))
+                            MoveTo(target.position);
                         }
                     }
                     
@@ -435,7 +435,7 @@ namespace HW
             agent.ResetPath();
 
             // Wait a while
-            yield return new WaitForSeconds(waitingTimer);
+            //yield return new WaitForSeconds(waitingTimer);
 
             // State might be changed in the meantime
             if (state != State.Alerted)
@@ -466,11 +466,21 @@ namespace HW
 
         void Idle()
         {
-           
+            
             state = State.Idle;
 
-            // Start idle mode
-            (idleBehaviour as IBehaviour)?.StartBehaving();
+            if(idleBehaviour == null)
+            {
+                hasDestination = false;
+                agent.ResetPath();
+            }
+            else
+            {
+                // Start idle mode
+                (idleBehaviour as IBehaviour)?.StartBehaving();
+            }
+
+            
         }
 
         // Returns true if player is engaged otherwise false
