@@ -91,7 +91,7 @@ namespace HW
         float idleNoiseRange = 1.5f; // The minimum noise you can do ( normally in idle ).
         float stealthNoiseRange = 2.5f; // Noise multiplier while walking in stealth mode.
         float walkNoiseRange = 3.5f; // Noise multiplier while walking.
-        float runNoiseRange = 6; // Noise multiplier while running.
+        float runNoiseRange = 4.5f; // Noise multiplier while running.
         #endregion
 
         #region FIGHTING FIELDS
