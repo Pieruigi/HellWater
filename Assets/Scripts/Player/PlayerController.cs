@@ -72,7 +72,7 @@ namespace HW
         Vector3 currentVelocity;
 
         float stealthMaxWalkSpeed = 1f;
-        float stealthRunSpeedMul = 2.5f;
+        //float stealthRunSpeedMul = 2.5f;
         bool stealthModeAvailable = true;
         public bool StealthModeAvailable
         {
@@ -90,8 +90,8 @@ namespace HW
         #region Noise Ranges
         float idleNoiseRange = 1.5f; // The minimum noise you can do ( normally in idle ).
         float stealthNoiseRange = 2.5f; // Noise multiplier while walking in stealth mode.
-        float walkNoiseRange = 4f; // Noise multiplier while walking.
-        float runNoiseRange = 10; // Noise multiplier while running.
+        float walkNoiseRange = 3.5f; // Noise multiplier while walking.
+        float runNoiseRange = 6; // Noise multiplier while running.
         #endregion
 
         #region FIGHTING FIELDS
@@ -174,6 +174,7 @@ namespace HW
                 health = GetComponent<Health>();
                 raycastOffset = Vector3.up * Constants.RaycastVerticalOffset;
                 coll = GetComponent<CapsuleCollider>();
+                stealthMaxWalkSpeed = maxWalkingSpeed * 0.7f;
             }
             else
             {
@@ -278,6 +279,7 @@ namespace HW
         #region PUBLIC
         public void Surrender(int gameOverType)
         {
+            Debug.Log("Surrender");
             // Player gets captured by a human enemy ( marauder, soldier, etc. ).
             // Disable controller.
             SetDisabled(true);
@@ -308,7 +310,7 @@ namespace HW
 
         public float GetMaximumSpeed()
         {
-            return stealthMode ? stealthMaxWalkSpeed * stealthRunSpeedMul : maxRunningSpeed;
+            return stealthMode ? stealthMaxWalkSpeed : maxRunningSpeed;
         }
 
 
@@ -420,6 +422,9 @@ namespace HW
 
             stealthMode = value;
             ResetMaxSpeed();
+
+            // Holser weapon ( not forced )
+            HolsterWeapon();
         }
 
         /// <summary>
@@ -542,9 +547,10 @@ namespace HW
 
             if (aim)
             {
-                if (holsterForced)
+                if (holsterForced || stealthMode)
                 {
-                    OnHolsterForced?.Invoke();
+                    if(!stealthMode)
+                        OnHolsterForced?.Invoke();
                     return;    
                 }
                 
@@ -588,7 +594,7 @@ namespace HW
             if(!stealthMode)
                 maxSpeed = running ? maxRunningSpeed : maxWalkingSpeed;
             else
-                maxSpeed = running ? stealthMaxWalkSpeed * stealthRunSpeedMul : stealthMaxWalkSpeed;
+                maxSpeed = stealthMaxWalkSpeed;
         }
 
         void TryReload()
@@ -882,9 +888,10 @@ namespace HW
                 if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) > 0)
                 {
 
-                    if (holsterForced) // No weapon allowed here
+                    if (holsterForced || stealthMode) // No weapon allowed here
                     {
-                        OnHolsterForced?.Invoke();
+                        if(!stealthMode)
+                            OnHolsterForced?.Invoke();
                         
                     }
                     else // Ok, lets fight

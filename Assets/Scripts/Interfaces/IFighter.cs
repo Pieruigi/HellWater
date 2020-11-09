@@ -12,6 +12,8 @@ namespace HW.Interfaces
         float GetFightingRange();
 
         bool AttackAvailable();
+
+        bool CallFightByAnimation();
        
     }
 

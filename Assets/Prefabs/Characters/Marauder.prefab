@@ -2097,13 +2097,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perceptionRange: 0
   hearingMul: 1
-  sightRange: 4
-  sightAngle: 80
-  idleBehaviour: {fileID: 0}
+  sightRange: 10
+  sightAngle: 60
+  idleBehaviour: {fileID: 6584969546699097129}
   fightBehaviour: {fileID: 6584969546699097135}
-  speedClass: 0
+  speedClass: 2
   canNotBePushed: 0
-  eyesVerticalOffset: 1.75
 --- !u!114 &6584969546699097129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2111,15 +2110,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8175151101754288619}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a0dfbadb0a3db54b8d3fc2e76b3a601, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spotGroup: {fileID: 0}
-  stayInSpotMinTime: 7
-  stayInSpotMaxTime: 14
-  speedClass: 2
+  stayInSpotMinTime: 3
+  stayInSpotMaxTime: 6
+  speedClass: 1
 --- !u!195 &1448523380821072513
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2154,7 +2153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f023de7692e61e740b5054e3e86fb46a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 0
+  attackRange: 5
   gameOverType: 1
 --- !u!114 &6584969546699097136
 MonoBehaviour:

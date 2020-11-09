@@ -88,7 +88,10 @@ namespace HW
 
         private void NextDestination()
         {
-            currentSpot = spots[UnityEngine.Random.Range(0, spots.Count)];
+            // Remove the current spot from the available ones.
+            List<Transform> l = spots.FindAll(s => s != currentSpot);
+
+            currentSpot = l[UnityEngine.Random.Range(0, l.Count)];
             mover.MoveTo(currentSpot.position);
         }
 

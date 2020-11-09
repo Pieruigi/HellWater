@@ -15,28 +15,37 @@ namespace HW
         public UnityAction OnFight;
         public UnityAction<HitInfo> OnGotHit;
 
+        
+
         [Header("Engagement ranges")]
+
+        /// <summary>
+        /// The perception range is something like a feeling range for AI that can't see nor
+        /// hear anything. 
+        /// This is a powerfull skill because if you stay inside the range then AI always knows
+        /// where you are. You can't sneak around in stealth mode trying to avoid an enemy 
+        /// if you get inside his perception range.
+        /// </summary>
         [SerializeField]
         float perceptionRange = 2f; // You are too close ( zero or negative to disable )
         float sqrPerceptionRange;
 
         /// <summary>
         /// When you move or do something making noise, the noise range is multiplied by this value.
+        /// If you are walking and the AI hears you and thus you stop trying to make no noise the AI can't
+        /// hear you anymore but it switches to alert mode, thus checking the last position the noise  
+        /// was coming from.
         /// </summary>
         [SerializeField]
         float hearingMul = 1f; 
-        //float sqrHearingRange;
         
+
         [SerializeField]
         float sightRange = 8f; // They can see you ( zero or negative to disable )
         float sqrSightRange;
 
         [SerializeField]
         float sightAngle = 30f;
-
-        //[SerializeField]
-        //float shotHearingRange = 8f; // Enemy can hear you if you shoot within this distance ( zero or negative to disable )
-        //float sqrShotHearingRange;
 
         [Header("Behaviours")]
         [SerializeField]
@@ -63,14 +72,13 @@ namespace HW
             get { return canNotBePushed; }
         }
 
-        [SerializeField]
-        float eyesVerticalOffset = 1.75f;
+        //[SerializeField]
+        //float eyesVerticalOffset = 1.75f;
         
 
         #region FIGHTING
         // The target this enemy is looking for ( can be both the player and any NPC )
         Transform target;
-        //float attackRange = 1.25f;
         bool reacting = false;
         float pushDistance = .75f;
         float pushSpeed = 4;
@@ -91,9 +99,8 @@ namespace HW
 
         #region ALERT
         float alertTimer = 8;
-        float waitingTimer = 2f;
         Vector3 alertPosition;
-        bool movingAlerted = false;
+        DateTime lastAlert;
         #endregion
 
         State state = State.Idle;
@@ -120,11 +127,8 @@ namespace HW
 
             // Ranges
             sqrPerceptionRange = perceptionRange * perceptionRange;
-            //sqrHearingRange = hearingRange * hearingRange;
             sqrSightRange = sightRange * sightRange;
-            //sqrShotHearingRange = shotHearingRange * shotHearingRange;
-           
-
+          
             health = GetComponent<Health>();
 
             
@@ -136,7 +140,6 @@ namespace HW
         {
             Activate(true);
 
-            //player = GameObject.FindGameObjectWithTag(Tags.Player);
             PlayerController.Instance.OnHitSomething += HandlePlayerOnHitSomething;
             PlayerController.Instance.OnShoot += HandlePlayerOnShoot;
             target = PlayerController.Instance.transform;
@@ -148,6 +151,14 @@ namespace HW
         {
             if (!active)
                 return;
+
+            // When you set destination the AI could take a while in order to find a path; 
+            // if you set has destination in the MoveTo() methods it may happen that for some
+            // frames hasDestination is true and agent.remainingDistance is zero true 
+            // ( remainingDistance is always zero with no path ). This cause OnDestinationReached()
+            // to be called even if AI in not moving at all.
+            if (agent.hasPath)
+                hasDestination = true;
 
             if(reacting || fighting || attackRecharging)
             {
@@ -197,6 +208,13 @@ namespace HW
                                 {
                                     fighting = true;
                                     OnFight?.Invoke();
+                                    
+                                    // Surrender or fire weapon should be called soon.
+                                    if (!(fightBehaviour as IFighter).CallFightByAnimation())
+                                    {
+                                        (fightBehaviour as IFighter).Fight(target);
+                                    }
+                                    
                                     agent.ResetPath();
 
                                 }
@@ -220,13 +238,17 @@ namespace HW
                     // he goes back in idle state.
                     if (CheckForEngagement())
                     {
-                        // Engaged, stop the alert coroutine.
-                        StopCoroutine(DoAlert());
-                        movingAlerted = false; // No moving alerted.
                         // Engage the player.
                         Engage(); 
                     }
-
+                    else
+                    {
+                        // Check alert time.
+                        if(!hasDestination && (DateTime.UtcNow - lastAlert).TotalSeconds > alertTimer)
+                        {
+                            Idle();
+                        }
+                    }
                     break;
                 case State.Idle:
                     // Check for engamement.
@@ -249,6 +271,13 @@ namespace HW
             {
                 hasDestination = false;
                 OnDestinationReached?.Invoke(this);
+
+                if(state == State.Alerted)
+                {
+                    // Update the last alert time.
+                    lastAlert = DateTime.UtcNow;
+
+                }
             }
                 
         }
@@ -336,9 +365,10 @@ namespace HW
 
         public void MoveTo(Vector3 destination)
         {
-            Debug.Log("Setting destination:" + destination);
             agent.SetDestination(destination);
-            hasDestination = true;
+            //Debug.Log("HasPath:" + agent.hasPath);
+            //Debug.Log("RemainingDistance:" + agent.remainingDistance);
+            //hasDestination = true;
         }
 
         public void SetMaxSpeed(float maxSpeed)
@@ -398,75 +428,47 @@ namespace HW
             ResetSpeed();
         }
 
-
+        /// <summary>
+        /// Alert is called when the AI loses your track after he's engaged you, or if you shoot
+        /// or hit a mutant with your bat inside a given range.
+        /// </summary>
+        /// <param name="position"></param>
         void Alert(Vector3 position)
         {
-            
-            // Always update alert position
-            alertPosition = position;
-            
-            // If already alerted then reset position and continue with the already running 
-            // coroutine.
-            if (state == State.Alerted)
-            {
-                // Maybe coroutine started moving AI, so we need to update manually the direction
-                if (movingAlerted)
-                    MoveTo(alertPosition);
+            Debug.Log("Alerted");
 
-                return;
+            // We must stop the AI from idling if needed and move it to the alert position.
+            if (state == State.Idle)
+            {
+                // Stop the idle mode.
+                (idleBehaviour as IBehaviour)?.StopBehaving();
+
+                // Since different behaviours can have differest speed a reset is needed.
+                ResetSpeed();
+
+                // Stop moving the agent.
+                agent.ResetPath();
             }
+            
+            // We always update the alert position.
+            alertPosition = position;
+
+
                 
             // Set alerted state
             state = State.Alerted;
 
-            movingAlerted = false;
-            StartCoroutine(DoAlert());
-        }
-
-        IEnumerator DoAlert()
-        {
-            // Stop idle mode
-            (idleBehaviour as IBehaviour)?.StopBehaving();
-
-            // Reset speed
-            ResetSpeed();
-
-            // Stop moving
-            agent.ResetPath();
-
-            // Wait a while
-            //yield return new WaitForSeconds(waitingTimer);
-
-            // State might be changed in the meantime
-            if (state != State.Alerted)
-                yield break;
-
-            // Move to alert position
-            if(transform.position != alertPosition)
+            // Move.
+            //if (transform.position != alertPosition)
                 MoveTo(alertPosition);
 
-            // We want to know if coroutine started moving the IA, in order to update the alert position
-            movingAlerted = true;
-
-            // Wait a while
-            yield return new WaitForSeconds(alertTimer);
-
-            // AI is no longer moving to alert position
-            movingAlerted = false;
-
-            // State might be changed in the meantime
-            if (state != State.Alerted)
-                yield break;
-
-            // Return in idle mode
-            Idle();
+            
         }
 
-        
-
+       
         void Idle()
         {
-            
+            Debug.Log("Idle");
             state = State.Idle;
 
             if(idleBehaviour == null)
@@ -511,8 +513,7 @@ namespace HW
 
             // Distance from player.
             float sqrDistance = toPlayer.sqrMagnitude;
-            Debug.Log("PlayerDistance:" + toPlayer.magnitude);
-
+           
             // If player is in the perception range then engage him.
             if (sqrPerceptionRange > 0 && sqrDistance < sqrPerceptionRange)
                 return true;
@@ -524,8 +525,6 @@ namespace HW
             // First we check if the enemy has a hearing reange at all.
             if (hearingMul > 0)
             {
-                Debug.Log("PlayerNoise:" + PlayerController.Instance.GetNoiseRange());
-
                 // Add the enemy hearing range to the player noise range.
                 float sqrRange = PlayerController.Instance.GetNoiseRange() * hearingMul;
                 sqrRange *= sqrRange;
@@ -568,70 +567,6 @@ namespace HW
             
         }
 
-        //bool CheckForDisengagement()
-        //{
-        //    // Already time to check?
-        //    if ((System.DateTime.UtcNow - lastEngagementCheckTime).TotalSeconds < engagementCheckTimer)
-        //        return false;
-
-        //    lastEngagementCheckTime = System.DateTime.UtcNow;
-
-        //    // I should not be here... anyway
-        //    if (state != State.Engaged)
-        //        return true;
-    
-
-        //    // Dead enemies can't engage noone.
-        //    if (IsDead())
-        //        return true;
-            
-
-        //    // You already kill the player, disengage him.
-        //    if (PlayerController.Instance.IsDead())
-        //        return true;
-
-        //    // Now we must check for sight, hearing and perception.
-        //    // If all them fail checking then disangage.
-
-
-        //    // Mutants can't see or hear anything, so their sight and hear range are zero. This
-        //    // means they can only feel you presence when you are too close ( generally their 
-        //    // proximity range is very large ) and they disangage you when you go too far away.
-        //    // Humans work in a different way: they can still fell you when you go too close but
-        //    // their range is smaller than mutants' range. But they can hear or see you in a long
-        //    // range yet. This means that if you are too close to a mutant he know where you are,
-        //    // instead if you go away from a human field of view he doesn't know where you are, but
-        //    // he reaches to check your last position.
-        //    //
-        //    // If sight range is bigger than zero then we are dealing with a human AI and we
-        //    // take into account the field of view.
-        //    if(sightRange > 0)
-        //    {
-        //        if (IsInFieldOfView(PlayerController.Instance.transform, sightRange, sightAngle) && !IsOccluded(PlayerController.Instance.transform))
-        //        {
-        //            lastPlayerOnSight = System.DateTime.UtcNow;
-        //        }
-        //        else
-        //        {
-        //            if ((System.DateTime.UtcNow - lastPlayerOnSight).TotalSeconds > playerLostMaxTime)
-        //            {
-        //                return true;
-        //            }
-
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // Mutants, only proximity range is taken into account, increasing by 30%.
-        //        float sqrDist = (PlayerController.Instance.transform.position - transform.position).sqrMagnitude;
-        //        // Since we are using the square, 1.69 is 1.3 x 1.3. 
-        //        if (sqrDist > 1.69f * sqrPerceptionRange)
-        //            return true;
-        //    }
-
-        //    return false;
-        //}
-
         // Check for the target to be inside a visual cone given angle and distance 
         bool IsInFieldOfView(Transform target, float maxDistance, float maxAngle)
         {
@@ -663,10 +598,20 @@ namespace HW
             // Distance between ai and target
             float distance = toTarget.magnitude;
 
+            // We use a offeset to check if there is something between the player and the AI.
+            // Since the player can move in a crouched stance we need to switch between two 
+            // different values for the offset.
+            // An alternative way would be to cast two rays, one for each offset: this would be a 
+            // good way to check for every character ( at moment we are also checking for 
+            // the player ).
+            float vOffset = 1.4f;
+            if (PlayerController.Instance.StealthMode)
+                vOffset = 0.5f;
 
             RaycastHit hitInfo;
-            Ray ray = new Ray(transform.position + Vector3.up * eyesVerticalOffset, toTarget.normalized);
-            
+            Ray ray = new Ray(transform.position + Vector3.up * vOffset, toTarget.normalized);
+            Debug.DrawRay(ray.origin, ray.direction*distance, Color.red, 5f, true);
+
             // Avoid to hit itself
             GetComponent<Collider>().enabled = false;
 
@@ -752,12 +697,16 @@ namespace HW
 
         }
 
+        /// <summary>
+        /// This is called by the AI melee animation or by the weapon.
+        /// </summary>
         public void Hit()
         {
             (fightBehaviour as IFighter).Fight(PlayerController.Instance.transform);
             
         }
 
+        public void Step() { }
        
         #endregion
 

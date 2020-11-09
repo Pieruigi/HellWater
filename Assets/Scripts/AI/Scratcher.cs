@@ -74,6 +74,10 @@ namespace HW
                 return true;
         }
 
+        public bool CallFightByAnimation()
+        {
+            return true; ;
+        }
     }
 
 }
