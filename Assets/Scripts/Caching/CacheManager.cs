@@ -40,6 +40,10 @@ namespace HW.CachingSystem
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
 
+
+            ////////// ONLY FOR TEST /////////////////////////////////
+            //Load();
+
             //// Create save file if needed
             //string path = Path.Combine(folder, file);
             //if (!File.Exists(path))
