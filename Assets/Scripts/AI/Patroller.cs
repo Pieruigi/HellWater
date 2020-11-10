@@ -57,17 +57,18 @@ namespace HW
             if (!loop)
                 return;
 
-            if (stayTimer > 0)
+            if (stayTimer >= 0)
             {
                 stayTimer -= Time.deltaTime;
 
-                if (stayTimer <= 0)
+                if (stayTimer < 0)
                 {
                     NextDestination();
                 }
             }
 
-           
+            
+
         }
 
         public void StartBehaving()
