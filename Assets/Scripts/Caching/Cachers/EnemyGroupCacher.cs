@@ -21,6 +21,8 @@ namespace HW.CachingSystem
             EnemyGroupData data = new EnemyGroupData();
             data.Parse(cacheValue);
 
+            GetComponent<EnemyGroup>().Init(new List<bool>(data.DeadList));
+
             // Init fsm  
             FiniteStateMachine fsm = GetComponent<FiniteStateMachine>();
             fsm.ForceState(data.State, false, false);

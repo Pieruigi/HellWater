@@ -15,7 +15,7 @@ namespace HW
         FiniteStateMachine fsm;
 
         // Contains info about who is alive and who is dead.
-        List<bool> deadList = new List<bool>();
+        List<bool> deadList;
         public IList<bool> DeadList
         {
             get { return deadList.AsReadOnly(); }
@@ -23,8 +23,22 @@ namespace HW
 
         private void Awake()
         {
+            // We check if the dead list is empty before initializing it in order to avoid to 
+            // override data loaded from cache.
+            if(deadList == null)
+            {
+                deadList = new List<bool>();
+                for (int i = 0; i < enemies.Count; i++)
+                    deadList.Add(false);
+            }
+
+            // Get the finite state machine.
             fsm = GetComponent<FiniteStateMachine>();
             fsm.OnStateChange += HandleOnStateChange;
+
+            // Set the dead handle to each enemy.
+            foreach (GameObject enemy in enemies)
+                enemy.GetComponent<Enemy>().OnDead += HandleOnDead;
         }
 
         // Start is called before the first frame update
@@ -43,6 +57,7 @@ namespace HW
                 // Fsm state is enabled, so we activate only enemies who are still alive.
                 EnableEnemies();
             }
+            
         }
 
         // Update is called once per frame
@@ -88,6 +103,15 @@ namespace HW
                 else
                     enemies[i].SetActive(false);
             }
+        }
+
+        void HandleOnDead(Enemy enemy)
+        {
+            // Get the enemy index from the list.
+            int id = enemies.IndexOf(enemy.gameObject);
+
+            // Flag as dead.
+            deadList[id] = true;
         }
     }
 

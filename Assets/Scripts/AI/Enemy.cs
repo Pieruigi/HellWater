@@ -14,6 +14,7 @@ namespace HW
 
         public UnityAction OnFight;
         public UnityAction<HitInfo> OnGotHit;
+        public UnityAction<Enemy> OnDead; 
 
         
 
@@ -330,6 +331,8 @@ namespace HW
                 agent.speed = 0;
 
                 state = State.Dead;
+
+                OnDead?.Invoke(this);
             }
                 
                 

@@ -17,8 +17,10 @@ public class Test : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-
+            
             HW.CachingSystem.CacheManager.Instance.Save();
         }
+
+        
     }
 }
