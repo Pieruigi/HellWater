@@ -4486,6 +4486,8 @@ MonoBehaviour:
   positiveObjects:
   - {fileID: 84810732}
   - {fileID: 2115620171}
+  - {fileID: 1088927689}
+  - {fileID: 1827523014}
   negativeObjects:
   - {fileID: 1268718151}
 --- !u!95 &197825105 stripped
@@ -25009,6 +25011,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72c574122556b84498b76121fc14fe59, type: 3}
+--- !u!1 &1088927689 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8175151101754288619, guid: 72c574122556b84498b76121fc14fe59,
+    type: 3}
+  m_PrefabInstance: {fileID: 1088927688}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1093387542
 GameObject:
   m_ObjectHideFlags: 0
@@ -38849,7 +38857,7 @@ GameObject:
   - component: {fileID: 1750915240}
   - component: {fileID: 1750915241}
   m_Layer: 0
-  m_Name: Target
+  m_Name: StealthTarget
   m_TagString: Untagged
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -40346,6 +40354,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72c574122556b84498b76121fc14fe59, type: 3}
+--- !u!1 &1827523014 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8175151101754288619, guid: 72c574122556b84498b76121fc14fe59,
+    type: 3}
+  m_PrefabInstance: {fileID: 1827523013}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1833424748
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44371,6 +44385,8 @@ GameObject:
   - component: {fileID: 1978036022}
   - component: {fileID: 1978036021}
   - component: {fileID: 1978036020}
+  - component: {fileID: 1978036023}
+  - component: {fileID: 1978036019}
   m_Layer: 2
   m_Name: DoorTrigger
   m_TagString: Untagged
@@ -44526,6 +44542,20 @@ MonoBehaviour:
   twoWay: 1
   interactableObject: {fileID: 1978036010}
   actionController: {fileID: 0}
+--- !u!114 &1978036019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978036010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bbb5494d77cddf4ca7652b1578d5df0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateId: 0
+  spawnPointId: 2
 --- !u!114 &1978036020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44597,9 +44627,26 @@ PlayableDirector:
     value: {fileID: 84810732}
   - key: {fileID: -2440917739570579085, guid: 71a08672af2c45d418e20503a12d0b66, type: 2}
     value: {fileID: 2115620171}
+  - key: {fileID: -1466815546140313935, guid: 71a08672af2c45d418e20503a12d0b66, type: 2}
+    value: {fileID: 1088927689}
+  - key: {fileID: -3206905555088181404, guid: 71a08672af2c45d418e20503a12d0b66, type: 2}
+    value: {fileID: 1827523014}
   m_ExposedReferences:
     m_References:
     - f02068388ff436a4f8c3d0a645028b9e: {fileID: 1581732634}
+--- !u!114 &1978036023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978036010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69dd1cc459be37541bb99970f61564bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  code: b003
 --- !u!4 &1978053925 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: b5aa90c58aee6974484f27ee020eb59f,
