@@ -102,6 +102,9 @@ namespace HW.CachingSystem
 
         public void Load()
         {
+            // Clear cache.
+            cache.Clear();
+            // Read from file.
             ReadCache();
         }
 

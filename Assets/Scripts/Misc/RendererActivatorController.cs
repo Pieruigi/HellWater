@@ -24,13 +24,13 @@ namespace HW
 
         private void Awake()
         {
-              Deactivate();  
+              
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            
+            Deactivate();
         }
 
         // Update is called once per frame

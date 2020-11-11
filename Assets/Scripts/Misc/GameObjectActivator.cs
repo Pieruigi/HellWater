@@ -36,6 +36,9 @@ namespace HW
             active = value;
             if (isGroup)
             {
+                if(children == null)
+                    children = GetComponentsInChildren<Transform>();
+
                 foreach (Transform child in children)
                     child.gameObject.SetActive(value);
             }
