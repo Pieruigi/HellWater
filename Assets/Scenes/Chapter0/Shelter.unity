@@ -3625,6 +3625,7 @@ GameObject:
   - component: {fileID: 580516827}
   - component: {fileID: 580516828}
   - component: {fileID: 580516829}
+  - component: {fileID: 580516830}
   m_Layer: 0
   m_Name: CookingMachine
   m_TagString: Untagged
@@ -3887,6 +3888,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d9db41f8afdbfe4fa5aeea438ae82f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &580516830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580516815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79930eeb97fd7dc4c94eceaaa4a518c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  desiredState: 0
+  desiredOldState: -1
+  nextQuestCode: g004
 --- !u!1 &586068003
 GameObject:
   m_ObjectHideFlags: 0
