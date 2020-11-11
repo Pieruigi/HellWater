@@ -32,7 +32,12 @@ namespace HW.Collections
             get { return longDescription; }
         }
 
-        
+        [SerializeField]
+        float uiDelay = 2f;
+        public float UIDelay
+        {
+            get { return uiDelay; }
+        }
 
         public static QuestDetail GetQuestDetail(string code, Language language)
         {
