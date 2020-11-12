@@ -17,8 +17,6 @@ namespace HW.CachingSystem
 
         protected virtual void Awake()
         {
-            Debug.Log("Awake");
-
             if ("".Equals(code.Trim()))
                 return;
 

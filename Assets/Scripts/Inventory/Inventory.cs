@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HW.Collections;
+using UnityEngine.Events;
 
 namespace HW
 {
@@ -10,10 +11,10 @@ namespace HW
      * */
     public class Inventory : MonoBehaviour
     {
+        public UnityAction<Item> OnItemAdded;
+        public UnityAction<Item> OnItemRemoved;
         
         List<Item> items = new List<Item>();// List of items  
-
-      
 
         public static Inventory Instance { get; private set; }
         private void Awake()
@@ -53,12 +54,20 @@ namespace HW
 
             // Ok add
             items.Add(item);
+
+            // Call event.
+            OnItemAdded?.Invoke(item);
         }
 
         // Removes an existing item
         public void Remove(Item item)
         {
+            if (!items.Contains(item))
+                return;
+            
             items.Remove(item);
+
+            OnItemRemoved?.Invoke(item);
         }
 
         // Returns true if the item passed as param exists, otherwise returns false

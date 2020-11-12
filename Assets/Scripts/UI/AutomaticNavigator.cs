@@ -23,6 +23,8 @@ namespace HW.UI
         DateTime lastSelection;
         float selectionTime = 0.25f;
 
+        GameObject lastSelectedObject;
+
         private void Awake()
         {
             activable = GetComponent<IActivable>();
@@ -48,6 +50,15 @@ namespace HW.UI
                 return;
 
             CheckNavigation();
+
+            // The event system loses focus on the selected object when you click the mouse 
+            // button somewhere around in the screen. To avoid this we simply store the current 
+            // selected object on each frame so that we will be able to replace it when 
+            // focus gets lost.
+            if (!EventSystem.current.currentSelectedGameObject)
+                lastSelectedObject.GetComponent<Selectable>().Select();
+            else
+                lastSelectedObject = EventSystem.current.currentSelectedGameObject;
         }
 
         void CheckNavigation()
@@ -79,6 +90,7 @@ namespace HW.UI
             // takes into accout selectables beholding to other panels
             if (next && selectables.Contains(next))
                 next.Select();
+                
 
             lastSelection = DateTime.UtcNow;
         }

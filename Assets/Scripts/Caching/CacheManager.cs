@@ -108,8 +108,16 @@ namespace HW.CachingSystem
             ReadCache();
         }
 
+        /// <summary>
+        /// Delete both file and cache.
+        /// Can be used by the game manager when a new game starts.
+        /// </summary>
         public void Delete()
         {
+            // Delete cache.
+            cache.Clear();
+
+            // Delete file if exists.
             string path = Path.Combine(folder, file);
             if (File.Exists(path))
                 File.Delete(path);

@@ -48,7 +48,7 @@ namespace HW.UI
             RectTransform panel = transform.GetChild(0) as RectTransform;
             // Get panel width.
             float width = panel.rect.width;
-            // Panel is attached to the left edge of the screen with its pivot on the edge,
+            // Panel is attached to the right edge of the screen with its pivot on the left,
             // so we must move it to the left.
             LeanTween.moveX((RectTransform)panel.transform, -width, 0.25f).setEaseSpring();
 

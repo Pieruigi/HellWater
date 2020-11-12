@@ -663,7 +663,6 @@ GameObject:
   - component: {fileID: 586865927292548467}
   - component: {fileID: 2668957253492184459}
   - component: {fileID: 8959158575960734845}
-  - component: {fileID: 3783404688096002755}
   - component: {fileID: 2884993209287424757}
   - component: {fileID: 6390805331306807686}
   - component: {fileID: -7670656969401244704}
@@ -843,14 +842,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!81 &3783404688096002755
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2124363711614942937}
-  m_Enabled: 1
 --- !u!114 &2884993209287424757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -930,6 +921,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a77c1fc02a1a80140bbcdfa54bee8752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioListenerPrefab: {fileID: 4608110584848797818, guid: 12e344fb8e3d4d3499f39ea0e5b6e03e,
+    type: 3}
   audioSource: {fileID: 8959158575960734845}
   reactionClips:
   - {fileID: 8300000, guid: 8e7a9012f131760498c5f65b2184d3ee, type: 3}

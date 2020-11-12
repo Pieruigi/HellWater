@@ -24,6 +24,8 @@ namespace HW.UI
 
         int exitGameTextId = 4;
 
+        int newGameTextId = 8;
+
         
         // Start is called before the first frame update
         void Start()
@@ -35,8 +37,6 @@ namespace HW.UI
                 // Disable continue button
                 buttonContinue.GetComponent<Button>().interactable = false;
 
-                Debug.Log("Selecting new game button");
-
                 // Select the new game button
                 newGameButton.GetComponent<Selectable>().Select();
             }
@@ -45,18 +45,38 @@ namespace HW.UI
                 buttonContinue.GetComponent<Selectable>().Select();
             }
 
-            lastSelectedObject = EventSystem.current.currentSelectedGameObject;
         }
 
         // Update is called once per frame
         void Update()
         {
+            Debug.Log("IsFocused:"+EventSystem.current.currentSelectedGameObject);
+  
         }
 
 
         public void StartNewGame()
         {
-            GameManager.Instance.StartNewGame();
+            
+            if (GameManager.Instance.IsSaveGameAvailable())
+            {
+                inputDisabled = true;
+
+                // We need to store the last selected button ( the exit button we assume ) in order
+                // the be able to select it again if we abort exit.
+                lastSelectedObject = EventSystem.current.currentSelectedGameObject;
+
+                // If a save game is available we must warn the player that starting a new game
+                // will destroy the old saves.
+                string message = UITextTranslator.GetMessage(newGameTextId);
+                MessageBox.Show(MessageBox.Type.YesNo, message, HandleOnNewGameYes, HandleOnNewGameNo);
+                
+            }
+            else
+            {
+                GameManager.Instance.StartNewGame();
+            }
+            
         }
 
         public void ContinueGame()
@@ -67,7 +87,12 @@ namespace HW.UI
         public void ExitGame()
         {
             inputDisabled = true;
+
+            // We need to store the last selected button ( the exit button we assume ) in order
+            // the be able to select it again if we abort exit.
             lastSelectedObject = EventSystem.current.currentSelectedGameObject;
+
+            // Show the message box.
             string msg = UITextTranslator.GetMessage(exitGameTextId);
             MessageBox.Show(MessageBox.Type.YesNo, msg, HandleOnExitYes, HandleOnExitNo);
         }
@@ -82,6 +107,21 @@ namespace HW.UI
         void HandleOnExitNo()
         {
             inputDisabled = false;
+
+            // Reset focus on the last button.
+            lastSelectedObject.GetComponent<Selectable>().Select();
+        }
+
+        void HandleOnNewGameYes()
+        {
+            GameManager.Instance.StartNewGame();
+        }
+
+        void HandleOnNewGameNo()
+        {
+            inputDisabled = false;
+
+            // Reset focus on the last button.
             lastSelectedObject.GetComponent<Selectable>().Select();
         }
 

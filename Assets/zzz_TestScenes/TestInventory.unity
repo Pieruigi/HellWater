@@ -921,11 +921,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3524474544261020085, guid: b4c59c3dd4462254888b47c3e0202e8f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4559001140862011373, guid: b4c59c3dd4462254888b47c3e0202e8f,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -934,16 +929,6 @@ PrefabInstance:
     - target: {fileID: 4559001140862011373, guid: b4c59c3dd4462254888b47c3e0202e8f,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559001140862011373, guid: b4c59c3dd4462254888b47c3e0202e8f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559001140862011373, guid: b4c59c3dd4462254888b47c3e0202e8f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7732316799644268356, guid: b4c59c3dd4462254888b47c3e0202e8f,
@@ -1262,6 +1247,7 @@ MonoBehaviour:
   stunnedEffect: 0
   hitPhysicalReaction: 1
   range: 5
+  noiseRange: 0
   animationId: 2
   weaponObject: {fileID: 1682212930}
   type: 0
@@ -2497,6 +2483,7 @@ MonoBehaviour:
   stunnedEffect: 1
   hitPhysicalReaction: 2
   range: 1.25
+  noiseRange: 0
   animationId: 1
   weaponObject: {fileID: 1454462941}
 --- !u!1 &4524868320127991240
@@ -3510,6 +3497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a77c1fc02a1a80140bbcdfa54bee8752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioListenerPrefab: {fileID: 0}
   audioSource: {fileID: 8959158574705491955}
   reactionClips:
   - {fileID: 8300000, guid: 8e7a9012f131760498c5f65b2184d3ee, type: 3}

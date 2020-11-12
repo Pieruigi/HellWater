@@ -1,12 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Audio;
 
 namespace HW
 {
     public class PlayerFX : MonoBehaviour
     {
+        [SerializeField]
+        GameObject audioListenerPrefab;
+
         [SerializeField]
         AudioSource audioSource;
 
@@ -23,6 +27,14 @@ namespace HW
             playerController = GetComponent<PlayerController>();
             playerController.OnGotHit += HandleOnGotHit;
             playerController.OnDead += HandleOnDead;
+
+            // Create the audio listener.
+            GameObject al = GameObject.Instantiate(audioListenerPrefab);
+            ConstraintSource cs = new ConstraintSource();
+            cs.sourceTransform = transform;
+            cs.weight = 1;
+            al.GetComponent<PositionConstraint>().SetSource(0, cs);
+            al.GetComponent<PositionConstraint>().constraintActive = true;
         }
 
         // Start is called before the first frame update

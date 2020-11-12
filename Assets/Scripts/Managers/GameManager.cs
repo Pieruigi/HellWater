@@ -12,6 +12,10 @@ namespace HW
     {
         //public UnityAction<int> OnGameOver;
 
+        [SerializeField]
+        List<GameObject> gamePrefabs;
+
+
         int mainSceneIndex = 0;
         int loadingSceneIndex = 1;
         int startingSceneIndex = 2;
@@ -242,6 +246,14 @@ namespace HW
             }
         }
 
+        void InstantiatePrefabs()
+        {
+            if (inGame)
+            {
+                foreach(GameObject o in gamePrefabs)
+                    GameObject.Instantiate(o, Vector3.zero, Quaternion.identity);
+            }
+        }
        
     }
 
