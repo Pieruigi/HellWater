@@ -3810,6 +3810,7 @@ GameObject:
   - component: {fileID: 580516828}
   - component: {fileID: 580516829}
   - component: {fileID: 580516830}
+  - component: {fileID: 580516831}
   m_Layer: 0
   m_Name: CookingMachine
   m_TagString: Untagged
@@ -4087,6 +4088,21 @@ MonoBehaviour:
   desiredState: 0
   desiredOldState: -1
   nextQuestCode: g004
+--- !u!114 &580516831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580516815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e64ee37e711c30e4bafd700c1753f626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemToRemove: {fileID: 11400000, guid: 07906a3701f15f349885d6d9f5a213a7, type: 2}
+  desiredState: 0
+  desiredOldState: 1
 --- !u!1 &586068003
 GameObject:
   m_ObjectHideFlags: 0
@@ -14750,6 +14766,8 @@ PlayableDirector:
     value: {fileID: 2079169660}
   - key: {fileID: 8138543670874459589, guid: dc8cdde91f0dec74497dbdfe965eb8bd, type: 2}
     value: {fileID: 518516440}
+  - key: {fileID: 1335129620929632322, guid: dc8cdde91f0dec74497dbdfe965eb8bd, type: 2}
+    value: {fileID: 214961059}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &1508507328

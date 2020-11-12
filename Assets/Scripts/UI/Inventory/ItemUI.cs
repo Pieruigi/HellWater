@@ -65,6 +65,7 @@ namespace HW.UI
             item = null;
             icon.sprite = null;
             _name.text = "";
+            transform.localScale = Vector3.zero;
         }
 
         public bool IsEmpty()

@@ -47,6 +47,7 @@ namespace HW
 
         // Resources
         public static readonly string ResourceFolderEquipment = "Items/Equipment";
+        public static readonly string ResourceFolderInventory = "Items/Inventory";
         public static readonly string ResourceFolderMessageCollection = "MessageCollection";
         public static readonly string ResourceFolderMessageCollectionUI = "UI/MessageCollection";
         
