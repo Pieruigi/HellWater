@@ -30,7 +30,7 @@ public class _TestInventory : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            Inventory.Instance.Remove(items[2]);
+            Inventory.Instance.Remove(items[0]);
         }
 
 

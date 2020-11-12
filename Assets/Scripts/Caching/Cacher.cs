@@ -37,7 +37,7 @@ namespace HW.CachingSystem
         {
             
             string cacheValue = GetCacheValue();
-            if(!"".Equals(cacheValue))
+            //if(!"".Equals(cacheValue))
                 CacheManager.Instance.UpdateCacheValue(code, GetCacheValue());
         }
 

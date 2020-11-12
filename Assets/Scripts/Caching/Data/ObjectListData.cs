@@ -60,6 +60,9 @@ namespace HW.CachingSystem
 
         public override void Parse(string data)
         {
+            if (string.IsNullOrEmpty(data))
+                return;
+
             string[] sList = data.Split(' ');
             foreach(string s in sList)
             {
