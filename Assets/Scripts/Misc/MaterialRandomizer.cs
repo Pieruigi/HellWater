@@ -16,7 +16,7 @@ namespace HW
             rend = GetComponent<Renderer>();
 
             int r = Random.Range(0, materials.Count);
-            r = 0;
+            
             rend.material = materials[r];
         }
 
