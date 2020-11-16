@@ -9,6 +9,7 @@ namespace HW.CachingSystem
     public class CacheManager
     {
         public UnityAction OnCacheUpdate;
+        public UnityAction OnSave;
         
         private string folder = Application.persistentDataPath + "/Saves/";
         private string file = "sav.txt";
@@ -98,6 +99,8 @@ namespace HW.CachingSystem
             OnCacheUpdate?.Invoke();
 
             WriteCache();
+
+            OnSave?.Invoke();
         }
 
         public void Load()
