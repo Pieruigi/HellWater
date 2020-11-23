@@ -140,7 +140,7 @@ namespace HW
 
             currentMagazineAmmo += count;
 
-            OnReload?.Invoke();
+            //OnReload?.Invoke();
 
             return true;
         }
