@@ -129,7 +129,7 @@ namespace HW
                 if (PlayerInput.GetButton(PlayerInput.QuestAxis))
                     open = true;
 
-                if (open != QuestViewer.Instance.IsOpen())
+                if (QuestViewer.Instance && open != QuestViewer.Instance.IsOpen())
                     QuestViewer.Instance.Show(open);
             }
         }
@@ -241,7 +241,8 @@ namespace HW
                     inventory = GameObject.FindObjectOfType<InventoryUI>();
 
                     // Close the game menu
-                    menuManager.Close();
+                    if(menuManager)
+                        menuManager.Close();
                 }
             }
         }

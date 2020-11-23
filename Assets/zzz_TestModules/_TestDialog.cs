@@ -1,9 +1,18 @@
-﻿using System.Collections;
+﻿using HW;
+using HW.Collections;
+using HW.CutScene;
+using HW.UI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static HW.Collections.Dialog;
 
 public class _TestDialog : MonoBehaviour
 {
+    [SerializeField]
+    string dialogCode;
+
+    int startIndex = 0;
     
 
     // Start is called before the first frame update
@@ -15,19 +24,21 @@ public class _TestDialog : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            StartCoroutine(Test());
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Dialog d = Dialog.GetDialog(dialogCode, GameManager.Instance.Language);
 
-        //if (Input.GetKeyDown(KeyCode.Alpha2))
-        //    GetComponent<HW.Cinema.DialogController>().StopDialog();
+            Speech speech = d.GetSpeech(startIndex);
+
+            if (speech == null)
+                return;
+
+            DialogViewer.Instance.ShowSpeech(speech.Content, speech.Avatar);
+
+            startIndex++;
+        }
+            
     }
 
-    IEnumerator Test()
-    {
-        yield return new WaitForSeconds(1f);
-        HW.UI.DialogViewer.Instance.ShowSpeech("Aaa fs df s fsdfs fsdfsd", null);
 
-        yield return new WaitForSeconds(3f);
-        HW.UI.DialogViewer.Instance.Hide();
-    }
 }
