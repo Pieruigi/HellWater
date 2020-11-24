@@ -47,8 +47,7 @@ namespace HW
 
         void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
         {
-            // Since the new state is -1 we are sure the come from the enable state
-            //InGameTutorialViewer.Instance.Show(tutorialIndex);
+            // Since the new state is -1 we are always sure to come from the enable state.
             OnShow?.Invoke(tutorialCode);
         }
     }
