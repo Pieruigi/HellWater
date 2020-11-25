@@ -5616,6 +5616,7 @@ GameObject:
   - component: {fileID: 242592938}
   - component: {fileID: 242592932}
   - component: {fileID: 242592939}
+  - component: {fileID: 242592940}
   m_Layer: 0
   m_Name: SearchTrigger-3
   m_TagString: Untagged
@@ -5653,7 +5654,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredState: 0
   desiredOldState: 1
-  actionType: 8
+  actionType: 1
   loop: 0
   length: 3.5
   disablePlayerOnActionPerformed: 1
@@ -5858,6 +5859,18 @@ MonoBehaviour:
   count: 1
   target: {fileID: 1207921223}
   delay: 0.7
+--- !u!114 &242592940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242592926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9db41f8afdbfe4fa5aeea438ae82f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &244390949
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10045,6 +10058,7 @@ GameObject:
   - component: {fileID: 448939598}
   - component: {fileID: 448939592}
   - component: {fileID: 448939600}
+  - component: {fileID: 448939599}
   m_Layer: 0
   m_Name: SearchTrigger-6
   m_TagString: Untagged
@@ -10271,6 +10285,18 @@ MonoBehaviour:
   toolPosition: {x: 0, y: 0, z: 0}
   toolRotation: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
+--- !u!114 &448939599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448939586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9db41f8afdbfe4fa5aeea438ae82f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &448939600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18149,6 +18175,7 @@ GameObject:
   - component: {fileID: 755490114}
   - component: {fileID: 755490113}
   - component: {fileID: 755490112}
+  - component: {fileID: 755490124}
   m_Layer: 0
   m_Name: SearchTrigger-7
   m_TagString: Untagged
@@ -18252,7 +18279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredState: 0
   desiredOldState: 1
-  actionType: 8
+  actionType: 1
   loop: 0
   length: 3.5
   disablePlayerOnActionPerformed: 1
@@ -18391,6 +18418,18 @@ Transform:
   m_Father: {fileID: 2001073990}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &755490124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755490110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9db41f8afdbfe4fa5aeea438ae82f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &755818461
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22564,6 +22603,7 @@ GameObject:
   - component: {fileID: 835960860}
   - component: {fileID: 835960854}
   - component: {fileID: 835960861}
+  - component: {fileID: 835960862}
   m_Layer: 0
   m_Name: SearchTrigger-4
   m_TagString: Untagged
@@ -22601,7 +22641,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredState: 0
   desiredOldState: 1
-  actionType: 8
+  actionType: 1
   loop: 0
   length: 3.5
   disablePlayerOnActionPerformed: 1
@@ -22806,6 +22846,18 @@ MonoBehaviour:
   count: 1
   target: {fileID: 1178602097}
   delay: 0.7
+--- !u!114 &835960862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835960848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9db41f8afdbfe4fa5aeea438ae82f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &836732916
 GameObject:
   m_ObjectHideFlags: 0
@@ -24241,6 +24293,7 @@ GameObject:
   - component: {fileID: 913386303}
   - component: {fileID: 913386297}
   - component: {fileID: 913386304}
+  - component: {fileID: 913386305}
   m_Layer: 0
   m_Name: SearchTrigger-5
   m_TagString: Untagged
@@ -24278,7 +24331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredState: 0
   desiredOldState: 1
-  actionType: 8
+  actionType: 1
   loop: 0
   length: 3.5
   disablePlayerOnActionPerformed: 1
@@ -24483,6 +24536,18 @@ MonoBehaviour:
   count: 1
   target: {fileID: 1483554912}
   delay: 0.7
+--- !u!114 &913386305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913386291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9db41f8afdbfe4fa5aeea438ae82f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &913705332
 GameObject:
   m_ObjectHideFlags: 0
@@ -28131,6 +28196,7 @@ GameObject:
   - component: {fileID: 1128888410}
   - component: {fileID: 1128888404}
   - component: {fileID: 1128888411}
+  - component: {fileID: 1128888412}
   m_Layer: 0
   m_Name: SearchTrigger-2
   m_TagString: Untagged
@@ -28168,7 +28234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredState: 0
   desiredOldState: 1
-  actionType: 8
+  actionType: 1
   loop: 0
   length: 3.5
   disablePlayerOnActionPerformed: 1
@@ -28373,6 +28439,18 @@ MonoBehaviour:
   count: 1
   target: {fileID: 764827343}
   delay: 0.7
+--- !u!114 &1128888412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128888398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9db41f8afdbfe4fa5aeea438ae82f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1131313127
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35135,6 +35213,7 @@ GameObject:
   - component: {fileID: 1489154275}
   - component: {fileID: 1489154268}
   - component: {fileID: 1489154276}
+  - component: {fileID: 1489154277}
   m_Layer: 0
   m_Name: SearchTrigger-1
   m_TagString: Untagged
@@ -35329,7 +35408,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredState: 0
   desiredOldState: 1
-  actionType: 8
+  actionType: 1
   loop: 0
   length: 3.5
   disablePlayerOnActionPerformed: 1
@@ -35377,6 +35456,18 @@ MonoBehaviour:
   count: 1
   target: {fileID: 2115863464}
   delay: 0.7
+--- !u!114 &1489154277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489154263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9db41f8afdbfe4fa5aeea438ae82f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1490903754
 GameObject:
   m_ObjectHideFlags: 0
