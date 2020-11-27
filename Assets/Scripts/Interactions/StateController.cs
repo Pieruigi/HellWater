@@ -5,24 +5,32 @@ using UnityEngine;
 namespace HW
 {
     /// <summary>
-    /// This class controls the animation depending on the state.
+    /// By attaching this class to an object depending on a finite machine state you can control
+    /// the object using an animator.
+    /// The simplest way is to set all the states you need in the animator and then call them
+    /// from any state.
     /// </summary>
-    public class AnimationStateController : MonoBehaviour
+    public class StateController : MonoBehaviour
     {
-        // Set true if you want to set on start depending on the fsm state.
+        // Set true if you want to set on start depending on the fsm state, otherwise live false.
         [SerializeField]
         bool setOnStart = false;
+
+        [SerializeField]
+        [Tooltip("The finite state machine this object depends on; if null it will try to set the" +
+            "field from this object")]
+        FiniteStateMachine fsm;
 
         Animator animator;
 
         string stateParamName = "State";
 
-        FiniteStateMachine fsm;
-
 
         void Awake()
         {
-            fsm = GetComponent<FiniteStateMachine>();
+            if(!fsm)
+                fsm = GetComponent<FiniteStateMachine>();
+
             fsm.OnStateChange += HandleOnStateChange;
             animator = GetComponent<Animator>();
         }
