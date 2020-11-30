@@ -16,7 +16,11 @@ namespace HW
         FiniteStateMachine fsm;
 
         [SerializeField]
-        List<int> states = new List<int>(); 
+        List<int> states = new List<int>();
+
+        // False if you want to check only on start, otherwise true.
+        [SerializeField]
+        bool onStateChanged = false;
 
         // The list of object you want to activate when states match and deactivate when 
         // states don't match.
@@ -27,6 +31,12 @@ namespace HW
         // states don't match.
         [SerializeField]
         List<GameObject> negativeObjects;
+
+        private void Awake()
+        {
+            if (onStateChanged)
+                fsm.OnStateChange += HandleOnStateChange;
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -51,6 +61,29 @@ namespace HW
         void Update()
         {
 
+        }
+
+        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        {
+            Check();
+        }
+
+        void Check()
+        {
+            // Return true if the current state of the active state machine is in the state list.
+            bool activate = states.Exists(s => s == fsm.CurrentStateId);
+
+            // De/activate positive objects in the list.
+            foreach (GameObject obj in positiveObjects)
+            {
+                obj.SetActive(activate);
+            }
+
+            // De/activate negative objects in the list.
+            foreach (GameObject obj in negativeObjects)
+            {
+                obj.SetActive(!activate);
+            }
         }
     }
 
