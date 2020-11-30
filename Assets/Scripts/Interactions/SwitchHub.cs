@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using HW.Interfaces;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,7 +10,7 @@ namespace HW
     /// Sum the output given by circuits in the input state machine in order to set the output.
     /// Circuit output depends on the corresponding fsm state.
     /// </summary>
-    public class FsmHub : MonoBehaviour
+    public class SwitchHub : MonoBehaviour
     {
         // State machines in input.
         [SerializeField]
@@ -40,7 +41,7 @@ namespace HW
                 fsm.OnStateChange += HandleOnStateChange;
 
             }
-                
+            
            
         }
 
@@ -65,6 +66,7 @@ namespace HW
         void ComputeOutput()
         {
             // Get the output for each finite state machine we have in input.
+            // Each circuit output will be sent as input to the operator.
             string[] outArray = new string[inputs.Count];
             for(int i=0; i< outArray.Length; i++)
             {
@@ -72,26 +74,37 @@ namespace HW
                 outArray[i] = circuits[i].GetOutput(inputs[i].CurrentStateId.ToString());
             }
 
+            // Compute operation.
+            string output = CircuitSum.Instance.Compute(outArray);
+            Debug.Log("Output:" + output);
+            if (!string.IsNullOrEmpty(output))
+            {
+                string[] outS = output.Split(' ');
+                for(int i=0; i<outS.Length; i++)
+                {
+                    outputs[i].ForceState(int.Parse(outS[i]), true, false);
+                }
+            }
             
 
-            int numOfElements = outArray[0].Split(' ').Length;
-            // Split element by element in output.
-            for(int i=0; i<numOfElements; i++)
-            {
-                // Sum of element i-th.
-                int sum = 0;
-                foreach(string output in outArray)
-                {
-                    int s = int.Parse(output.Split(' ')[i]);
+            //int numOfElements = outArray[0].Split(' ').Length;
+            //// Split element by element in output.
+            //for(int i=0; i<numOfElements; i++)
+            //{
+            //    // Sum of element i-th.
+            //    int sum = 0;
+            //    foreach(string output in outArray)
+            //    {
+            //        int s = int.Parse(output.Split(' ')[i]);
 
-                    sum += s;
-                    sum = sum % sumBase; 
-                }
+            //        sum += s;
+            //        sum = sum % sumBase; 
+            //    }
 
-                outputs[i].ForceState(sum, true, false);
+            //    outputs[i].ForceState(sum, true, false);
 
         
-            }
+            //}
 
         }
 
