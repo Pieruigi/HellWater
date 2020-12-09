@@ -148,7 +148,6 @@ namespace HW
         Rigidbody rb;
         bool disabled = false; // Is this controller disabled ?
         float sphereCastRadius = 2.0f; // Used to get targets
-        bool qteAction = false;
         float angularSpeedInRadians;
         Vector3 raycastOffset;
         Transform startingPoint;
@@ -198,12 +197,217 @@ namespace HW
         // Update is called once per frame
         void Update()
         {
+            // Update velocity
+            float speedChange = ((currentVelocity.sqrMagnitude < desiredVelocity.sqrMagnitude) ? acceleration : deceleration) * Time.deltaTime;
+            currentVelocity = Vector3.MoveTowards(currentVelocity, desiredVelocity, speedChange);
 
-            if (qteAction)
-                QteAction();
-            else
-                RealtimeAction();
-                
+            // You can't do anything else while you are doing one of these actions
+            if (disabled || /*reloading ||*/ shooting || attacking || hit || IsDead())
+                return;
+
+            // If you are reloading you can still move, but reloading will be interrupted
+            if (reloading)
+            {
+                if (PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis) != 0 || PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis) != 0)
+
+                {
+                    reloading = false;
+                    OnReloadInterrupted?.Invoke();
+                    (currentWeapon as FireWeapon).OnReloadInterrupted?.Invoke();
+                }
+
+                return;
+            }
+
+            // Is charging melee attack
+            if (chargingAttack)
+            {
+                // Rotate the player towards the choosen target if there is one
+                TryRotateTowardsTarget();
+
+                if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) == 0)
+                {
+                    TryAttack();
+                }
+                // We can't move or do anything else while while we are charging attack
+                return;
+            }
+
+            // Check stealth mode
+            CheckStealthMode();
+
+
+
+            // Switch fire weapon
+            //CheckIsSwitchingWeapon();
+
+            // Check if player is aiming
+            CheckIsAiming();
+
+            // Check if equipped fire weapon must be reloaded
+            CheckIsReloading();
+
+
+            if (!aiming)
+            {
+                OnTargeting?.Invoke(currentWeapon, null);
+
+                // Time to holster weapon?
+                currentReleaseWeaponTimer -= Time.deltaTime;
+                if (currentReleaseWeaponTimer < 0)
+                    ResetCurrentWeapon();
+
+                // Check movement.
+                // Check if player is running.
+                CheckIsRunning();
+
+                // Get player movement input. 
+                Vector2 input = new Vector2(PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis), PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis)).normalized;
+
+                // Get the desired velocity depending on the camera orientation ( for ex. if the camera if looking
+                // from north to south we need to reverse the forward direction )
+                desiredVelocity = PlayerCamera.Instance.GetRightOrientation() * input.x +
+                                  PlayerCamera.Instance.GetForwardOrientation() * input.y;
+
+                desiredVelocity *= maxSpeed;
+
+                // Look to the direction you are moving towards.
+                Vector3 desiredFwd = desiredVelocity.normalized;
+
+                // Get the direction player is looking at
+                Vector3 currentFwd = transform.forward;
+                if (desiredVelocity == Vector3.zero)
+                    desiredFwd = currentFwd;
+
+                // Look the direction you are heading 
+                transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
+
+
+                // 
+                // Melee attack
+                //
+
+                // Start charging melee attack
+                if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) > 0)
+                {
+
+                    if (holsterForced || stealthMode) // No weapon allowed here
+                    {
+                        if (!stealthMode)
+                            OnHolsterForced?.Invoke();
+
+                    }
+                    else // Ok, lets fight
+                    {
+                        if (meleeWeapon && !attackFailed)
+                        {
+                            // Stop moving
+                            desiredVelocity = Vector3.zero;
+
+                            // Get all the targets inside the weapon range which are not hidden by any obstacle
+                            List<Transform> targets = GetAvailableTargets(meleeWeapon.Range * 2f);
+
+                            // Set the target or null
+                            currentTarget = GetClosestTarget(targets);
+
+
+                            TryChargeAttack();
+                        }
+                    }
+
+
+                }
+
+
+            }
+            else // Is aiming
+            {
+                // Stop moving
+                desiredVelocity = Vector3.zero;
+
+                //
+                // Get target
+                //
+
+                // Get all the targets inside the weapon range which are not hidden by any obstacle
+                List<Transform> targets;
+                if (!fireWeaponAccuracySystem)
+                    targets = GetAvailableTargets(fireWeapon.Range);
+                else
+                    targets = GetAvailableTargets(FireWeapon.GlobalAimingRange);
+
+
+                // Last target will be useful to decide to call or not an event
+                Transform lastTarget = currentTarget;
+
+                // Clear current target if not longer available
+                if (currentTarget && !targets.Contains(currentTarget))
+                    currentTarget = null;
+
+
+                // If there no target yet then set the closest one if available
+                if (!currentTarget)
+                {
+                    // Set the new target if available
+                    currentTarget = GetClosestTarget(targets);
+                }
+                else
+                {
+                    // Get the aiming direction
+                    Vector3 direction = new Vector3(PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis), 0, PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis)).normalized;
+
+                    // I'm trying to target someone else
+                    if (direction != Vector3.zero)
+                    {
+                        // Get the target the player is aiming or null
+                        Transform newTarget = GetNewTarget(targets, direction, fireWeapon.Range);
+
+                        // 
+                        if (newTarget && newTarget != currentTarget)
+                            currentTarget = newTarget;
+                    }
+
+
+                }
+
+                // Check for event to be called
+                if (lastTarget != currentTarget)
+                    OnTargeting?.Invoke(currentWeapon, currentTarget);
+
+                // Rotate the player towards the choosen target if there is one
+                TryRotateTowardsTarget();
+
+
+                // Just debug
+                //DebugTargets(targets);
+
+                //Debug.Log("CurrentTarget:" + currentTarget);
+
+                // 
+                // Shoot
+                //
+
+                // If magazine is not empty then shoot
+                if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) > 0 && (System.DateTime.UtcNow - lastShoot).TotalSeconds > shootTime)
+                {
+                    lastShoot = System.DateTime.UtcNow;
+                    if (!fireWeapon.IsEmpty())
+                    {
+                        TryShoot();
+                    }
+                    else
+                    {
+                        Debug.Log("IsOutOfAmmo...");
+                        if (fireWeapon.IsOutOfAmmo())
+                            fireWeapon.OnOutOfAmmo?.Invoke();
+                        else
+                            TryReload();
+                    }
+                }
+
+            }
+
+
 
         }
 
@@ -791,226 +995,6 @@ namespace HW
             ResetMaxSpeed();
         }
 
-        void RealtimeAction()
-        {
-
-            // Update velocity
-            float speedChange = ((currentVelocity.sqrMagnitude < desiredVelocity.sqrMagnitude) ? acceleration : deceleration) * Time.deltaTime;
-            currentVelocity = Vector3.MoveTowards(currentVelocity, desiredVelocity, speedChange);
-
-            // You can't do anything else while you are doing one of these actions
-            if (disabled || /*reloading ||*/ shooting || attacking || hit || IsDead())
-                return;
-
-            // If you are reloading you can still move, but reloading will be interrupted
-            if (reloading)
-            {
-                if (PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis) != 0 || PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis) != 0)
-                
-                {
-                    reloading = false;
-                    OnReloadInterrupted?.Invoke();
-                    (currentWeapon as FireWeapon).OnReloadInterrupted?.Invoke();
-                }
-
-                return;
-            }
-
-            // Is charging melee attack
-            if (chargingAttack)
-            {
-                // Rotate the player towards the choosen target if there is one
-                TryRotateTowardsTarget();
-
-                if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) == 0)
-                {
-                    TryAttack();
-                }
-                // We can't move or do anything else while while we are charging attack
-                return;
-            }
-
-            // Check stealth mode
-            CheckStealthMode();
-            
-
-
-            // Switch fire weapon
-            //CheckIsSwitchingWeapon();
-
-            // Check if player is aiming
-            CheckIsAiming();
-
-            // Check if equipped fire weapon must be reloaded
-            CheckIsReloading();
-                      
-            
-            if (!aiming)
-            {
-                OnTargeting?.Invoke(currentWeapon, null);
-
-                // Time to holster weapon?
-                currentReleaseWeaponTimer -= Time.deltaTime;
-                if (currentReleaseWeaponTimer < 0)
-                    ResetCurrentWeapon();
-
-                // Check movement.
-                // Check if player is running.
-                CheckIsRunning();
-
-                // Get player movement input. 
-                Vector2 input = new Vector2(PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis), PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis)).normalized;
-
-                // Get the desired velocity depending on the camera orientation ( for ex. if the camera if looking
-                // from north to south we need to reverse the forward direction )
-                desiredVelocity = PlayerCamera.Instance.GetRightOrientation() * input.x +
-                                  PlayerCamera.Instance.GetForwardOrientation() * input.y;
-
-                desiredVelocity *= maxSpeed;
-               
-                // Look to the direction you are moving towards.
-                Vector3 desiredFwd = desiredVelocity.normalized;
-
-                // Get the direction player is looking at
-                Vector3 currentFwd = transform.forward;
-                if (desiredVelocity == Vector3.zero)
-                    desiredFwd = currentFwd;
-
-                // Look the direction you are heading 
-                transform.forward = Vector3.RotateTowards(currentFwd, desiredFwd, angularSpeedInRadians * Time.deltaTime, 0);
-                
-               
-                // 
-                // Melee attack
-                //
-
-                // Start charging melee attack
-                if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) > 0)
-                {
-
-                    if (holsterForced || stealthMode) // No weapon allowed here
-                    {
-                        if(!stealthMode)
-                            OnHolsterForced?.Invoke();
-                        
-                    }
-                    else // Ok, lets fight
-                    {
-                        if (meleeWeapon && !attackFailed)
-                        {
-                            // Stop moving
-                            desiredVelocity = Vector3.zero;
-
-                            // Get all the targets inside the weapon range which are not hidden by any obstacle
-                            List<Transform> targets = GetAvailableTargets(meleeWeapon.Range * 2f);
-
-                            // Set the target or null
-                            currentTarget = GetClosestTarget(targets);
-
-
-                            TryChargeAttack();
-                        }
-                    }
-                    
-
-                }
-
-
-            }
-            else // Is aiming
-            {
-                // Stop moving
-                desiredVelocity = Vector3.zero;
-
-                //
-                // Get target
-                //
-
-                // Get all the targets inside the weapon range which are not hidden by any obstacle
-                List<Transform> targets;
-                if (!fireWeaponAccuracySystem)
-                    targets = GetAvailableTargets(fireWeapon.Range);
-                else
-                    targets = GetAvailableTargets(FireWeapon.GlobalAimingRange);
-
-
-                // Last target will be useful to decide to call or not an event
-                Transform lastTarget = currentTarget;
-
-                // Clear current target if not longer available
-                if (currentTarget && !targets.Contains(currentTarget))
-                    currentTarget = null;
-
-
-                // If there no target yet then set the closest one if available
-                if (!currentTarget)
-                {
-                    // Set the new target if available
-                    currentTarget = GetClosestTarget(targets);
-                }
-                else
-                {
-                    // Get the aiming direction
-                    Vector3 direction = new Vector3(PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis), 0, PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis)).normalized;
-
-                    // I'm trying to target someone else
-                    if (direction != Vector3.zero)
-                    {
-                        // Get the target the player is aiming or null
-                        Transform newTarget = GetNewTarget(targets, direction, fireWeapon.Range);
-
-                        // 
-                        if (newTarget && newTarget != currentTarget)
-                            currentTarget = newTarget;
-                    }
-
-
-                }
-
-                // Check for event to be called
-                if (lastTarget != currentTarget)
-                    OnTargeting?.Invoke(currentWeapon, currentTarget);
-
-                // Rotate the player towards the choosen target if there is one
-                TryRotateTowardsTarget();
-
-
-                // Just debug
-                //DebugTargets(targets);
-
-                //Debug.Log("CurrentTarget:" + currentTarget);
-
-                // 
-                // Shoot
-                //
-
-                // If magazine is not empty then shoot
-                if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) > 0 && (System.DateTime.UtcNow - lastShoot).TotalSeconds > shootTime)
-                {
-                    lastShoot = System.DateTime.UtcNow;
-                    if (!fireWeapon.IsEmpty())
-                    {
-                        TryShoot();
-                    }
-                    else
-                    {
-                        Debug.Log("IsOutOfAmmo...");
-                        if (fireWeapon.IsOutOfAmmo())
-                            fireWeapon.OnOutOfAmmo?.Invoke();
-                        else
-                            TryReload();
-                    }
-                }
-
-            }
-
-           
-        }
-
-        void QteAction()
-        {
-
-        }
 
         void TryRotateTowardsTarget()
         {

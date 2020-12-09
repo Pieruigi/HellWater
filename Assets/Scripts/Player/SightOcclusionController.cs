@@ -40,6 +40,9 @@ namespace HW
             if (!active)
                 return;
 
+            if (!Camera.main)
+                return;
+
             //
             // Do raycast
             //
