@@ -8,6 +8,9 @@ namespace HW
     {
         enum Locomotion { Idle, Walk, Run }
 
+        [SerializeField]
+        int attackAnimationCount = 1;
+
         PlayerController playerController;
         Animator animator;
 
@@ -26,6 +29,7 @@ namespace HW
         string paramHit = "Hit";
         string paramDead = "Dead";
         string paramAttack = "Attack";
+        string paramAttackId = "AttackId";
         //string paramLocomotion = "Locomotion";
         
         #endregion
@@ -124,7 +128,8 @@ namespace HW
 
         void HandleOnAttack(bool value)
         {
-            
+            animator.SetInteger(paramAttackId, Random.Range(0, attackAnimationCount));
+            animator.SetTrigger(paramAttack);
         }
 
     }

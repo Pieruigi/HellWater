@@ -99,6 +99,8 @@ namespace HW
             get { return meleeWeapon; }
         }
 
+        // Is the weapon you are actually holding.
+        // You must be in attacking mode ( aiming, shooting or striking ).
         Weapon currentWeapon;
         public Weapon CurrentWeapon
         {

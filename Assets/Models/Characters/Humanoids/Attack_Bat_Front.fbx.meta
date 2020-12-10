@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 1d01139831d7b9e4b9486bd3051a3121
+guid: 1d7d59b81ffb78f4dbb7c9013a1b1acd
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
   - first:
-      74: 8887530642507353988
-    second: Attack_Bat
+      74: 5377465610788626438
+    second: Attack_Bat_Front
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -19,7 +19,14 @@ ModelImporter:
     optimizeGameObjects: 0
     motionNodeName: 
     rigImportErrors: 
-    rigImportWarnings: 
+    rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
+      copied configuration does not match position in animation file:\n\t'mixamorig:LeftUpLeg'
+      : position error = 1.564278 mm\n\t'mixamorig:LeftLeg' : position error = 1.566555
+      mm\n\t'mixamorig:LeftFoot' : position error = 8.153507 mm\n\t'mixamorig:LeftToeBase'
+      : position error = 5.132407 mm\n\t'mixamorig:RightUpLeg' : position error =
+      3.150818 mm\n\t'mixamorig:RightLeg' : position error = 1.584663 mm\n\t'mixamorig:RightFoot'
+      : position error = 7.828902 mm\n\t'mixamorig:RightToeBase' : position error
+      = 11.753448 mm\n"
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -35,11 +42,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Attack_Bat
-      takeName: Attack_Bat
+      name: Attack_Bat_Front
+      takeName: Attack_Bat_Front
       internalID: 0
       firstFrame: 0
-      lastFrame: 26
+      lastFrame: 59
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -59,7 +66,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.41980127
+      - time: 0.42043552
         functionName: Strike
         data: 
         objectReferenceParameter: {instanceID: 0}
