@@ -20,7 +20,6 @@ namespace HW
         float chargingEvalSpeed = 10;
 
         #region ANIMATION PARAMS
-        string paramWeaponAnimationId = "WeaponAnimationId";
         string paramSpeed = "Speed";
         string paramAiming = "Aiming";
         string paramAimingDirection = "AimingDirection";
@@ -85,12 +84,10 @@ namespace HW
 
         void HandleOnSetCurrentWeapon(Weapon weapon)
         {
-            animator.SetFloat(paramWeaponAnimationId, (float)weapon.AnimationId);
         }
 
         void HandleOnResetCurrentWeapon()
         {
-            animator.SetFloat(paramWeaponAnimationId, 0);
         }
 
         void HandleOnStartAiming()

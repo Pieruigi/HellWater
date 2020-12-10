@@ -106,9 +106,7 @@ namespace HW
         {
             get { return currentWeapon; }
         }
-        float releaseWeaponTimer = 8;
-        float currentReleaseWeaponTimer = 0;
-
+        
 
         //Transform desiredTarget;
         Transform currentTarget;
@@ -219,10 +217,6 @@ namespace HW
             {
                 OnTargeting?.Invoke(currentWeapon, null);
 
-                // Time to holster weapon?
-                currentReleaseWeaponTimer -= Time.deltaTime;
-                if (currentReleaseWeaponTimer < 0)
-                    ResetCurrentWeapon();
 
                 // Check movement.
                 // Check if player is running.
@@ -492,6 +486,8 @@ namespace HW
             {
                 currentTarget = null;
 
+                ResetCurrentWeapon();
+
                 OnStopAiming?.Invoke();
             }
         }
@@ -576,8 +572,7 @@ namespace HW
         void SetCurrentWeapon(Weapon weapon)
         {
             
-            currentReleaseWeaponTimer = releaseWeaponTimer;
-
+          
             if (currentWeapon != null && currentWeapon != weapon)
             {
                 currentWeapon.SetVisible(false);

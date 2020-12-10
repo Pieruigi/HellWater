@@ -58,7 +58,7 @@ public class _TestFighting : MonoBehaviour
         // Hit player
         if (Input.GetKeyDown(KeyCode.T))
         {
-            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Push, 20, false);
+            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Stop, 20, false);
             playerController.GetComponent<IHitable>().GetHit(hitInfo);
         }
 
