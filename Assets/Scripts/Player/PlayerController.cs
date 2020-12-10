@@ -15,8 +15,6 @@ namespace HW
         public UnityAction<Weapon> OnShoot; // Called on shoot
         public UnityAction OnStartAiming; // Called when you start aiming
         public UnityAction OnStopAiming; // Called when you stop aiming
-        public UnityAction OnChargeAttack; // Called when you start charging melee attack
-        public UnityAction<bool> OnAttackCharged; // Called passing true if melee attack is charged, otherwise false is passed
         public UnityAction<bool> OnAttack; // Called when melee charging stops; param tell if attack has been charged
         public UnityAction OnIsOutOfAmmo; // Called when your firegun is out of ammo
         public UnityAction OnReload; // Called on reloading
@@ -27,9 +25,6 @@ namespace HW
         public UnityAction<Weapon> OnHitSomething; // Called when you hit something with your weapon
         public UnityAction<Weapon, Transform> OnTargeting; // Called everytime you acquire or switch a target ( null means no target )
         public UnityAction OnDead;
-        public UnityAction OnHolsterForced;
-        public UnityAction<int> OnSurrender;
-
         #endregion
 
         #region SERIALIZED FIELDS
@@ -49,9 +44,6 @@ namespace HW
         float angularSpeed;
 
         [SerializeField]
-        bool chargeMeleeAttack = false;
-
-        [SerializeField]
         bool fireWeaponAccuracySystem = false;
         public bool FireWeaponAccuracySystem
         {
@@ -61,7 +53,7 @@ namespace HW
 
 
         #region LOCOMOTION FIELDS
-        // The max speed the player can reach depending on whether is running or not
+        // The max speed the player can reach depending on whether is running or not.
         float maxSpeed;
 
         // Is player running ?
@@ -70,26 +62,10 @@ namespace HW
         // The target velocity
         Vector3 desiredVelocity;
         Vector3 currentVelocity;
-
-        float stealthMaxWalkSpeed = 1f;
-        //float stealthRunSpeedMul = 2.5f;
-        bool stealthModeAvailable = true;
-        public bool StealthModeAvailable
-        {
-            get { return stealthModeAvailable; }
-            set { stealthModeAvailable = value; }
-        }
-        
-        bool stealthMode = false;
-        public bool StealthMode
-        {
-            get { return stealthMode; }
-        }
         #endregion
 
         #region Noise Ranges
         float idleNoiseRange = 1.5f; // The minimum noise you can do ( normally in idle ).
-        float stealthNoiseRange = 2.5f; // Noise multiplier while walking in stealth mode.
         float walkNoiseRange = 3.5f; // Noise multiplier while walking.
         float runNoiseRange = 4.5f; // Noise multiplier while running.
         #endregion
@@ -98,10 +74,7 @@ namespace HW
         bool aiming = false;
         bool reloading = false;
         bool shooting = false;
-        bool chargingAttack = false; // Charging melee attack
         bool attacking = false; // Performing attack with melee weapon
-        bool attackCharged = false;
-        bool attackFailed = false;
         bool hit = false;
         bool holsterForced = false;
 
@@ -173,7 +146,7 @@ namespace HW
                 health = GetComponent<Health>();
                 raycastOffset = Vector3.up * Constants.RaycastVerticalOffset;
                 coll = GetComponent<CapsuleCollider>();
-                stealthMaxWalkSpeed = maxWalkingSpeed * 0.7f;
+                
             }
             else
             {
@@ -219,25 +192,17 @@ namespace HW
                 return;
             }
 
-            // Is charging melee attack
-            if (chargingAttack)
+            // Player is attacking.
+            if (attacking)
             {
                 // Rotate the player towards the choosen target if there is one
                 TryRotateTowardsTarget();
 
-                if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) == 0)
-                {
-                    TryAttack();
-                }
                 // We can't move or do anything else while while we are charging attack
                 return;
             }
 
-            // Check stealth mode
-            CheckStealthMode();
-
-
-
+        
             // Switch fire weapon
             //CheckIsSwitchingWeapon();
 
@@ -290,16 +255,9 @@ namespace HW
                 // Start charging melee attack
                 if (PlayerInput.GetAxisRaw(PlayerInput.ShootAxis) > 0)
                 {
-
-                    if (holsterForced || stealthMode) // No weapon allowed here
+                    if(!holsterForced) // Ok, lets fight
                     {
-                        if (!stealthMode)
-                            OnHolsterForced?.Invoke();
-
-                    }
-                    else // Ok, lets fight
-                    {
-                        if (meleeWeapon && !attackFailed)
+                        if (meleeWeapon)
                         {
                             // Stop moving
                             desiredVelocity = Vector3.zero;
@@ -310,8 +268,8 @@ namespace HW
                             // Set the target or null
                             currentTarget = GetClosestTarget(targets);
 
-
-                            TryChargeAttack();
+                            TryAttack();
+                            
                         }
                     }
 
@@ -452,8 +410,7 @@ namespace HW
 
             shooting = false;
             attacking = false;
-            chargingAttack = false;
-
+            
             // You are already dead
             if (IsDead())
                 return;
@@ -481,17 +438,7 @@ namespace HW
         #endregion
 
         #region PUBLIC
-        public void Surrender(int gameOverType)
-        {
-            Debug.Log("Surrender");
-            // Player gets captured by a human enemy ( marauder, soldier, etc. ).
-            // Disable controller.
-            SetDisabled(true);
-
-            // Call event.
-            OnSurrender?.Invoke(gameOverType);
-        }
-
+      
         public bool IsRunning()
         {
             return running;
@@ -509,14 +456,8 @@ namespace HW
 
         public float GetCurrentSpeedNormalized()
         {
-            return currentVelocity.magnitude / GetMaximumSpeed();
+            return currentVelocity.magnitude / maxRunningSpeed;
         }
-
-        public float GetMaximumSpeed()
-        {
-            return stealthMode ? stealthMaxWalkSpeed : maxRunningSpeed;
-        }
-
 
         public void SetDisabled(bool value)
         {
@@ -566,11 +507,7 @@ namespace HW
 
         public void EquipWeapon(Item item)
         {
-            //if (holsterForced)
-            //{
-            //    OnHolsterForced?.Invoke();
-            //    return;
-            //}
+          
 
             if (item.Type != ItemType.Weapon)
                 throw new System.Exception("EquipWeapon() can't be called with param of type " + item.Type + ".");
@@ -599,8 +536,6 @@ namespace HW
                 if (!fireWeapon)
                     fireWeapon = weapon as FireWeapon;
 
-                // Ok let's see this weapon
-                //SetCurrentWeapon(fireWeapon);
             }
             else // Is melee ( we only have bat )
             {
@@ -608,29 +543,11 @@ namespace HW
                 if (!meleeWeapon)
                     meleeWeapon = weapon as MeleeWeapon;
 
-                // Ok let's see this weapon
-                //SetCurrentWeapon(meleeWeapon);
+
             }
         }
 
-        /// <summary>
-        /// This is called when player starts or stops standing crouched.
-        /// </summary>
-        public void SetStealthMode(bool value)
-        {
-            if(!stealthModeAvailable && value)
-            {
-                Debug.LogWarningFormat("You can not set the stealth mode; please make sure stealth mode is available first.");
-                return;
-            }
-
-            stealthMode = value;
-            ResetMaxSpeed();
-
-            // Holser weapon ( not forced )
-            HolsterWeapon();
-        }
-
+       
         /// <summary>
         /// Return the noise range.
         /// </summary>
@@ -645,11 +562,6 @@ namespace HW
             // First check if player is running.
             if (IsRunning())
                 return runNoiseRange;
-
-            // Player is not runnig, so he's walking, an thus we must check whether is moving in
-            // stealth or not.
-            if (StealthMode)
-                return stealthNoiseRange;
 
             // Not in stealth mode.
             return walkNoiseRange;
@@ -720,22 +632,6 @@ namespace HW
             }
         }
 
-        void CheckStealthMode()
-        {
-            if (PlayerInput.GetButtonDown(PlayerInput.BackAxis) && stealthModeAvailable)
-            {
-                if (!stealthMode)
-                    SetStealthMode(true);
-            }
-            else
-                if (PlayerInput.GetButtonUp(PlayerInput.BackAxis))
-            {
-                if (stealthMode)
-                    SetStealthMode(false);
-            }
-
-        }
-
         void CheckIsAiming()
         {
             
@@ -749,17 +645,7 @@ namespace HW
 
             bool aim = PlayerInput.GetAxisRaw(PlayerInput.AimAxis) > 0;
 
-            if (aim)
-            {
-                if (holsterForced || stealthMode)
-                {
-                    if(!stealthMode)
-                        OnHolsterForced?.Invoke();
-                    return;    
-                }
-                
-            }
-
+ 
             SetAiming(aim);
 
 
@@ -795,10 +681,7 @@ namespace HW
         // It also decrease if player is crouching.
         void ResetMaxSpeed()
         {
-            if(!stealthMode)
-                maxSpeed = running ? maxRunningSpeed : maxWalkingSpeed;
-            else
-                maxSpeed = stealthMaxWalkSpeed;
+            maxSpeed = running ? maxRunningSpeed : maxWalkingSpeed;
         }
 
         void TryReload()
@@ -848,60 +731,17 @@ namespace HW
 
         }
 
-        void TryChargeAttack()
-        {
-            if (!meleeWeapon)
-                return;
-
-            // Set flags
-            chargingAttack = true;
-            attackCharged = false;
-
-            SetCurrentWeapon(meleeWeapon);
-            
-            // Event
-            OnChargeAttack?.Invoke();
-        }
-
         void TryAttack()
         {
 
             if (!meleeWeapon)
                 return;
 
-            if (!chargeMeleeAttack)
-                attackCharged = true; // Only if you want to attack without charging
+            attacking = true;
 
-            // Check is attack will succeed
-            if (attackCharged)
-            {
-                attackCharged = false;
-
-                // Start attacking if attack succeeds
-                attacking = true;
-                OnAttack?.Invoke(true);
-            }
-            else
-            {
-                attacking = false; // Be sure
-                attackFailed = true;
-                StartCoroutine(AttackFailedCooldown());
-                OnAttack?.Invoke(false);
-            }
-
-            // Stop charging
-            chargingAttack = false;
-
-
-            OnAttackCharged?.Invoke(false);
-
+            OnAttack?.Invoke(true);
         }
 
-        IEnumerator AttackFailedCooldown()
-        {
-            yield return new WaitForSeconds(0.5f);
-            attackFailed = false;
-        }
 
       
 
@@ -982,12 +822,9 @@ namespace HW
             aiming = false;
             reloading = false;
             shooting = false;
-            chargingAttack = false;
             attacking = false;
-            attackCharged = false;
             toTargetSignedAngleRotation = 0;
             hit = false;
-            stealthMode = false;
             desiredVelocity = Vector2.zero;
 
             currentTarget = null;
@@ -1035,33 +872,9 @@ namespace HW
         #endregion
 
         #region ANIMATION EVENTS
+      
         // Sent by the melee attack animation
-        public void ChargingAttackStarted()
-        {
-            if (chargingAttack)
-            {
-                // Charging succeeded
-                attackCharged = true;
-
-                OnAttackCharged?.Invoke(true);
-            }
-
-        }
-
-        // Sent by the melee attack animation
-        public void ChargingAttackCompleted()
-        {
-            if (chargingAttack)
-            {
-                // Charging failed
-                attackCharged = false;
-                TryAttack();
-
-                OnAttackCharged?.Invoke(false);
-            }
-
-        }
-
+        
         // Sent by the melee attack animation
         public void AttackCompleted()
         {
@@ -1087,8 +900,7 @@ namespace HW
             // Some animations could be interrupted by hit, so we need to reset flags to avoid player to be stucked
             reloading = false;
             shooting = false;
-            chargingAttack = false;
-            attackCharged = false;
+            
 
             hit = false;
         }

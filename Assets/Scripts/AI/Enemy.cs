@@ -601,16 +601,7 @@ namespace HW
             // Distance between ai and target
             float distance = toTarget.magnitude;
 
-            // We use a offeset to check if there is something between the player and the AI.
-            // Since the player can move in a crouched stance we need to switch between two 
-            // different values for the offset.
-            // An alternative way would be to cast two rays, one for each offset: this would be a 
-            // good way to check for every character ( at moment we are also checking for 
-            // the player ).
             float vOffset = 1.4f;
-            if (PlayerController.Instance.StealthMode)
-                vOffset = 0.5f;
-
             RaycastHit hitInfo;
             Ray ray = new Ray(transform.position + Vector3.up * vOffset, toTarget.normalized);
             Debug.DrawRay(ray.origin, ray.direction*distance, Color.red, 5f, true);

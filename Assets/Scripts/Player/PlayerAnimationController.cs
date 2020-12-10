@@ -25,11 +25,7 @@ namespace HW
         string paramReload = "Reload";
         string paramHit = "Hit";
         string paramDead = "Dead";
-        string paramChargeAttack = "ChargeAttack";
-        string paramAttackOK = "AttackOK";
-        string paramAttackKO = "AttackKO";
-        string paramAttackChargeSpeed = "AttackChargeSpeed";
-        string paramCrouching = "Crouching";
+        string paramAttack = "Attack";
         //string paramLocomotion = "Locomotion";
         
         #endregion
@@ -47,13 +43,10 @@ namespace HW
             playerController.OnShoot += HandleOnShoot;
             playerController.OnReload += HandleOnReload;
             playerController.OnGotHit += HandleOnGotHit;
-            playerController.OnChargeAttack += HandleOnChargeAttack;
             playerController.OnAttack += HandleOnAttack;
-            playerController.OnAttackCharged += HandleOnAttackCharged;
-
+            
             animator = GetComponentInChildren<Animator>();
 
-            animator.SetFloat(paramAttackChargeSpeed, 1f);
         }
 
         // Start is called before the first frame update
@@ -67,29 +60,10 @@ namespace HW
         {
 
             // Update locomotion
-            //animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
-            if (!playerController.StealthMode)
-            {
-                // If player is crouching then return to walk
-                if (animator.GetBool(paramCrouching))
-                    animator.SetBool(paramCrouching, false);
-
-                // Set speed
-                animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed());
-                //animator.SetFloat(paramSpeed, playerController.GetCurrentSpeed() / playerController.GetMaximumSpeed());
-            }
-            else
-            {
-                // If player is walking then start crouching
-                if (!animator.GetBool(paramCrouching))
-                    animator.SetBool(paramCrouching, true);
-
-                Debug.Log("NormalizedSpeed:" + playerController.GetCurrentSpeedNormalized());
-                // Set speed
-                animator.SetFloat(paramSpeed, playerController.GetCurrentSpeedNormalized());
-            }
-
-            
+         
+             
+            // Set animation speed
+            animator.SetFloat(paramSpeed, playerController.GetCurrentSpeedNormalized());
 
             // If player is aiming then check rotation
             if (animator.GetBool(paramAiming))
@@ -146,26 +120,13 @@ namespace HW
                 animator.SetBool(paramDead, true);
         }
 
-        void HandleOnChargeAttack()
-        {
-            animator.SetTrigger(paramChargeAttack);
-        }
+
 
         void HandleOnAttack(bool value)
         {
-            if(value)
-                animator.SetTrigger(paramAttackOK);
-            else
-                animator.SetTrigger(paramAttackKO);
+            
         }
 
-        void HandleOnAttackCharged(bool value)
-        {
-            if (value)
-                animator.SetFloat(paramAttackChargeSpeed, 0.3f);
-            else
-                animator.SetFloat(paramAttackChargeSpeed, 1f); 
-        }
     }
 
 }
