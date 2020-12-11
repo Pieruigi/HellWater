@@ -64,7 +64,7 @@ public class _TestFighting : MonoBehaviour
         {
             if(Equipment.Instance.MeleeWeapon != bat)
             {
-                Equipment.Instance.AddWeapon(bat);
+                Equipment.Instance.AddMeleeWeapon(bat);
             }
             
         }
@@ -72,7 +72,7 @@ public class _TestFighting : MonoBehaviour
         {
             if (Equipment.Instance.PrimaryWeapon != gun)
             {
-                Equipment.Instance.AddWeapon(gun);
+                Equipment.Instance.AddPrimaryFireWeapon(gun);
             }
             else
             {

@@ -163,7 +163,15 @@ namespace HW
            
             Reset();
 
-            GetComponentInChildren<MeleeWeapon>().OnHit += HandleOnHitSomething;
+            //GetComponentInChildren<MeleeWeapon>().OnHit += HandleOnHitSomething;
+            // Set equipment handles.
+            Equipment.Instance.OnWeaponAdded += HandleOnWeaponAdded;
+            Equipment.Instance.OnWeaponRemoved += HandleOnWeaponRemoved;
+            
+
+            // If PlayerController starts after Equipment then we must get data by hand.
+            fireWeapon = Equipment.Instance.SecondaryWeapon;
+            meleeWeapon = Equipment.Instance.MeleeWeapon;
 
         }
 
@@ -863,6 +871,44 @@ namespace HW
                 OnHitSomething(weapon);
         }
 
+        void HandleOnWeaponAdded(Weapon weapon)
+        {
+            if (weapon.GetType() == typeof(MeleeWeapon))
+            {
+                (weapon as MeleeWeapon).OnHit += HandleOnHitSomething;
+                meleeWeapon = weapon as MeleeWeapon;
+            }
+            else
+            {
+                if (weapon.GetType() == typeof(FireWeapon))
+                {
+                    //if(Equipment.Instance.IsPrimary(weapon as FireWeapon))
+                    fireWeapon = weapon as FireWeapon;
+                }
+            }
+
+            // We must attach the game object.
+        }
+
+        void HandleOnWeaponRemoved(Weapon weapon)
+        {
+            if (weapon.GetType() == typeof(MeleeWeapon))
+            {
+                (weapon as MeleeWeapon).OnHit -= HandleOnHitSomething;
+                meleeWeapon = null;
+            }
+            else
+            {
+                if(weapon.GetType() == typeof(FireWeapon))
+                {
+                    fireWeapon = null;
+                }
+            }
+
+        }
+
+        
+
         #endregion
 
         #region ANIMATION CONTROLLER
@@ -870,9 +916,9 @@ namespace HW
         #endregion
 
         #region ANIMATION EVENTS
-      
+
         // Sent by the melee attack animation
-        
+
         // Sent by the melee attack animation
         public void AttackCompleted()
         {

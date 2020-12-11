@@ -11,8 +11,9 @@ namespace HW
 
     public class Equipment : MonoBehaviour
     {
-        public UnityAction<Weapon> WeaponAdded;
-        public UnityAction<Weapon> WeaponRemoved;
+        public UnityAction<Weapon> OnWeaponAdded;
+        public UnityAction<Weapon> OnWeaponRemoved;
+        
 
         FireWeapon primaryWeapon, secondaryWeapon;
         public FireWeapon PrimaryWeapon
@@ -87,78 +88,58 @@ namespace HW
             //}
         }
 
-        //public void Add(Item item, int count = 1)
-        //{
-        //    if (item.Type != ItemType.Weapon && item.Type != ItemType.Ammo)
-        //        throw new System.Exception("Invalid type '" + item.Type + "' for " + item.name);
-
-        //    switch (item.Type)
-        //    {
-        //        case ItemType.Weapon:
-        //            AddWeapon(item);
-        //            break;
-        //        case ItemType.Ammo:
-        //            AddAmmonitions(item, count);
-        //            break;
-        //    }
-        //}
-
-        public void AddWeapon(Weapon weapon)
+        public bool IsPrimary(FireWeapon fireWeapon)
         {
-            Weapon oldWeapon = null;
-            if(weapon.GetType() == typeof(MeleeWeapon))
-            {
-                // It's melee weapon.
-                RemoveMeleeWeapon();
-                meleeWeapon = weapon as MeleeWeapon;
-            }
-            else
-            {
-                if(weapon.GetType() == typeof(FireWeapon))
-                {
-                    // We must check wheter is primary or secondary weapon.
-                    FireWeapon newWeapon = weapon as FireWeapon;
-                    if(newWeapon.Group == FireWeaponGroup.Primary)
-                    {
-                        // It's primary weapon.
-                        RemovePrimaryWeapon();
-                        primaryWeapon = newWeapon;
-                    }
-                    else
-                    {
-                        // It's secondary weapon.
-                        RemoveSecondaryWeapon();
-                        secondaryWeapon = newWeapon;
-                    }
-                }
+            return primaryWeapon == fireWeapon;
+        }
+        
+        public void AddMeleeWeapon(MeleeWeapon weapon)
+        {
+            RemoveMeleeWeapon();
+            meleeWeapon = weapon as MeleeWeapon;
 
-                
-            }
-
-            // Let know the other that a weapon has been added.
-            WeaponAdded?.Invoke(weapon);
+            OnWeaponAdded?.Invoke(weapon);
         }
 
-        public void RemovePrimaryWeapon()
+        public void AddPrimaryFireWeapon(FireWeapon weapon)
+        {
+            RemovePrimaryFireWeapon();
+            primaryWeapon = weapon;
+
+            OnWeaponAdded?.Invoke(weapon);
+        }
+
+        public void AddSecondaryFireWeapon(FireWeapon weapon)
+        {
+            RemoveSecondaryFireWeapon();
+            secondaryWeapon = weapon;
+
+            OnWeaponAdded?.Invoke(weapon);
+        }
+
+
+        public void RemovePrimaryFireWeapon()
         {
             if (primaryWeapon == null)
                 return;
 
-            Weapon tmp = primaryWeapon;
+            FireWeapon tmp = primaryWeapon;
             primaryWeapon = null;
 
-            WeaponRemoved?.Invoke(tmp);
+            // Let know the others that a weapon has been removed.
+            OnWeaponRemoved?.Invoke(tmp);
         }
 
-        public void RemoveSecondaryWeapon()
+        public void RemoveSecondaryFireWeapon()
         {
             if (secondaryWeapon == null)
                 return;
 
-            Weapon tmp = secondaryWeapon;
+            FireWeapon tmp = secondaryWeapon;
             secondaryWeapon = null;
 
-            WeaponRemoved?.Invoke(tmp);
+            // Let know the others that a weapon has been removed.
+            OnWeaponRemoved?.Invoke(tmp);
         }
 
         public void RemoveMeleeWeapon()
@@ -166,32 +147,15 @@ namespace HW
             if (meleeWeapon == null)
                 return;
 
-            Weapon tmp = meleeWeapon;
+            MeleeWeapon tmp = meleeWeapon;
             meleeWeapon = null;
 
-            WeaponRemoved?.Invoke(tmp);
+            // Let know the others that a weapon has been removed.
+            OnWeaponRemoved?.Invoke(tmp);
 
         }
 
-        //private void AddAmmonitions(Item item, int amount)
-        //{
-        //    if (item.Type != ItemType.Ammo)
-        //        throw new System.Exception("AddAmmonitions() can't be called with param of type " + item.Type + ".");
 
-        //    // Look for this ammo in the equipment
-        //    AmmoData data = ammonitions.Find(ad => ad.Ammo == item);
-
-        //    // If ammo doesn't exist the create new data
-        //    if (data == null)
-        //    {
-        //        data = new AmmoData(item);
-        //        ammonitions.Add(data);
-        //    }
-
-        //    // Increase data
-        //    data.IncreaseAmmo(amount);
-
-        //}
 
         /// <summary>
         /// Add some ammo.
@@ -208,13 +172,10 @@ namespace HW
             if (count == maxCount)
                 return 0;
 
-            int ret = amount;
+            // Check the maximum amount.
+            int ret = Mathf.Min(amount, maxCount-count);
 
-            if (count + amount > maxCount)
-            {
-                ret = maxCount - count;
-            }
-
+            // Update ammo.
             count += ret;
             ammonitions[ammoType] = count;
 

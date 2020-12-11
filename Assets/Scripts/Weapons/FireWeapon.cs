@@ -10,17 +10,7 @@ namespace HW
     // Type of bullets
     public enum AmmonitionType { GunBullet, Magnum, Shells, RifleBullet, SniperBullet }
 
-    //public enum FireWeaponType { Gun, Shotgun, CombatRifle, Rifle }
-    /// <summary>
-    /// Which type of weapon:
-    /// secondary is for ex. gun;
-    /// primary is for ex. rifle;
-    /// melee is melee;
-    /// throwing is something like grenades;
-    /// heavy is a weapon that you can only carry with you, but that you can't put in your bag.
-    /// </summary>
-    public enum FireWeaponGroup { Primary, Secondary }
-
+  
     public class FireWeapon : Weapon
     {
         public static readonly float GlobalAimingRange = 14;
@@ -29,13 +19,6 @@ namespace HW
         public UnityAction OnReload;
         public UnityAction OnOutOfAmmo;
         public UnityAction OnReloadInterrupted;
-
-        [SerializeField]
-        FireWeaponGroup group;
-        public FireWeaponGroup Group
-        {
-            get { return group; }
-        }
 
         [SerializeField]
         int maxMagazineAmmo;
