@@ -7,7 +7,19 @@ using HW.Collections;
 
 namespace HW
 {
-    public enum FireWeaponType { Gun, Shotgun, CombatRifle, Rifle }
+    // Type of bullets
+    public enum AmmonitionType { GunBullet, Magnum, Shells, RifleBullet, SniperBullet }
+
+    //public enum FireWeaponType { Gun, Shotgun, CombatRifle, Rifle }
+    /// <summary>
+    /// Which type of weapon:
+    /// secondary is for ex. gun;
+    /// primary is for ex. rifle;
+    /// melee is melee;
+    /// throwing is something like grenades;
+    /// heavy is a weapon that you can only carry with you, but that you can't put in your bag.
+    /// </summary>
+    public enum FireWeaponGroup { Primary, Secondary }
 
     public class FireWeapon : Weapon
     {
@@ -19,23 +31,21 @@ namespace HW
         public UnityAction OnReloadInterrupted;
 
         [SerializeField]
-        FireWeaponType type;
-        public FireWeaponType Type
+        FireWeaponGroup group;
+        public FireWeaponGroup Group
         {
-            get { return type; }
+            get { return group; }
         }
 
         [SerializeField]
         int maxMagazineAmmo;
 
         [SerializeField]
-        Item ammonition;
-        public Item Ammonition
+        AmmonitionType ammonitionType;
+        public AmmonitionType AmmonitionType
         {
-            get { return ammonition; }
+            get { return ammonitionType; }
         }
-
-        //int leftAmmo = 0;
 
         int currentMagazineAmmo = 0;
         public int NumberOfLoadedAmmo
@@ -131,12 +141,12 @@ namespace HW
 
             int count = maxMagazineAmmo - currentMagazineAmmo;
 
-            int leftAmmo = Equipment.Instance.GetNumberOfAmmonitions(ammonition);
+            int leftAmmo = Equipment.Instance.GetNumberOfAmmonitions((int)ammonitionType);
            
             if(leftAmmo < count)
                 count = leftAmmo;
 
-            Equipment.Instance.RemoveAmmonitions(ammonition, count);
+            Equipment.Instance.RemoveAmmonitions((int)ammonitionType, count);
 
             currentMagazineAmmo += count;
 
@@ -158,7 +168,7 @@ namespace HW
 
         public bool IsOutOfAmmo()
         {
-            return Equipment.Instance.GetNumberOfAmmonitions(ammonition) == 0;
+            return Equipment.Instance.GetNumberOfAmmonitions((int)ammonitionType) == 0;
         }
 
         //public void AddAmmo(int amount)

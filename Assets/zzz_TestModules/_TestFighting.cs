@@ -11,16 +11,7 @@ public class _TestFighting : MonoBehaviour
     FireWeapon gun;
 
     [SerializeField]
-    Item gunItem;
-
-    [SerializeField]
-    Item gunAmmo;
-
-    [SerializeField]
     MeleeWeapon bat;
-
-    [SerializeField]
-    Item batItem;
 
     [SerializeField]
     Enemy enemy;
@@ -33,16 +24,12 @@ public class _TestFighting : MonoBehaviour
         
 
         playerController = GameObject.FindObjectOfType<PlayerController>();
-        gun = playerController.GetComponentInChildren<FireWeapon>();
-        bat = playerController.GetComponentInChildren<MeleeWeapon>();
+        //gun = playerController.GetComponentInChildren<FireWeapon>();
+        //bat = playerController.GetComponentInChildren<MeleeWeapon>();
 
-        Equipment.Instance.Add(gunAmmo, 24);
-        Equipment.Instance.Add(batItem);
-        Equipment.Instance.Add(gunItem);
-        
-
-        playerController.EquipWeapon(batItem);
-        playerController.EquipWeapon(gunItem);
+        //Equipment.Instance.AddAmmonition((int)gun.AmmonitionType, 24);
+        //Equipment.Instance.AddWeapon(bat);
+        //Equipment.Instance.AddWeapon(gun);
 
         //playerController.FireWeapon.Reload();
 
@@ -58,19 +45,40 @@ public class _TestFighting : MonoBehaviour
         // Hit player
         if (Input.GetKeyDown(KeyCode.T))
         {
-            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Stop, 20, false);
+            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Stop, 20);
             playerController.GetComponent<IHitable>().GetHit(hitInfo);
         }
 
         if (Input.GetKeyDown(KeyCode.Y))
         {
-            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Push, 20, false);
+            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Push, 20);
             enemy.GetComponent<IHitable>().GetHit(hitInfo);
         }
         if (Input.GetKeyDown(KeyCode.U))
         {
-            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Stop, 20, false);
+            HitInfo hitInfo = new HitInfo(playerController.transform.position, Vector3.forward, HitPhysicalReaction.Stop, 20);
             enemy.GetComponent<IHitable>().GetHit(hitInfo);
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            if(Equipment.Instance.MeleeWeapon != bat)
+            {
+                Equipment.Instance.AddWeapon(bat);
+            }
+            
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (Equipment.Instance.PrimaryWeapon != gun)
+            {
+                Equipment.Instance.AddWeapon(gun);
+            }
+            else
+            {
+                Equipment.Instance.AddAmmonition((int)gun.AmmonitionType, 10);
+            }
+        }
+        
     }
 }

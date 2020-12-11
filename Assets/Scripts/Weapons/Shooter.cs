@@ -56,7 +56,7 @@ namespace HW
 
                         if (accSucceeded)
                         {
-                            HitInfo hitInfo = new HitInfo(hit.point, hit.normal, fireWeapon.HitPhysicalReaction, fireWeapon.DamageAmount, fireWeapon.StunnedEffect);
+                            HitInfo hitInfo = new HitInfo(hit.point, hit.normal, fireWeapon.HitPhysicalReaction, fireWeapon.DamageAmount);
                             hitable.GetHit(hitInfo);
                         }
                         

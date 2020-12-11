@@ -87,12 +87,14 @@ namespace HW
             get { return toTargetSignedAngleRotation; }
         }
 
+        // The fireweapon currently equipped ( primary or secondary weapon ).
         FireWeapon fireWeapon;
         public FireWeapon FireWeapon
         {
             get { return fireWeapon; }
         }
 
+        // The melee weapon
         MeleeWeapon meleeWeapon;
         public MeleeWeapon MeleeWeapon
         {
@@ -160,8 +162,6 @@ namespace HW
         {
            
             Reset();
-
-            //SetCrouching(true);
 
             GetComponentInChildren<MeleeWeapon>().OnHit += HandleOnHitSomething;
 
@@ -511,7 +511,8 @@ namespace HW
                 throw new System.Exception("EquipWeapon() can't be called with param of type " + item.Type + ".");
 
             // Get weapon
-            Weapon weapon = new List<Weapon>(GetComponentsInChildren<Weapon>()).Find(w => w.Item == item);
+            Weapon weapon = null;// new List<Weapon>(GetComponentsInChildren<Weapon>()).Find(w => w.Item == item);
+            
 
             if (weapon == null)
                 throw new System.Exception("No weapon can be found from item " + item + ".");

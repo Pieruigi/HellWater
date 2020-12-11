@@ -5,14 +5,18 @@ using HW.Collections;
 
 namespace HW
 {
+    
+
     public abstract class Weapon : MonoBehaviour
     {
-        [SerializeField]
-        Item item;
-        public Item Item
-        {
-            get { return item; }
-        }
+        //[SerializeField]
+        //Item item;
+        //public Item Item
+        //{
+        //    get { return item; }
+        //}
+
+       
 
         [SerializeField]
         float damageAmount; // The amount of damage delivered
@@ -21,12 +25,6 @@ namespace HW
             get { return damageAmount; }
         }
 
-        [SerializeField]
-        bool stunnedEffect; // Does the enemy remain stunned ?
-        public bool StunnedEffect
-        {
-            get { return stunnedEffect; }
-        }
 
         [SerializeField]
         HitPhysicalReaction hitPhysicalReaction; // Does the enemy stop moving or get pushed ?
