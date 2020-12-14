@@ -22,7 +22,9 @@ namespace HW
 
         public static void ObjectPopOut(GameObject obj)
         {
-            
+            if (obj == null)
+                return;
+
             LeanTween.scale(obj, Vector3.zero, 1f).setEaseInOutBounce();
 
             GameObject.Destroy(obj, 1.1f);

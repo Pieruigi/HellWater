@@ -56,9 +56,9 @@ namespace HW
                 audioSource.Stop();
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
-            if((desiredOldState <= 0 || oldState == desiredOldState ) && ( desiredState <= 0 || fsm.CurrentStateId == desiredState))
+            if((desiredOldState <= 0 || fsm.PreviousStateId == desiredOldState ) && ( desiredState <= 0 || fsm.CurrentStateId == desiredState))
             {
                 // Try to set the clip
                 if (clip != null)

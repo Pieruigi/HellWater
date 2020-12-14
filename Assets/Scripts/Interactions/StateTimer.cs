@@ -56,7 +56,7 @@ namespace HW
             }
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             // Wrong state.
             if (desiredState >= 0 && fsm.CurrentStateId != desiredState)

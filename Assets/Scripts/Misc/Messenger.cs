@@ -67,7 +67,7 @@ namespace HW
             StartCoroutine(ShowMessage(message, delay));
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             Debug.Log("fsm.LastExitCode:" + fsm.LastExitCode);
             if (fsm.LastExitCode < 0)

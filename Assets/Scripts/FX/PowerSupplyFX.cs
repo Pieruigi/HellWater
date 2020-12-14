@@ -58,7 +58,7 @@ namespace HW
 
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             if(fsm == starterFsm && fsm.CurrentStateId == playOnStateId)
             {
@@ -67,7 +67,7 @@ namespace HW
                 StartFX();
             }
 
-            if(fsm == tankFsm && oldState == 1 && fsm.CurrentStateId == 0)
+            if(fsm == tankFsm && fsm.PreviousStateId == 1 && fsm.CurrentStateId == 0)
             {
                 tankAudioSource.Play();
             }

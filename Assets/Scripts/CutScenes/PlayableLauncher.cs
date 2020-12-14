@@ -46,14 +46,14 @@ namespace HW.CutScene
 
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             // Check for the current state if needed. 
             if (state >= 0 && fsm.CurrentStateId != state)
                 return;
 
             // Does the set up allows loop?
-            if (oldState == fsm.CurrentStateId && !loopAllowed)
+            if (fsm.PreviousStateId == fsm.CurrentStateId && !loopAllowed)
                 return;
 
             // Start playable.

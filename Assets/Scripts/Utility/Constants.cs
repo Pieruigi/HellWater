@@ -10,11 +10,13 @@ namespace HW
 
     public enum DialogState { Completed, Ready }
 
-    public enum PickableState { Picked, Ready }
+    public enum PickableState { Picked, NotPicked }
 
     public enum GroundType { Concrete, Grass, Dirt }
 
     public enum GameOverType { Death, Capture, Arrest }
+
+    //public enum PickableType { Weapon, Ammonition, }
 
     // Tags
     public class Tags
@@ -23,6 +25,7 @@ namespace HW
         public static readonly string Enemy = "Enemy";
         public static readonly string Npc = "Npc";
         public static readonly string StartingPoint = "StartingPoint";
+        
         //public const string GroundConcrete = "Concrete";
         //public const string GroundGrass = "Grass";
         //public const string GroundDirt = "Dirt";

@@ -13,7 +13,7 @@ namespace HW
         
 
         // Called on state change except when ForceState() is called with callEvent = false; int param is the old state
-        public UnityAction<FiniteStateMachine, int> OnStateChange;
+        public UnityAction<FiniteStateMachine> OnStateChange;
 
         // Called everytime a lookup fails ( normally when conditions are not satisfied ); returns the error id
         public UnityAction<FiniteStateMachine> OnFail; 
@@ -197,7 +197,18 @@ namespace HW
             get { return currentStateId; }
         }
 
+        int previousStateId;
+        public int PreviousStateId
+        {
+            get { return previousStateId; }
+        }
+
         string disabledStateName = "Disabled";
+
+        private void Awake()
+        {
+            previousStateId = currentStateId;
+        }
 
         void Update()
         {
@@ -207,7 +218,7 @@ namespace HW
                 states[i].id = i;
             }
 
-            
+                        
 
             if (currentStateId < 0)
                 currentStateName = disabledStateName;
@@ -227,6 +238,7 @@ namespace HW
 
         public void ForceStateDisabled()
         {
+            previousStateId = currentStateId;
             currentStateId = -1;
             currentStateName = disabledStateName;
         }
@@ -313,14 +325,14 @@ namespace HW
         {
             Debug.Log(name + " forceState("+stateId+","+callEvent+","+setOthers+")");
 
-            int oldState = currentStateId;
+            previousStateId = currentStateId;
             currentStateId = stateId;
 
             // We don't want to send message if we are forcing this fsm
             lastExitCode = -1;
 
             if (callEvent)
-                OnStateChange?.Invoke(this, oldState);
+                OnStateChange?.Invoke(this);
 
             if(setOthers && currentStateId >= 0 && currentStateId<states.Count)
                 states[currentStateId].SetOthers();
@@ -329,7 +341,7 @@ namespace HW
         private void ChangeState(Transition transition)
         {
             // Store old state
-            int oldStateId = currentStateId;
+            previousStateId = currentStateId;
 
             // Switch to the new state
             currentStateId = transition.ToStateId;
@@ -347,7 +359,7 @@ namespace HW
                 lastExitCode = -1;
 
             // Call event
-            OnStateChange?.Invoke(this, oldStateId);
+            OnStateChange?.Invoke(this);
             
             if (currentStateId < 0)
                 return;

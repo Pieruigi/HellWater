@@ -10,7 +10,8 @@ namespace HW
     // Type of bullets
     public enum AmmonitionType { GunBullet, Magnum, Shells, RifleBullet, SniperBullet }
 
-  
+    public enum FireWeaponHolsterId { None, Primary, Secondary }
+    
     public class FireWeapon : Weapon
     {
         public static readonly float GlobalAimingRange = 14;
@@ -28,6 +29,13 @@ namespace HW
         public AmmonitionType AmmonitionType
         {
             get { return ammonitionType; }
+        }
+
+        [SerializeField]
+        FireWeaponHolsterId holsterId;
+        public FireWeaponHolsterId HolsterId
+        {
+            get { return holsterId; }
         }
 
         int currentMagazineAmmo = 0;

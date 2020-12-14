@@ -35,10 +35,10 @@ namespace HW
 
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             // This should not be happening
-            if (fsm.CurrentStateId == oldState)
+            if (fsm.CurrentStateId == fsm.PreviousStateId)
                 return;
 
             // Show...

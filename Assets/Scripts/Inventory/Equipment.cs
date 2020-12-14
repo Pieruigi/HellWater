@@ -88,6 +88,7 @@ namespace HW
             //}
         }
 
+       
         public bool IsPrimary(FireWeapon fireWeapon)
         {
             return primaryWeapon == fireWeapon;
@@ -101,24 +102,27 @@ namespace HW
             OnWeaponAdded?.Invoke(weapon);
         }
 
-        public void AddPrimaryFireWeapon(FireWeapon weapon)
+        public void AddFireWeapon(FireWeapon weapon)
         {
-            RemovePrimaryFireWeapon();
-            primaryWeapon = weapon;
+            if(weapon.HolsterId == FireWeaponHolsterId.Primary)
+            {
+                RemovePrimaryFireWeapon();
+                primaryWeapon = weapon;
+            }
+            else
+            {
+                if(weapon.HolsterId == FireWeaponHolsterId.Secondary)
+                {
+                    RemoveSecondaryFireWeapon();
+                    secondaryWeapon = weapon;
+                }
+            }    
 
             OnWeaponAdded?.Invoke(weapon);
         }
 
-        public void AddSecondaryFireWeapon(FireWeapon weapon)
-        {
-            RemoveSecondaryFireWeapon();
-            secondaryWeapon = weapon;
 
-            OnWeaponAdded?.Invoke(weapon);
-        }
-
-
-        public void RemovePrimaryFireWeapon()
+        void RemovePrimaryFireWeapon()
         {
             if (primaryWeapon == null)
                 return;
@@ -130,7 +134,7 @@ namespace HW
             OnWeaponRemoved?.Invoke(tmp);
         }
 
-        public void RemoveSecondaryFireWeapon()
+        void RemoveSecondaryFireWeapon()
         {
             if (secondaryWeapon == null)
                 return;
@@ -142,7 +146,7 @@ namespace HW
             OnWeaponRemoved?.Invoke(tmp);
         }
 
-        public void RemoveMeleeWeapon()
+        void RemoveMeleeWeapon()
         {
             if (meleeWeapon == null)
                 return;
@@ -196,6 +200,8 @@ namespace HW
 
         }
 
+
+   
        
     }
 

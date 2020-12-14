@@ -37,12 +37,12 @@ namespace HW
 
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             if (desiredState >= 0 && fsm.CurrentStateId != desiredState)
                 return;// Wrong state.
 
-            if (desiredOldState >= 0 && oldState != desiredOldState)
+            if (desiredOldState >= 0 && fsm.PreviousStateId != desiredOldState)
                 return; // Wrong old state.
 
             // Remove the item.

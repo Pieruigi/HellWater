@@ -47,7 +47,7 @@ namespace HW
 
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             if (fsm.CurrentStateId == (int)PickableState.Picked)
             {

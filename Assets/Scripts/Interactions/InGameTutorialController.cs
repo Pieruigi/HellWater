@@ -45,7 +45,7 @@ namespace HW
         }
 
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             // Since the new state is -1 we are always sure to come from the enable state.
             OnShow?.Invoke(tutorialCode);

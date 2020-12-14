@@ -264,6 +264,9 @@ namespace HW
                     {
                         if (meleeWeapon)
                         {
+                            // Set melee weapon.
+                            SetCurrentWeapon(meleeWeapon);
+                            
                             // Stop moving
                             desiredVelocity = Vector3.zero;
 
@@ -579,16 +582,26 @@ namespace HW
 
         #region PRIVATE
 
+        /// <summary>
+        /// Set visible the weapon passed as parameter.
+        /// </summary>
+        /// <param name="weapon"></param>
         void SetCurrentWeapon(Weapon weapon)
         {
-            
-          
-            if (currentWeapon != null && currentWeapon != weapon)
+            // SetCurrentWeapon(null) == ResetCurrentWeapon().
+            if (!weapon)
             {
-                currentWeapon.SetVisible(false);
-                currentWeapon = null;
+                ResetCurrentWeapon(); 
+                return;
             }
 
+            // Another weapon is held, so reset it. 
+            if (currentWeapon != weapon)
+            {
+                ResetCurrentWeapon();
+            }
+
+            // Hold the new weapon.
             if (!currentWeapon)
             {
                 currentWeapon = weapon;
@@ -599,6 +612,9 @@ namespace HW
 
         }
 
+        /// <summary>
+        /// Set unvisible any weapon.
+        /// </summary>
         void ResetCurrentWeapon()
         {
             if (!currentWeapon)
@@ -746,6 +762,8 @@ namespace HW
 
             attacking = true;
 
+            
+
             OnAttack?.Invoke(true);
         }
 
@@ -889,6 +907,9 @@ namespace HW
             }
 
             // We must attach the game object.
+            weapon.transform.parent = GetComponent<HumanoidNodeCollection>().GetNode(HumanoidNodeName.RightHand);
+            weapon.transform.localPosition = Vector3.zero;
+            weapon.transform.localRotation = Quaternion.identity;
         }
 
         void HandleOnWeaponRemoved(Weapon weapon)

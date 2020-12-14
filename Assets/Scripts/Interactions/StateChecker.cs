@@ -48,7 +48,7 @@ namespace HW
             return targets.Count;
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             // If true set the new state
             Check();
