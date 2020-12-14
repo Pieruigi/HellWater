@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Andrea
+  m_Name: Zombie
   m_Shader: {fileID: 4800000, guid: ad5551aa81ee9c841874d7f598e257ab, type: 3}
-  m_ShaderKeywords: TCP2_COLORS_AS_NORMALS TCP2_DISABLE_WRAPPED_LIGHT
+  m_ShaderKeywords: TCP2_DISABLE_WRAPPED_LIGHT TCP2_NONE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 96515be974098684eb6e7234e8433039, type: 3}
+        m_Texture: {fileID: 2800000, guid: 373fe877522dee44a91db23e0b9d4175, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -81,7 +81,7 @@ Material:
     - _OcclusionStrength: 1
     - _Offset1: 0
     - _Offset2: 0
-    - _Outline: 0
+    - _Outline: 1.5
     - _Parallax: 0.02
     - _RampSmooth: 0.1
     - _RampSmoothAdd: 0.75

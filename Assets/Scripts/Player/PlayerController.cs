@@ -136,6 +136,7 @@ namespace HW
         #endregion
 
         public static PlayerController Instance { get; private set; }
+        
 
         #region NATIVE METHODS
         private void Awake()
