@@ -41,6 +41,7 @@ namespace HW
     {
         // Interaction
         public static readonly float InteractionCooldownTime = 1.5f;
+        public static readonly float PopInOutTime = 0.5f;
         //public static readonly int DoorLockedState = 0;
         //public static readonly int DoorClosedState = 1;
         //public static readonly int DoorOpenState = 2;

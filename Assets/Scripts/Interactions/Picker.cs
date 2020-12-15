@@ -22,7 +22,6 @@ namespace HW
 
         FiniteStateMachine fsm;
 
-        int pickedState = 0;
 
         private void Awake()
         {
@@ -37,7 +36,7 @@ namespace HW
         void Start()
         {
             // If the object has not been picked then show the place holder.
-            if(fsm.CurrentStateId != pickedState)
+            if(fsm.CurrentStateId != (int)PickableState.Picked && fsm.CurrentStateId > 0)
             {
                 GameObject prefab = pickable.GetPlaceHolderPrefab();
                 if (prefab)
@@ -54,11 +53,9 @@ namespace HW
         void HandleOnStateChange(FiniteStateMachine fsm)
         {
             // State changed to picked.
-            if (fsm.CurrentStateId == pickedState)
+            if (fsm.CurrentStateId == (int)PickableState.Picked)
             {
-                // Set the place holder invisible.
-                if(placeHolder)
-                    GeneralUtility.ObjectPopOut(placeHolder);
+                Debug.Log("Pick:" + pickable.name);
 
                 // Pick the object.
                 Pick();
@@ -103,44 +100,56 @@ namespace HW
         {
             
             // Which kind of weapon is this?
-            Weapon newWeapon = pickable.GetObjectPrefab().GetComponent<Weapon>();
+            GameObject newWeapon = GameObject.Instantiate(pickable.GetObjectPrefab());
 
             // Add a reference to the new weapon.
-            newWeapon.gameObject.AddComponent<Referer>().SetReference(pickable);
+            newWeapon.AddComponent<Referer>().SetReference(pickable);
             
             // Handle to the currently equipped weapon, if any.
             Weapon wOld = null;
 
             // Melee weapon.
-            if (newWeapon.GetType() == typeof(MeleeWeapon)) 
+            if (newWeapon.GetComponent<MeleeWeapon>()) 
             {
                 // Get the already equipped weapon if any.                
                 wOld = Equipment.Instance.MeleeWeapon;
 
                 // Add the new weapon in the equipment.
-                Equipment.Instance.AddMeleeWeapon(newWeapon as MeleeWeapon);
+                Equipment.Instance.AddMeleeWeapon(newWeapon.GetComponent<MeleeWeapon>());
             }
 
             // Fire weapon.
-            if(newWeapon.GetType() == typeof(FireWeapon))
+            if(newWeapon.GetComponent<FireWeapon>())
             {
                 // Get the already equipped weapon if any.
-                if ((newWeapon as FireWeapon).HolsterId == FireWeaponHolsterId.Primary)
+                if (newWeapon.GetComponent<FireWeapon>().HolsterId == FireWeaponHolsterId.Primary)
                     wOld = Equipment.Instance.PrimaryWeapon;
                 else
-                    if ((newWeapon as FireWeapon).HolsterId == FireWeaponHolsterId.Secondary)
+                    if (newWeapon.GetComponent<FireWeapon>().HolsterId == FireWeaponHolsterId.Secondary)
                         wOld = Equipment.Instance.SecondaryWeapon;
 
                 // Add the new weapon in the equipment.
-                Equipment.Instance.AddFireWeapon(newWeapon as FireWeapon);
+                Equipment.Instance.AddFireWeapon(newWeapon.GetComponent<FireWeapon>());
             }
 
+            // Spawn the old pickable if any.
+            // We need to get the reference of the object we want to spawn and attach it to this picker.
+            Pickable oldPickable = null;
+            if (wOld)
+            {
+                // The reference to the pickable.
+                oldPickable = (Pickable)wOld.GetComponent<Referer>().GetReference();
 
-                
-            // Respawn the old weapon.
-            //object oldPickable = wOld.GetComponent<Referer>().GetReference();
-            //Spawn(oldPickable);
+                // Set the picker.
+                pickable = oldPickable;
 
+                // Reset the finite state machine.
+                fsm.ForceState((int)PickableState.NotPicked, false, false);
+
+            }
+            
+            // Manage place holders.
+            StartCoroutine(ManagePlaceHolders(oldPickable));
             
         }
 
@@ -149,7 +158,16 @@ namespace HW
 
         }
 
+        IEnumerator ManagePlaceHolders(Pickable old)
+        {
+            // Set the place holder invisible.
+            if (placeHolder)
+                GeneralUtility.ObjectPopOut(placeHolder);
 
+            yield return new WaitForSeconds(Constants.PopInOutTime);
+
+            
+        }
 
 
     }
