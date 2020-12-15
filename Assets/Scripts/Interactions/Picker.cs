@@ -135,6 +135,7 @@ namespace HW
             // Spawn the old pickable if any.
             // We need to get the reference of the object we want to spawn and attach it to this picker.
             Pickable oldPickable = null;
+            Debug.Log("WOld:" + wOld);
             if (wOld)
             {
                 // The reference to the pickable.
@@ -147,7 +148,9 @@ namespace HW
                 fsm.ForceState((int)PickableState.NotPicked, false, false);
 
             }
-            
+
+            Debug.Log("oldPickable:" + oldPickable);
+
             // Manage place holders.
             StartCoroutine(ManagePlaceHolders(oldPickable));
             
@@ -160,11 +163,20 @@ namespace HW
 
         IEnumerator ManagePlaceHolders(Pickable old)
         {
-            // Set the place holder invisible.
+            // Destroy the current place holder.
             if (placeHolder)
                 GeneralUtility.ObjectPopOut(placeHolder);
+                
 
-            yield return new WaitForSeconds(Constants.PopInOutTime);
+            // If we are switching from different pickables then we show up the new place holder.
+            if (old)
+            {
+                yield return new WaitForSeconds(Constants.PopInOutTime);
+
+                placeHolder = GeneralUtility.ObjectPopIn(old.GetPlaceHolderPrefab(), placeHolderRoot, Vector3.zero, Vector3.zero, Vector3.one);
+            }
+            
+
 
             
         }

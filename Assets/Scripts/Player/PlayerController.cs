@@ -236,8 +236,9 @@ namespace HW
 
                 // Get the desired velocity depending on the camera orientation ( for ex. if the camera if looking
                 // from north to south we need to reverse the forward direction )
-                desiredVelocity = PlayerCamera.Instance.GetRightOrientation() * input.x +
-                                  PlayerCamera.Instance.GetForwardOrientation() * input.y;
+                //desiredVelocity = PlayerCamera.Instance.GetRightOrientation() * input.x +
+                //                  PlayerCamera.Instance.GetForwardOrientation() * input.y;
+                desiredVelocity = Vector3.right * input.x + Vector3.forward * input.y;
 
                 desiredVelocity *= maxSpeed;
 
