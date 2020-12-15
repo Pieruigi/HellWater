@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HW.Collections;
 
 namespace HW
 {
@@ -9,12 +10,14 @@ namespace HW
     public class Picker : MonoBehaviour
     {
         [SerializeField]
-        GameObject pickableObject;
+        Pickable pickable;
 
         [SerializeField]
         int amount;
 
         [SerializeField]
+        Transform placeHolderRoot;
+
         GameObject placeHolder;
 
         FiniteStateMachine fsm;
@@ -23,24 +26,22 @@ namespace HW
 
         private void Awake()
         {
-            // Set the finite state machine.
+            // Get the fsm attached to this object.
             fsm = GetComponent<FiniteStateMachine>();
-            fsm.OnStateChange += HandleOnStateChange;
 
-            // If the place holder is empty then we try to read it from the IPickable.
-            if (!placeHolder)
-                placeHolder = pickableObject.GetComponent<IPickable>().GetPlaceHolder();
-            
+            // Set the handle.
+            fsm.OnStateChange += HandleOnStateChange;
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            // If the object has already been picked then hide the place holder.
-            if(fsm.CurrentStateId == pickedState)
+            // If the object has not been picked then show the place holder.
+            if(fsm.CurrentStateId != pickedState)
             {
-                if (placeHolder)
-                    GeneralUtility.ObjectPopOut(placeHolder);
+                GameObject prefab = pickable.GetPlaceHolderPrefab();
+                if (prefab)
+                    placeHolder = GeneralUtility.ObjectPopIn(prefab, placeHolderRoot, Vector3.zero, Vector3.zero, Vector3.one);
             }
         }
 
@@ -84,7 +85,7 @@ namespace HW
 
         bool IsWeapon()
         {
-            if (pickableObject.GetComponent<IPickable>().GetObjectPrefab().GetComponent<Weapon>())
+            if (pickable.GetObjectPrefab().GetComponent<Weapon>())
                 return true;
 
             return false;
@@ -92,7 +93,7 @@ namespace HW
 
         bool IsAmmo()
         {
-            if (pickableObject.GetComponent<IPickable>().GetObjectPrefab().GetComponent<Ammonition>())
+            if (pickable.GetObjectPrefab().GetComponent<Ammonition>())
                 return true;
 
             return false;
@@ -100,24 +101,21 @@ namespace HW
 
         void PickWeapon()
         {
-            // Get the interface.
-            IPickable pickable = pickableObject.GetComponent<IPickable>();
-
+            
             // Which kind of weapon is this?
             Weapon newWeapon = pickable.GetObjectPrefab().GetComponent<Weapon>();
 
             // Add a reference to the new weapon.
-            newWeapon.gameObject.GetComponent<Referer>().SetReference(pickable);
-
+            newWeapon.gameObject.AddComponent<Referer>().SetReference(pickable);
+            
             // Handle to the currently equipped weapon, if any.
-            GameObject wOld = null;
+            Weapon wOld = null;
 
             // Melee weapon.
             if (newWeapon.GetType() == typeof(MeleeWeapon)) 
             {
                 // Get the already equipped weapon if any.                
-                if(Equipment.Instance.MeleeWeapon)
-                    wOld = Equipment.Instance.MeleeWeapon.gameObject;
+                wOld = Equipment.Instance.MeleeWeapon;
 
                 // Add the new weapon in the equipment.
                 Equipment.Instance.AddMeleeWeapon(newWeapon as MeleeWeapon);
@@ -128,10 +126,10 @@ namespace HW
             {
                 // Get the already equipped weapon if any.
                 if ((newWeapon as FireWeapon).HolsterId == FireWeaponHolsterId.Primary)
-                    wOld = Equipment.Instance.PrimaryWeapon.gameObject;
+                    wOld = Equipment.Instance.PrimaryWeapon;
                 else
                     if ((newWeapon as FireWeapon).HolsterId == FireWeaponHolsterId.Secondary)
-                        wOld = Equipment.Instance.SecondaryWeapon.gameObject;
+                        wOld = Equipment.Instance.SecondaryWeapon;
 
                 // Add the new weapon in the equipment.
                 Equipment.Instance.AddFireWeapon(newWeapon as FireWeapon);
@@ -146,43 +144,12 @@ namespace HW
             
         }
 
-        void PickAmmo(GameObject objectPrefab)
+        void PickAmmo()
         {
 
         }
 
 
-
-         if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            GameObject wOld = Equipment.Instance.MeleeWeapon ? Equipment.Instance.MeleeWeapon.gameObject : null;
-
-
-        // Create the object
-        GameObject wObj = GameObject.Instantiate(bat.gameObject);
-
-        // Equip 
-        Equipment.Instance.AddMeleeWeapon(wObj.GetComponent<Weapon>() as MeleeWeapon);
-
-            // I should read what type of prefab the old weapon refer to and spawn it.
-            
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            // Create the weapon object.
-            GameObject wObj = GameObject.Instantiate(gun.gameObject);
-
-    Weapon wOld = null;
-            // Check the holster id.
-            if (wObj.GetComponent<FireWeapon>().HolsterId == FireWeaponHolsterId.Primary)
-                wOld = Equipment.Instance.PrimaryWeapon;
-            else
-                if (wObj.GetComponent<FireWeapon>().HolsterId == FireWeaponHolsterId.Secondary)
-                    wOld = Equipment.Instance.SecondaryWeapon;
-
-            Equipment.Instance.AddFireWeapon(wObj.GetComponent<FireWeapon>());
-
-        }
 
 
     }

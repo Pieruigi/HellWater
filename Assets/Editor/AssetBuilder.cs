@@ -135,6 +135,25 @@ namespace HW.Editor
 
             Selection.activeObject = asset;
         }
+
+        [MenuItem("Assets/Create/HW/Pickable")]
+        public static void CreatePickable()
+        {
+            Pickable asset = ScriptableObject.CreateInstance<Pickable>();
+
+            string name = "pickable.asset";
+            string folder = "Assets/Resources/Pickables/";
+
+            if (!System.IO.Directory.Exists(folder))
+                System.IO.Directory.CreateDirectory(folder);
+
+            AssetDatabase.CreateAsset(asset, folder + name);
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+
+            Selection.activeObject = asset;
+        }
     }
 
 }

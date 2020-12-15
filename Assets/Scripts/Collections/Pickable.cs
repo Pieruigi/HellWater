@@ -9,20 +9,12 @@ namespace HW.Collections
 
     public class Pickable : ScriptableObject, IPickable
     {
-        [SerializeField]
-        string code;
-
-        [SerializeField]
-        GameObject placeHolderPrefab;
 
         [SerializeField]
         GameObject objectPrefab;
 
         [SerializeField]
-        Sprite icon;
-
-        [SerializeField]
-        string description;
+        GameObject placeHolderPrefab;
 
 
         public GameObject GetPlaceHolderPrefab()
