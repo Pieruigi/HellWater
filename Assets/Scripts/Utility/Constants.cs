@@ -26,6 +26,7 @@ namespace HW
         public static readonly string Npc = "Npc";
         public static readonly string StartingPoint = "StartingPoint";
         
+        
         //public const string GroundConcrete = "Concrete";
         //public const string GroundGrass = "Grass";
         //public const string GroundDirt = "Dirt";

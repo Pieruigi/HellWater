@@ -8,25 +8,12 @@ namespace HW
     {
         [SerializeField]
         Transform target;
-
-        [SerializeField]
-        Vector3 offset;
-        public Vector3 Offset
+        public Transform Target
         {
-            get { return offset; }
-            set { offset = value; }
+            get { return target; }
         }
 
-        [SerializeField]
-        float smoothTime = 2f;
-        public float SmoothTime
-        {
-            get { return smoothTime; }
-            set { smoothTime = value; }
-        }
-
-        [SerializeField]
-        bool lookAt = false;
+        FollowingCameraData data;
 
         Vector3 velocity;
         Vector3 angularVelocity;
@@ -38,6 +25,7 @@ namespace HW
             if (!Instance)
             {
                 Instance = this;
+                data = GetComponent<FollowingCameraData>();
             }
             else
             {
@@ -50,8 +38,6 @@ namespace HW
         {
             if (!target)
                 target = PlayerController.Instance.transform;
-
-            
         }
 
         // Update is called once per frame
@@ -63,17 +49,23 @@ namespace HW
         private void FixedUpdate()
         {
             // Smooth position.
-            Vector3 desiredPosition = target.position + offset;
-            //transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothTime);
-            transform.position = Vector3.Lerp(transform.position, desiredPosition, 0.042f);
+            Vector3 desiredPosition = target.position + data.Offset;
+            transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, data.SmoothTime);
+           // transform.position = Vector3.Lerp(transform.position, desiredPosition, 0.042f);
 
             // Smooth rotation.
-            if (lookAt)
+            if (data.LookAt)
             {
+                // Look at the target.
                 Vector3 desiredFwd = target.position - transform.position;
-                transform.forward = Vector3.SmoothDamp(transform.forward, desiredFwd, ref angularVelocity, smoothTime);
+                transform.forward = Vector3.SmoothDamp(transform.forward, desiredFwd, ref angularVelocity, data.SmoothTime);
             }
-            
+            else
+            {
+                // Use lookAngles field.
+                //transform.eulerAngles = Vector3.SmoothDamp(transform.eulerAngles, data.LookAtAngles, ref angularVelocity, data.SmoothTime);
+                transform.forward = Vector3.SmoothDamp(transform.forward, data.ForwardTarget.forward, ref angularVelocity, data.SmoothTime);
+            }
 
         }
     }
