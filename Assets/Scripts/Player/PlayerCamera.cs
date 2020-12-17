@@ -9,45 +9,38 @@ namespace HW
     [ExecuteAlways]
     public class PlayerCamera : MonoBehaviour
     {
-        [SerializeField]
-        CameraOrientation cameraOrientation;
-
-        [SerializeField]
-        bool external;
-
-        [SerializeField]
-        bool overrideRotX = false;
-
-        [SerializeField]
-        float yAngle = -20f;
-
-        [SerializeField]
-        Transform target;
-
-        [SerializeField]
-        float distance = 100;
-
-        //[SerializeField]
-        Vector3 eulerAngles;
         
-       
-        //Vector3 eulerDefault;
-        float xAngle;
+
+        // Does the camera follow the player?
+        [SerializeField]
+        bool followPlayer = false;
+
+        [SerializeField]
+        [Tooltip("Offset from the player")]
+        Vector3 offsetFromPlayer;
+
+        // Does the camera always look at the player?
+        [SerializeField]
+        bool lookAtPlayer = false;
+
+
+
+        [SerializeField]
+        float smoothTime = 0.5f;
+        
+        public static PlayerCamera Instance { get; private set; }
 
         GameObject player;
 
-        
+        Vector3 vel, angVel;
 
-        public static PlayerCamera Instance { get; private set; }
+        
 
         private void Awake()
         {
             if (!Instance)
             {
                 Instance = this;
-
-                Init();
-                
             }
             else
             {
@@ -59,118 +52,38 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
-            //player = PlayerController.Instance.gameObject;
-            transform.position = target.position - transform.forward * distance;
+            player = PlayerController.Instance.gameObject;
         }
 
         // Update is called once per frame
-        void LateUpdate()
+        void FixedUpdate()
         {
-            // Follow the player
-            transform.position = target.position - transform.forward * distance;
-
-            if (!Application.isPlaying)
+            Vector3 desiredPosition = transform.position, desiredForward;
+            
+            if (followPlayer)
             {
-                Init();
-                //transform.eulerAngles = eulerAngles;
+                desiredPosition = player.transform.position;
+                desiredPosition += offsetFromPlayer;
+                transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref vel, smoothTime);
             }
+
+
+            if (lookAtPlayer)
+            {
+                desiredForward = player.transform.position - desiredPosition;
+                transform.forward = Vector3.SmoothDamp(transform.forward, desiredForward, ref angVel, smoothTime);
+
+
+            }
+
             
 
         }
 
-      
+        
 
-        public Vector3 GetForwardOrientation()
-        {
-            Vector3 ret = Vector3.zero;
-            switch (cameraOrientation)
-            {
-                case CameraOrientation.ToNorth:
-                    ret = Vector3.forward;
-                    break;
-                case CameraOrientation.ToSouth:
-                    ret = Vector3.back;
-                    break;
-                case CameraOrientation.ToEast:
-                    ret = Vector3.right;
-                    break;
-                case CameraOrientation.ToWest:
-                    ret = Vector3.left;
-                    break;
-            }
+     
 
-            return ret;
-        }
-
-        public Vector3 GetRightOrientation()
-        {
-            Vector3 ret = Vector3.zero;
-            switch (cameraOrientation)
-            {
-                case CameraOrientation.ToNorth:
-                    ret = Vector3.right;
-                    break;
-                case CameraOrientation.ToSouth:
-                    ret = Vector3.left;
-                    break;
-                case CameraOrientation.ToEast:
-                    ret = Vector3.back;
-                    break;
-                case CameraOrientation.ToWest:
-                    ret = Vector3.forward;
-                    break;
-            }
-
-            return ret;
-        }
-
-
-        void ComputeOrientationAngle()
-        {
-            switch (cameraOrientation)
-            {
-                case CameraOrientation.ToNorth:
-                    eulerAngles.y = yAngle;
-                    break;
-                case CameraOrientation.ToSouth:
-                    eulerAngles.y = yAngle + 180f;
-                    break;
-                case CameraOrientation.ToEast:
-                    eulerAngles.y = yAngle + 90f;
-                    break;
-                case CameraOrientation.ToWest:
-                    eulerAngles.y = yAngle - 90;
-                    break;
-            }
-        }
-
-
-        void Init()
-        {
-            eulerAngles = new Vector3(0, yAngle, 0f);
-
-            if (external)
-                eulerAngles.x = 20f;
-            else
-            {
-                if (!overrideRotX)
-                    eulerAngles.x = 60f;
-                else
-                    eulerAngles.x = transform.eulerAngles.x;
-
-            }
-
-
-            xAngle = eulerAngles.x;
-
-            //worldDirection = new Vector3(1f, 0f, 1f);
-
-            ComputeOrientationAngle();
-            //ComputeWorldDirection();
-
-
-            transform.eulerAngles = eulerAngles;
-        }
         
     }
 

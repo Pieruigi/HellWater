@@ -234,11 +234,12 @@ namespace HW
                 // Get player movement input. 
                 Vector2 input = new Vector2(PlayerInput.GetAxisRaw(PlayerInput.HorizontalAxis), PlayerInput.GetAxisRaw(PlayerInput.VerticalAxis)).normalized;
 
-                // Get the desired velocity depending on the camera orientation ( for ex. if the camera if looking
-                // from north to south we need to reverse the forward direction )
-                //desiredVelocity = PlayerCamera.Instance.GetRightOrientation() * input.x +
-                //                  PlayerCamera.Instance.GetForwardOrientation() * input.y;
-                desiredVelocity = Vector3.right * input.x + Vector3.forward * input.y;
+                Vector3 fwd = Camera.main.transform.forward;
+                fwd = Vector3.ProjectOnPlane(fwd, Vector3.up).normalized;
+                Vector3 rgt = Camera.main.transform.right;
+                rgt = Vector3.ProjectOnPlane(rgt, Vector3.up).normalized;
+                //desiredVelocity = Vector3.right * input.x + Vector3.forward * input.y;
+                desiredVelocity = rgt * input.x + fwd * input.y;
 
                 desiredVelocity *= maxSpeed;
 
