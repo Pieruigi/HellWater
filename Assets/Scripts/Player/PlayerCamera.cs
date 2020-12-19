@@ -9,14 +9,16 @@ namespace HW
     [ExecuteAlways]
     public class PlayerCamera : MonoBehaviour
     {
-        public UnityAction OnStart;
-
-        // Useful to apply some changes to the camera after position and rotation has been calculated.
-        public UnityAction OnComplete;
-
-
+       
         [SerializeField]
         float smoothTime = 0.5f;
+        public float SmoothTime
+        {
+            get { return smoothTime; }
+            set { smoothTime = value; }
+        }
+
+        
 
         [Header("Player section")]
 
@@ -33,12 +35,20 @@ namespace HW
             set { offsetFromPlayer = value; }
         }
 
-        
-
 
         // Does the camera always look at the player?
         [SerializeField]
         bool lookAtPlayer = false;
+
+        [SerializeField]
+        [Tooltip("Only used if LookAtPlayer is false.")]
+        Vector3 lookAxis;
+        public Vector3 LookAxis
+        {
+            get { return lookAxis; }
+            set { lookAxis = value; }
+        }
+
 
         [Header("Move along axis section")]
         [SerializeField]
@@ -46,22 +56,32 @@ namespace HW
 
         [SerializeField]
         Vector3 startPosition;
+        public Vector3 StartPosition
+        {
+            get { return startPosition; }
+            set { startPosition = value; }
+        }
 
         [SerializeField]
         Vector3 moveAxis;
+        public Vector3 MoveAxis
+        {
+            get { return moveAxis; }
+            set { moveAxis = value; }
+        }
 
-        [SerializeField]
-        [Tooltip("Only used if LookAtPlayer is false.")]
-        Vector3 lookAxis;
-
+        
         [Header("Move along axis helpers")]
         [SerializeField]
         [Tooltip("Can be used to set StartPosition and MoveAxis on move along axis section.")]
-        Transform moveTarget;
+        Transform moveHelper;
 
         [SerializeField]
         [Tooltip("Can be used to set LookAxis on move along axis section.")]
-        Transform lookTarget;
+        Transform lookHelper;
+
+        [SerializeField]
+        bool keepHelpers = false;
 
         public static PlayerCamera Instance { get; private set; }
 
@@ -69,13 +89,38 @@ namespace HW
 
         Vector3 vel, angVel;
 
-        
+        bool computePositionDisable = false;
+        public bool ComputePositionDisable
+        {
+            get { return computePositionDisable; }
+            set { computePositionDisable = value; }
+        }
+        bool computeRotationDisable = false;
+
+        Vector3 desiredPosition;
+        public Vector3 DesiredPosition
+        {
+            get { return desiredPosition; }
+            set { desiredPosition = value; }
+        }
 
         private void Awake()
         {
             if (!Instance)
             {
                 Instance = this;
+               
+                if (moveHelper)
+                {
+                    startPosition = moveHelper.position;
+                    moveAxis = moveHelper.forward;
+                }
+
+                if (lookHelper)
+                {
+                    lookAxis = lookHelper.forward;
+                }
+
             }
             else
             {
@@ -88,64 +133,108 @@ namespace HW
         void Start()
         {
             player = PlayerController.Instance.gameObject;
+
+            if (!keepHelpers)
+            {
+                Destroy(moveHelper.gameObject);
+                Destroy(lookHelper.gameObject);
+            }
+            
         }
 
         // Update is called once per frame
         void FixedUpdate()
         {
-            OnStart?.Invoke();
+         
+            Vector3 desiredForward;
 
-            Vector3 desiredPosition = transform.position, desiredForward;
-            
-            if (followPlayer)
+            // 
+            // Computing desired camera position.
+            //
+            if(!computePositionDisable)
             {
+                // Set this position as default.
+                desiredPosition = transform.position;
 
-                desiredPosition = player.transform.position;
-                desiredPosition += offsetFromPlayer;
-                if (moveAlongAxis)
+
+                if (followPlayer)
                 {
-                    if(moveTarget)
-                        startPosition = moveTarget.position;
-                    
-                    Vector3 v = desiredPosition - startPosition;
+                    // Cmera is following player so we must calculate the new position by the offset and other things.                    
+                    if (moveAlongAxis)
+                    {
+                        // Camera is moving along an axis, so it is not completely free.
+                        // KeepHelpers is mostly used to adjust camera in realtime.
+                        if (moveHelper && keepHelpers)
+                        {
+                            startPosition = moveHelper.position;
+                            moveAxis = moveHelper.forward;
+                        }
 
-                    if(moveTarget)
-                        moveAxis = moveTarget.forward;
-
-                    Debug.LogFormat("MoveAxis:{0}", moveAxis);
-                    //Vector3 axis = Vector3.right;
-                    Vector3 normal = Vector3.Cross(moveAxis, Vector3.up).normalized;
-                    Debug.LogFormat("Normal:{0}", normal);
-
-                    v = Vector3.ProjectOnPlane(v, normal);
-                    
-                    
-                    desiredPosition = startPosition + v;
+                        // Get the desired position.
+                        desiredPosition = GetFollowAxisDesiredPosition(startPosition, moveAxis);
+                    }
+                    else
+                    {
+                        // Camera is following player and it is completely free.
+                        // So it's new position is given by the offset from player.
+                        desiredPosition = player.transform.position;
+                        desiredPosition += offsetFromPlayer;
+                    }
 
                 }
-
-                Debug.LogFormat("DesiredPos:{0}", desiredPosition);
-                transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref vel, smoothTime);
             }
 
 
+            //
+            // We calculate the desired forward direction of the camera.
+            //
             if (lookAtPlayer)
             {
+                // Camera is looking at the player, so it's forward is given by the camera->player vector.
                 desiredForward = player.transform.position + Vector3.up*.8f - desiredPosition;
-                transform.forward = Vector3.SmoothDamp(transform.forward, desiredForward, ref angVel, smoothTime);
+                
+            }
+            else
+            {
+                // Camera has a fixed direction.
+                // KeepHelpers is true just for debug.
+                if(lookHelper && keepHelpers)
+                    lookAxis = lookHelper.forward;
 
+                // Desired forward direction.
+                desiredForward = lookAxis;
 
             }
 
-            OnComplete?.Invoke();
+            // Update position and rotation.
+            transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref vel, smoothTime);
+            transform.forward = Vector3.SmoothDamp(transform.forward, desiredForward, ref angVel, smoothTime);
+
+         
+
+        }
+        public Vector3 GetFollowAxisDesiredPosition(Vector3 startPosition, Vector3 moveAxis)
+        {
+            Vector3 ret = player.transform.position;
+            ret += offsetFromPlayer;
+
+
+            Vector3 v = ret - startPosition;
+
+     
+   
+            Vector3 normal = Vector3.Cross(moveAxis, Vector3.up).normalized;
+
+
+            v = Vector3.ProjectOnPlane(v, normal);
+
+
+            ret = startPosition + v;
+            return ret;
 
         }
 
-        
 
-     
-
-        
     }
 
 }
