@@ -25,6 +25,11 @@ namespace HW
         // Does the camera follow the player?
         [SerializeField]
         bool followPlayer = false;
+        public bool FollowPlayer
+        {
+            get { return followPlayer; }
+            set { followPlayer = value; }
+        }
 
         [SerializeField]
         [Tooltip("Offset from the player")]
@@ -37,11 +42,11 @@ namespace HW
 
 
         // Does the camera always look at the player?
-        [SerializeField]
-        bool lookAtPlayer = false;
+        //[SerializeField]
+        //bool lookAtPlayer = false;
 
         [SerializeField]
-        [Tooltip("Only used if LookAtPlayer is false.")]
+        //[Tooltip("Only used if LookAtPlayer is false.")]
         Vector3 lookAxis;
         public Vector3 LookAxis
         {
@@ -104,6 +109,13 @@ namespace HW
             set { desiredPosition = value; }
         }
 
+        Vector3 desiredForward;
+        //public Vector3 DesiredForward
+        //{
+        //    get { return desiredForward; }
+        //    set { desiredForward = value; }
+        //}
+
         private void Awake()
         {
             if (!Instance)
@@ -146,7 +158,7 @@ namespace HW
         void FixedUpdate()
         {
          
-            Vector3 desiredForward;
+            
 
             // 
             // Computing desired camera position.
@@ -154,7 +166,7 @@ namespace HW
             if(!computePositionDisable)
             {
                 // Set this position as default.
-                desiredPosition = transform.position;
+                //desiredPosition = transform.position;
 
 
                 if (followPlayer)
@@ -188,14 +200,14 @@ namespace HW
             //
             // We calculate the desired forward direction of the camera.
             //
-            if (lookAtPlayer)
-            {
-                // Camera is looking at the player, so it's forward is given by the camera->player vector.
-                desiredForward = player.transform.position + Vector3.up*.8f - desiredPosition;
+            //if (lookAtPlayer)
+            //{
+            //    // Camera is looking at the player, so it's forward is given by the camera->player vector.
+            //    desiredForward = player.transform.position + Vector3.up*.8f - desiredPosition;
                 
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 // Camera has a fixed direction.
                 // KeepHelpers is true just for debug.
                 if(lookHelper && keepHelpers)
@@ -204,7 +216,7 @@ namespace HW
                 // Desired forward direction.
                 desiredForward = lookAxis;
 
-            }
+            //}
 
             // Update position and rotation.
             transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref vel, smoothTime);
@@ -232,6 +244,20 @@ namespace HW
             ret = startPosition + v;
             return ret;
 
+        }
+
+        public void ForcePosition(Vector3 position)
+        {
+            followPlayer = false;
+            desiredPosition = position;
+            transform.position = desiredPosition;
+        }
+
+        public void ForceDirection(Vector3 direction)
+        {
+            lookAxis = direction;
+            desiredForward = lookAxis;
+            transform.forward = lookAxis;
         }
 
 
