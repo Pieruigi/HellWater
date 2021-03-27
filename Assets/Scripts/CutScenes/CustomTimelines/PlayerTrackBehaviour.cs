@@ -12,9 +12,6 @@ namespace HW.CutScene
         bool disabled = false;
 
         [SerializeField]
-        bool stealthModeAvailable = false;
-
-        [SerializeField]
         bool noWeapon = false;
 
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
@@ -23,7 +20,6 @@ namespace HW.CutScene
             PlayerController p = playerData as PlayerController;
 
             p.SetDisabled(disabled);
-            p.StealthModeAvailable = stealthModeAvailable;
             p.HolsterWeapon(noWeapon);
         }
     }

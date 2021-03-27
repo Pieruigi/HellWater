@@ -36,8 +36,7 @@ namespace HW.UI
         void Start()
         {
             PlayerController.Instance.OnDead += HandleOnDead;
-            PlayerController.Instance.OnSurrender += HandleOnSurrender;
-
+           
             buttonContinue.onClick.AddListener(HandleOnContinue);
             buttonBack.onClick.AddListener(HandleOnBack);
         }

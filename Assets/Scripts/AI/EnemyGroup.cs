@@ -83,7 +83,7 @@ namespace HW
             }
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             // If the attached finite state machine switch to the enable state then
             // enemies must be activated.

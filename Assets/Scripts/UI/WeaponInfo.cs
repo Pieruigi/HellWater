@@ -54,7 +54,7 @@ namespace HW.UI
             // Set weapon
             currentWeapon = weapon;
             weaponImage.enabled = true;
-            weaponImage.sprite = currentWeapon.Item.Icon;
+            //weaponImage.sprite = currentWeapon.Item.Icon;
 
             // Is fire weapon?
             if(weapon.GetType() == typeof(FireWeapon))
@@ -89,7 +89,7 @@ namespace HW.UI
 
         void CountAmmo()
         {
-            int totalAmmo = Equipment.Instance.GetNumberOfAmmonitions((currentWeapon as FireWeapon).Ammonition);
+            int totalAmmo = Equipment.Instance.GetNumberOfAmmonitions((int)(currentWeapon as FireWeapon).AmmonitionType);
             ammoFireWeaponCount.text = string.Format(ammoFireWeaponTextFormat, (currentWeapon as FireWeapon).NumberOfLoadedAmmo, totalAmmo);
         }
 

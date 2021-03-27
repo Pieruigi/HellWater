@@ -48,10 +48,10 @@ namespace HW.QuestSystem
         /// </summary>
         /// <param name="fsm"></param>
         /// <param name="oldState"></param>
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             // If the fsm is not in the desired state or is coming from a different state than the desired one then return.
-            if (fsm.CurrentStateId != desiredState || (desiredOldState >= 0 && oldState != desiredOldState))
+            if (fsm.CurrentStateId != desiredState || (desiredOldState >= 0 && fsm.PreviousStateId != desiredOldState))
                 return;
 
             // Update quest manager.

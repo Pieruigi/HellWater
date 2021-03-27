@@ -36,7 +36,7 @@ namespace HW
 
         }
        
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             target.parent = parents[fsm.CurrentStateId];
         }

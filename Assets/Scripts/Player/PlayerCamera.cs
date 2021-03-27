@@ -1,53 +1,138 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace HW
 {
-    public enum CameraOrientation { ToNorth, ToSouth, ToEast, ToWest }
-
+    
     [ExecuteAlways]
     public class PlayerCamera : MonoBehaviour
     {
-        [SerializeField]
-        CameraOrientation cameraOrientation;
-
-        [SerializeField]
-        bool external;
-
-        [SerializeField]
-        bool overrideRotX = false;
-
-        [SerializeField]
-        float yAngle = -20f;
-
-        [SerializeField]
-        Transform target;
-
-        [SerializeField]
-        float distance = 100;
-
-        //[SerializeField]
-        Vector3 eulerAngles;
-        
        
-        //Vector3 eulerDefault;
-        float xAngle;
+        [SerializeField]
+        float smoothTime = 0.5f;
+        public float SmoothTime
+        {
+            get { return smoothTime; }
+            set { smoothTime = value; }
+        }
+
+        
+
+        [Header("Player section")]
+
+        // Does the camera follow the player?
+        [SerializeField]
+        bool followPlayer = false;
+        public bool FollowPlayer
+        {
+            get { return followPlayer; }
+            set { followPlayer = value; }
+        }
+
+        [SerializeField]
+        [Tooltip("Offset from the player")]
+        Vector3 offsetFromPlayer;
+        public Vector3 OffsetFromPlayer
+        {
+            get { return offsetFromPlayer; }
+            set { offsetFromPlayer = value; }
+        }
+
+
+        // Does the camera always look at the player?
+        //[SerializeField]
+        //bool lookAtPlayer = false;
+
+        [SerializeField]
+        //[Tooltip("Only used if LookAtPlayer is false.")]
+        Vector3 lookAxis;
+        public Vector3 LookAxis
+        {
+            get { return lookAxis; }
+            set { lookAxis = value; }
+        }
+
+
+        [Header("Move along axis section")]
+        [SerializeField]
+        bool moveAlongAxis = false;
+
+        [SerializeField]
+        Vector3 startPosition;
+        public Vector3 StartPosition
+        {
+            get { return startPosition; }
+            set { startPosition = value; }
+        }
+
+        [SerializeField]
+        Vector3 moveAxis;
+        public Vector3 MoveAxis
+        {
+            get { return moveAxis; }
+            set { moveAxis = value; }
+        }
+
+        
+        [Header("Move along axis helpers")]
+        [SerializeField]
+        [Tooltip("Can be used to set StartPosition and MoveAxis on move along axis section.")]
+        Transform moveHelper;
+
+        [SerializeField]
+        [Tooltip("Can be used to set LookAxis on move along axis section.")]
+        Transform lookHelper;
+
+        [SerializeField]
+        bool keepHelpers = false;
+
+        public static PlayerCamera Instance { get; private set; }
 
         GameObject player;
 
-        
+        Vector3 vel, angVel;
 
-        public static PlayerCamera Instance { get; private set; }
+        bool computePositionDisable = false;
+        public bool ComputePositionDisable
+        {
+            get { return computePositionDisable; }
+            set { computePositionDisable = value; }
+        }
+        bool computeRotationDisable = false;
+
+        Vector3 desiredPosition;
+        public Vector3 DesiredPosition
+        {
+            get { return desiredPosition; }
+            set { desiredPosition = value; }
+        }
+
+        Vector3 desiredForward;
+        //public Vector3 DesiredForward
+        //{
+        //    get { return desiredForward; }
+        //    set { desiredForward = value; }
+        //}
 
         private void Awake()
         {
             if (!Instance)
             {
                 Instance = this;
+               
+                if (moveHelper)
+                {
+                    startPosition = moveHelper.position;
+                    moveAxis = moveHelper.forward;
+                }
 
-                Init();
-                
+                if (lookHelper)
+                {
+                    lookAxis = lookHelper.forward;
+                }
+
             }
             else
             {
@@ -59,119 +144,123 @@ namespace HW
         // Start is called before the first frame update
         void Start()
         {
-            //player = PlayerController.Instance.gameObject;
-            transform.position = target.position - transform.forward * distance;
+            player = PlayerController.Instance.gameObject;
+
+            if (!keepHelpers)
+            {
+                Destroy(moveHelper.gameObject);
+                Destroy(lookHelper.gameObject);
+            }
+            
         }
 
         // Update is called once per frame
-        void LateUpdate()
+        void FixedUpdate()
         {
-            // Follow the player
-            transform.position = target.position - transform.forward * distance;
-
-            if (!Application.isPlaying)
-            {
-                Init();
-                //transform.eulerAngles = eulerAngles;
-            }
+         
             
 
-        }
-
-      
-
-        public Vector3 GetForwardOrientation()
-        {
-            Vector3 ret = Vector3.zero;
-            switch (cameraOrientation)
+            // 
+            // Computing desired camera position.
+            //
+            if(!computePositionDisable)
             {
-                case CameraOrientation.ToNorth:
-                    ret = Vector3.forward;
-                    break;
-                case CameraOrientation.ToSouth:
-                    ret = Vector3.back;
-                    break;
-                case CameraOrientation.ToEast:
-                    ret = Vector3.right;
-                    break;
-                case CameraOrientation.ToWest:
-                    ret = Vector3.left;
-                    break;
+                // Set this position as default.
+                //desiredPosition = transform.position;
+
+
+                if (followPlayer)
+                {
+                    // Cmera is following player so we must calculate the new position by the offset and other things.                    
+                    if (moveAlongAxis)
+                    {
+                        // Camera is moving along an axis, so it is not completely free.
+                        // KeepHelpers is mostly used to adjust camera in realtime.
+                        if (moveHelper && keepHelpers)
+                        {
+                            startPosition = moveHelper.position;
+                            moveAxis = moveHelper.forward;
+                        }
+
+                        // Get the desired position.
+                        desiredPosition = GetFollowAxisDesiredPosition(startPosition, moveAxis);
+                    }
+                    else
+                    {
+                        // Camera is following player and it is completely free.
+                        // So it's new position is given by the offset from player.
+                        desiredPosition = player.transform.position;
+                        desiredPosition += offsetFromPlayer;
+                    }
+
+                }
             }
 
+
+            //
+            // We calculate the desired forward direction of the camera.
+            //
+            //if (lookAtPlayer)
+            //{
+            //    // Camera is looking at the player, so it's forward is given by the camera->player vector.
+            //    desiredForward = player.transform.position + Vector3.up*.8f - desiredPosition;
+                
+            //}
+            //else
+            //{
+                // Camera has a fixed direction.
+                // KeepHelpers is true just for debug.
+                if(lookHelper && keepHelpers)
+                    lookAxis = lookHelper.forward;
+
+                // Desired forward direction.
+                desiredForward = lookAxis;
+
+            //}
+
+            // Update position and rotation.
+            transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref vel, smoothTime);
+            transform.forward = Vector3.SmoothDamp(transform.forward, desiredForward, ref angVel, smoothTime);
+
+         
+
+        }
+        public Vector3 GetFollowAxisDesiredPosition(Vector3 startPosition, Vector3 moveAxis)
+        {
+            Vector3 ret = player.transform.position;
+            ret += offsetFromPlayer;
+
+
+            Vector3 v = ret - startPosition;
+
+     
+   
+            Vector3 normal = Vector3.Cross(moveAxis, Vector3.up).normalized;
+
+
+            v = Vector3.ProjectOnPlane(v, normal);
+
+
+            ret = startPosition + v;
             return ret;
+
         }
 
-        public Vector3 GetRightOrientation()
+        public void ForcePosition(Vector3 position)
         {
-            Vector3 ret = Vector3.zero;
-            switch (cameraOrientation)
-            {
-                case CameraOrientation.ToNorth:
-                    ret = Vector3.right;
-                    break;
-                case CameraOrientation.ToSouth:
-                    ret = Vector3.left;
-                    break;
-                case CameraOrientation.ToEast:
-                    ret = Vector3.back;
-                    break;
-                case CameraOrientation.ToWest:
-                    ret = Vector3.forward;
-                    break;
-            }
-
-            return ret;
+            followPlayer = false;
+            desiredPosition = position;
+            transform.position = desiredPosition;
         }
 
-
-        void ComputeOrientationAngle()
+        public void ForceDirection(Vector3 direction)
         {
-            switch (cameraOrientation)
-            {
-                case CameraOrientation.ToNorth:
-                    eulerAngles.y = yAngle;
-                    break;
-                case CameraOrientation.ToSouth:
-                    eulerAngles.y = yAngle + 180f;
-                    break;
-                case CameraOrientation.ToEast:
-                    eulerAngles.y = yAngle + 90f;
-                    break;
-                case CameraOrientation.ToWest:
-                    eulerAngles.y = yAngle - 90;
-                    break;
-            }
+            lookAxis = direction;
+            desiredForward = lookAxis;
+            transform.forward = lookAxis;
         }
 
 
-        void Init()
-        {
-            eulerAngles = new Vector3(0, yAngle, 0f);
-
-            if (external)
-                eulerAngles.x = 20f;
-            else
-            {
-                if (!overrideRotX)
-                    eulerAngles.x = 60f;
-                else
-                    eulerAngles.x = transform.eulerAngles.x;
-
-            }
-
-
-            xAngle = eulerAngles.x;
-
-            //worldDirection = new Vector3(1f, 0f, 1f);
-
-            ComputeOrientationAngle();
-            //ComputeWorldDirection();
-
-
-            transform.eulerAngles = eulerAngles;
-        }
-        
     }
 
 }

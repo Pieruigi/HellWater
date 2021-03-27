@@ -115,9 +115,9 @@ namespace HW
                 move = false;
         }
 
-       void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+       void HandleOnStateChange(FiniteStateMachine fsm)
         {
-            this.oldState = oldState;
+            oldState = fsm.PreviousStateId;
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace HW
         /// <param name="fsm">The finite state machine attached to this game object.</param>
         void HandleOnFail(FiniteStateMachine fsm)
         {
-            this.oldState = fsm.CurrentStateId;
+            oldState = fsm.CurrentStateId;
         }
 
         IEnumerator CoroutineHandleOnActionPerformed(ActionController ctrl)

@@ -293,15 +293,15 @@ namespace HW.CutScene
         }
 
        
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
-            if (oldState != fsm.CurrentStateId && fsm.CurrentStateId == (int)CutSceneState.Playing)
+            if (fsm.PreviousStateId != fsm.CurrentStateId && fsm.CurrentStateId == (int)CutSceneState.Playing)
             {
                 Play();
             }
             else
             {
-                if (oldState == (int)CutSceneState.Playing && fsm.CurrentStateId == (int)CutSceneState.Played)
+                if (fsm.PreviousStateId == (int)CutSceneState.Playing && fsm.CurrentStateId == (int)CutSceneState.Played)
                 {
                     if (playing)
                     {

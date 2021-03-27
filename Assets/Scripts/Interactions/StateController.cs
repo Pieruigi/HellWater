@@ -47,7 +47,7 @@ namespace HW
 
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             Debug.Log("Init:" + fsm.CurrentStateId);
             animator.SetInteger(stateParamName, fsm.CurrentStateId);

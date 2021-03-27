@@ -15,17 +15,19 @@ namespace HW
             ret.transform.localEulerAngles = eulerAngles;
             ret.transform.localScale = Vector3.zero;
 
-            LeanTween.scale(ret, scale, 1f).setEaseInOutBounce();
+            LeanTween.scale(ret, scale, Constants.PopInOutTime).setEaseInOutBounce();
 
             return ret;
         }
 
         public static void ObjectPopOut(GameObject obj)
         {
-            
-            LeanTween.scale(obj, Vector3.zero, 1f).setEaseInOutBounce();
+            if (obj == null)
+                return;
 
-            GameObject.Destroy(obj, 1.1f);
+            LeanTween.scale(obj, Vector3.zero, Constants.PopInOutTime).setEaseInOutBounce();
+
+            GameObject.Destroy(obj, 2*Constants.PopInOutTime);
 
         }
 

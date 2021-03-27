@@ -7,8 +7,11 @@ using HW.Collections;
 
 namespace HW
 {
-    public enum FireWeaponType { Gun, Shotgun, CombatRifle, Rifle }
+    // Type of bullets
+    public enum AmmonitionType { GunBullet, Magnum, Shells, RifleBullet, SniperBullet }
 
+    public enum FireWeaponHolsterId { None, Primary, Secondary }
+    
     public class FireWeapon : Weapon
     {
         public static readonly float GlobalAimingRange = 14;
@@ -19,23 +22,21 @@ namespace HW
         public UnityAction OnReloadInterrupted;
 
         [SerializeField]
-        FireWeaponType type;
-        public FireWeaponType Type
-        {
-            get { return type; }
-        }
-
-        [SerializeField]
         int maxMagazineAmmo;
 
         [SerializeField]
-        Item ammonition;
-        public Item Ammonition
+        AmmonitionType ammonitionType;
+        public AmmonitionType AmmonitionType
         {
-            get { return ammonition; }
+            get { return ammonitionType; }
         }
 
-        //int leftAmmo = 0;
+        [SerializeField]
+        FireWeaponHolsterId holsterId;
+        public FireWeaponHolsterId HolsterId
+        {
+            get { return holsterId; }
+        }
 
         int currentMagazineAmmo = 0;
         public int NumberOfLoadedAmmo
@@ -131,12 +132,12 @@ namespace HW
 
             int count = maxMagazineAmmo - currentMagazineAmmo;
 
-            int leftAmmo = Equipment.Instance.GetNumberOfAmmonitions(ammonition);
+            int leftAmmo = Equipment.Instance.GetNumberOfAmmonitions((int)ammonitionType);
            
             if(leftAmmo < count)
                 count = leftAmmo;
 
-            Equipment.Instance.RemoveAmmonitions(ammonition, count);
+            Equipment.Instance.RemoveAmmonitions((int)ammonitionType, count);
 
             currentMagazineAmmo += count;
 
@@ -158,7 +159,7 @@ namespace HW
 
         public bool IsOutOfAmmo()
         {
-            return Equipment.Instance.GetNumberOfAmmonitions(ammonition) == 0;
+            return Equipment.Instance.GetNumberOfAmmonitions((int)ammonitionType) == 0;
         }
 
         //public void AddAmmo(int amount)

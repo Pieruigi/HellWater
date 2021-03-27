@@ -71,18 +71,18 @@ namespace HW
                 OnStillLocked?.Invoke(this);
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             int newState = fsm.CurrentStateId;
             // You are trying to open a locked door
-            if (oldState == newState && newState == (int)DoorState.Locked)
+            if (fsm.PreviousStateId == newState && newState == (int)DoorState.Locked)
             {
                 OnStillLocked?.Invoke(this);
                 return;
             }
 
             // You unlocked the door
-            if (oldState == (int)DoorState.Locked && newState == (int)DoorState.Locked)
+            if (fsm.PreviousStateId == (int)DoorState.Locked && newState == (int)DoorState.Locked)
             {
                 OnUnlock?.Invoke(this);
                 return;

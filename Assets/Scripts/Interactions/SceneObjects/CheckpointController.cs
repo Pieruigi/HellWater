@@ -23,10 +23,10 @@ namespace HW
         }
 
        
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             Debug.Log("Handle SaveGame");
-            if(fsm.CurrentStateId == stateId && oldState != fsm.CurrentStateId)
+            if(fsm.CurrentStateId == stateId && fsm.PreviousStateId != fsm.CurrentStateId)
             {
                 StartCoroutine(Save());
             }

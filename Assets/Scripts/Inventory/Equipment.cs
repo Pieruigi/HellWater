@@ -2,47 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HW.Collections;
+using UnityEngine.Events;
 
 namespace HW
 {
+    
+    
+
     public class Equipment : MonoBehaviour
     {
-        [System.Serializable]
-        private class AmmoData
+        public UnityAction<Weapon> OnWeaponAdded;
+        public UnityAction<Weapon> OnWeaponRemoved;
+        
+
+        FireWeapon primaryWeapon, secondaryWeapon;
+        public FireWeapon PrimaryWeapon
         {
-            Item ammo;
-            public Item Ammo
-            {
-                get { return ammo; }
-            }
-            int count;
-            public int Amount
-            {
-                get { return count; }
-            }
-
-            public AmmoData(Item ammo)
-            {
-                this.ammo = ammo;
-            }
-
-            public void IncreaseAmmo(int amount)
-            {
-                this.count += amount;
-            }
-
-            public void DecreaseAmmo(int amount)
-            {
-                count = Mathf.Max(0, count - amount);
-            }
+            get { return primaryWeapon; }
         }
 
-        
-        List<Item> weapons = new List<Item>();
+        public FireWeapon SecondaryWeapon
+        {
+            get { return secondaryWeapon; }
+        }
 
-        List<AmmoData> ammonitions = new List<AmmoData>();
+        MeleeWeapon meleeWeapon;
+        public MeleeWeapon MeleeWeapon
+        {
+            get { return meleeWeapon; }
+        }
 
+        //List<Item> weapons = new List<Item>();
 
+        //AmmoData[] ammonitions = new AmmoData[5];
+
+        int[] ammonitions = new int[5];
+
+        int[] maximumAmmonitions = new int[] { 150, 40, 20, 100, 20 };
+
+        //Item primaryWeapon              
 
         public static Equipment Instance { get; private set; }
         private void Awake()
@@ -75,102 +73,135 @@ namespace HW
             codes = new List<string>();
             amounts = new List<int>();
 
-            // Get weapons
-            foreach(Item item in weapons)
-            {
-                codes.Add(item.Code);
-                amounts.Add(1);
-            }
+            //// Get weapons
+            //foreach(Item item in weapons)
+            //{
+            //    codes.Add(item.Code);
+            //    amounts.Add(1);
+            //}
 
             // Get ammonitions
-            foreach(AmmoData ad in ammonitions)
+            //foreach(AmmoData ad in ammonitions)
+            //{
+            //    codes.Add(ad.Ammo.Code);
+            //    amounts.Add(ad.Amount);
+            //}
+        }
+
+       
+        public bool IsPrimary(FireWeapon fireWeapon)
+        {
+            return primaryWeapon == fireWeapon;
+        }
+        
+        public void AddMeleeWeapon(MeleeWeapon weapon)
+        {
+            RemoveMeleeWeapon();
+            meleeWeapon = weapon as MeleeWeapon;
+
+            OnWeaponAdded?.Invoke(weapon);
+        }
+
+        public void AddFireWeapon(FireWeapon weapon)
+        {
+            if(weapon.HolsterId == FireWeaponHolsterId.Primary)
             {
-                codes.Add(ad.Ammo.Code);
-                amounts.Add(ad.Amount);
+                RemovePrimaryFireWeapon();
+                primaryWeapon = weapon;
             }
-        }
-
-        public void Add(Item item, int count = 1)
-        {
-            if (item.Type != ItemType.Weapon && item.Type != ItemType.Ammo)
-                throw new System.Exception("Invalid type '" + item.Type + "' for " + item.name);
-
-            switch (item.Type)
+            else
             {
-                case ItemType.Weapon:
-                    AddWeapon(item);
-                    break;
-                case ItemType.Ammo:
-                    AddAmmonitions(item, count);
-                    break;
-            }
+                if(weapon.HolsterId == FireWeaponHolsterId.Secondary)
+                {
+                    RemoveSecondaryFireWeapon();
+                    secondaryWeapon = weapon;
+                }
+            }    
+
+            OnWeaponAdded?.Invoke(weapon);
         }
 
-        private void AddWeapon(Item item)
+
+        void RemovePrimaryFireWeapon()
         {
-            if (item.Type != ItemType.Weapon)
-                throw new System.Exception("AddWeapon() can't be called with param of type " + item.Type + ".");
-
-            weapons.Add(item);
-
-            // The first two weapons must also be equipped
-            if(weapons.Count < 3)
-            {
-                PlayerController.Instance.EquipWeapon(item);
-                //PlayerController.Instance.HolsterWeapon();
-            }
-                
-
-            
-        }
-
-        private void AddAmmonitions(Item item, int amount)
-        {
-            if (item.Type != ItemType.Ammo)
-                throw new System.Exception("AddAmmonitions() can't be called with param of type " + item.Type + ".");
-
-            // Look for this ammo in the equipment
-            AmmoData data = ammonitions.Find(ad => ad.Ammo == item);
-
-            // If ammo doesn't exist the create new data
-            if (data == null)
-            {
-                data = new AmmoData(item);
-                ammonitions.Add(data);
-            }
-
-            // Increase data
-            data.IncreaseAmmo(amount);
-            
-        }
-
-        public int GetNumberOfAmmonitions(Item item)
-        {
-            if (item.Type != ItemType.Ammo)
-                throw new System.Exception("GetNumberOfAmmonitions() can't be called with param of type " + item.Type + ".");
-
-            AmmoData data = ammonitions.Find(ad => ad.Ammo == item);
-            if (data == null)
-                return 0;
-
-            return data.Amount;
-        }
-
-        public void RemoveAmmonitions(Item item, int amount)
-        {
-            if (item.Type != ItemType.Ammo)
-                throw new System.Exception("RemoveAmmonitions() can't be called with param of type " + item.Type + ".");
-
-            AmmoData data = ammonitions.Find(ad => ad.Ammo == item);
-            if (data == null)
+            if (primaryWeapon == null)
                 return;
 
-            data.DecreaseAmmo(amount);
+            FireWeapon tmp = primaryWeapon;
+            primaryWeapon = null;
 
-            if (data.Amount == 0)
-                ammonitions.Remove(data);
+            // Let know the others that a weapon has been removed.
+            OnWeaponRemoved?.Invoke(tmp);
         }
 
+        void RemoveSecondaryFireWeapon()
+        {
+            if (secondaryWeapon == null)
+                return;
+
+            FireWeapon tmp = secondaryWeapon;
+            secondaryWeapon = null;
+
+            // Let know the others that a weapon has been removed.
+            OnWeaponRemoved?.Invoke(tmp);
+        }
+
+        void RemoveMeleeWeapon()
+        {
+            if (meleeWeapon == null)
+                return;
+
+            MeleeWeapon tmp = meleeWeapon;
+            meleeWeapon = null;
+
+            // Let know the others that a weapon has been removed.
+            OnWeaponRemoved?.Invoke(tmp);
+
+        }
+
+
+
+        /// <summary>
+        /// Add some ammo.
+        /// </summary>
+        /// <param name="ammoType"></param>
+        /// <param name="amount"></param>
+        /// <returns>The number of ammo added.</returns>
+        public int AddAmmonition(int ammoType, int amount)
+        {
+            int count = ammonitions[ammoType];
+            int maxCount = maximumAmmonitions[ammoType];
+
+            // No more room
+            if (count == maxCount)
+                return 0;
+
+            // Check the maximum amount.
+            int ret = Mathf.Min(amount, maxCount-count);
+
+            // Update ammo.
+            count += ret;
+            ammonitions[ammoType] = count;
+
+            return ret;
+        }
+
+        public int GetNumberOfAmmonitions(int ammoType)
+        {
+            return ammonitions[ammoType];
+        }
+
+        public void RemoveAmmonitions(int ammoType, int amount)
+        {
+            int count = ammonitions[ammoType];
+            count = Mathf.Max(0, count - amount);
+
+            ammonitions[ammoType] = count;
+
+        }
+
+
+   
        
     }
 

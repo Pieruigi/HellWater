@@ -40,7 +40,7 @@ namespace HW
                 // If we hit an hitable object we send out hit information
                 if (hitable != null)
                 {
-                    HitInfo hitInfo = new HitInfo(hit.point, hit.normal, weapon.HitPhysicalReaction, weapon.DamageAmount, weapon.StunnedEffect);
+                    HitInfo hitInfo = new HitInfo(hit.point, hit.normal, weapon.HitPhysicalReaction, weapon.DamageAmount);
                     hitable.GetHit(hitInfo);
                 }
                 

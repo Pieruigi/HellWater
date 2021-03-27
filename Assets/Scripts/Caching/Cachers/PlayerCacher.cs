@@ -62,8 +62,8 @@ namespace HW.CachingSystem
 
         protected override string GetCacheValue()
         {
-            string fwCode = playerController.FireWeapon ? playerController.FireWeapon.Item.Code : "-";
-            string mwCode = playerController.FireWeapon ? playerController.MeleeWeapon.Item.Code : "-";
+            string fwCode = "";//playerController.FireWeapon ? playerController.FireWeapon.Item.Code : "-";
+            string mwCode = "";// playerController.FireWeapon ? playerController.MeleeWeapon.Item.Code : "-";
 
             // Loaded ammonitions for every fire weapon ( even the not yet available ones )
             List<int> ammos = new List<int>();

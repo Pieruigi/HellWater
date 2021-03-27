@@ -36,28 +36,22 @@ namespace HW
             get { return damageAmount; }
         }
 
-        bool stunnedEffect;
-        public bool StunnedEffect
-        {
-            get { return stunnedEffect; }
-        }
         #endregion
 
 
-        public HitInfo(Vector3 position, Vector3 normal, HitPhysicalReaction physicalReaction, float damageAmount, bool stunnedEffect)
+        public HitInfo(Vector3 position, Vector3 normal, HitPhysicalReaction physicalReaction, float damageAmount)
         {
             this.position = position;
             this.normal = normal;
             this.physicalReaction = physicalReaction;
             this.damageAmount = damageAmount;
-            this.stunnedEffect = stunnedEffect;
         }
 
 
         public override string ToString()
         {
-            return string.Format("[HitInfo position:{0}, normal:{1}, physicalReaction:{2}, damageAmount:{3}, stunnedEffect:{4}]",
-                position, normal, physicalReaction, damageAmount, stunnedEffect);
+            return string.Format("[HitInfo position:{0}, normal:{1}, physicalReaction:{2}, damageAmount:{3}]",
+                position, normal, physicalReaction, damageAmount);
         }
     }
 

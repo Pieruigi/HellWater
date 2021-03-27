@@ -52,7 +52,7 @@ namespace HW
                 // If we hit an hitable object we send out hit information
                 if (hitable != null)
                 {
-                    HitInfo hitInfo = new HitInfo(hit.point, hit.normal, HitPhysicalReaction.Stop, damageAmount, false);
+                    HitInfo hitInfo = new HitInfo(hit.point, hit.normal, HitPhysicalReaction.Stop, damageAmount);
                     hitable.GetHit(hitInfo);
                 }
             }

@@ -47,7 +47,7 @@ namespace HW
 
         }
 
-        void HandleOnStateChange(FiniteStateMachine fsm, int oldState)
+        void HandleOnStateChange(FiniteStateMachine fsm)
         {
             if (fsm.CurrentStateId == (int)PickableState.Picked)
             {
@@ -73,7 +73,7 @@ namespace HW
             {
                 //Equipment.Instance.Add(item); // We really need some kind of dipatcher
                 //PlayerController.Instance.EquipWeapon(item);
-                ItemDispatcher.Dispatch(item, count);
+                //ItemDispatcher.Dispatch(item, count);
             }
                 
         }
