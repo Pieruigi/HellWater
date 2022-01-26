@@ -15,7 +15,8 @@ namespace HW.UI
 
         Transform target;
         Weapon weapon;
-        CapsuleCollider targetCollider;
+
+        float verticalOffset = 70f;
 
         float cameraSizeDefault;
 
@@ -43,8 +44,12 @@ namespace HW.UI
             if (!IsVisible())
                 return;
 
+<<<<<<< HEAD
             Debug.Log("Camera main:" + Camera.main);
             crosshairImage.transform.position = Camera.main.WorldToScreenPoint(target.position + Vector3.forward*targetCollider.height/2f);
+=======
+            crosshairImage.transform.position = Camera.main.WorldToScreenPoint(target.position) + Vector3.up * verticalOffset * cameraSizeDefault / Camera.main.orthographicSize;
+>>>>>>> parent of ed4f18aa (bug fixing AIM target)
 
             // Set color
             SetColor();
@@ -71,9 +76,6 @@ namespace HW.UI
                 }
                 this.target = target;
                 this.weapon = weapon;
-                if (target)
-                    targetCollider = target.GetComponent<Collider>() as CapsuleCollider;
-                
             }
             else
             {
